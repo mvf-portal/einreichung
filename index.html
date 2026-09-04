@@ -362,11 +362,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <label for="rubrik">Rubrik <span class="pflicht">*</span></label>
           <p class="anleitung">Wählen Sie hier bitte <b>eine</b> Rubrik aus der Liste.
           Wenn Sie unsicher sind, nehmen Sie die, die dem Charakter Ihres Textes am nächsten
-          kommt — die Redaktion korrigiert das notfalls.</p>
+          kommt — die Redaktion korrigiert das notfalls.<br>
+          <b>Wissenschaft und Wissen gehen ins Peer&nbsp;Review.</b> Planen Sie dafür sechs Wochen ein; die Auswahl der Ausgabe in Schritt&nbsp;5 berücksichtigt das bereits.</p>
           <select id="rubrik" data-feld="rubrik">
             <option value="">Bitte wählen</option>
-            <option value="wissenschaft">Wissenschaft</option>
-            <option value="wissen">Wissen</option>
+            <option value="wissenschaft">Wissenschaft (Achtung: Peer Review)</option>
+            <option value="wissen">Wissen (Achtung: Peer Review)</option>
             <option value="wissenstransfer">Wissenstransfer</option>
             <option value="report">Report</option>
             <option value="interview">Interview</option>
@@ -636,7 +637,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <label for="ausgabe">Vorgesehene Ausgabe <span class="pflicht">*</span></label>
           <p class="anleitung">Wählen Sie hier bitte die Ausgabe, in der Ihr Beitrag
           erscheinen soll. Angeboten werden nur Ausgaben mit
-          <span class="mass">mindestens 6 Wochen Vorlauf</span> — die braucht das Peer Review.</p>
+          <span class="mass">mindestens 6 Wochen Vorlauf</span> — die braucht das Peer Review in den Rubriken Wissenschaft und Wissen.</p>
           <select id="ausgabe" data-feld="ausgabe">
             <option value="">Bitte wählen</option>
             <option value="MVF 06/26">MVF 06/26</option>
@@ -937,8 +938,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
     $('#rubrik').addEventListener('change', function () {
       var t = {
-        wissenschaft:'Originalarbeit — geht ins Peer Review, rechnen Sie mit sechs Wochen.',
-        wissen:'Gesichertes Fachwissen, aufbereitet.',
+        wissenschaft:'Originalarbeit. Geht ins Peer Review — rechnen Sie mit sechs '
+          + 'Wochen zwischen Einreichung und Erscheinen.',
+        wissen:'Gesichertes Fachwissen, aufbereitet. Geht ebenfalls ins Peer Review — '
+          + 'rechnen Sie mit sechs Wochen zwischen Einreichung und Erscheinen.',
         wissenstransfer:'Der Weg von der Erkenntnis in die Praxis.',
         report:'Bericht von Kongress oder Veranstaltung.',
         interview:'Gespräch, redigiert und autorisiert.',

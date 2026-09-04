@@ -58,6 +58,9 @@ nicht.
 - **Unterschriften** — jede Abbildung und jede Tabelle braucht eine; ein leeres
   Feld bleibt sichtbar markiert.
 - **Editorial** steht nicht zur Wahl. Das ist Sache des Herausgebers.
+- **Wissenschaft und Wissen gehen ins Peer Review.** Beide Rubriken tragen den
+  Hinweis schon in der Auswahlliste, damit die sechs Wochen Vorlauf niemanden
+  überraschen.
 
 ## Was noch fehlt
 
