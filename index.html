@@ -1,0 +1,1366 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Entwurf der Einreichungsseite von Monitor Versorgungsforschung: Autorinnen und Autoren stellen ihren Beitrag Schritt fuer Schritt selbst ein.">
+<!--
+  MVF Einreichung - Entwurf zur Ansicht
+  =====================================
+  Eine einzige Datei, keine Abhaengigkeiten ausser der Schrift Lato von
+  Google Fonts. Laesst sich per Doppelklick im Browser oeffnen oder auf
+  einen beliebigen Webserver legen.
+
+  Diese Fassung SPEICHERT NICHTS AUF EINEM SERVER. Alle Eingaben bleiben im
+  Browser dessen, der die Seite geoeffnet hat (localStorage). Der Knopf am
+  Ende zeigt nur an, was uebergeben wuerde.
+
+  Der Anschluss an WordPress liegt daneben in server/einreichung.php.
+-->
+<title>MVF Beitrag einreichen</title>
+<link rel="canonical" href="https://einreichung.m-vf.de/">
+<link rel="icon" href="/logo/hub-icon.svg" type="image/svg+xml">
+<link rel="icon" href="/logo/hub-icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/logo/hub-icon-180.png">
+<meta name="theme-color" content="#0051A1">
+<style>
+
+  /* Lato vom eigenen Server - wie in den zwoelf Hubs. Keine Verbindung zu
+     Google, und die Seite sieht ueberall gleich aus. */
+  @font-face{ font-family:"Lato"; font-style:normal; font-weight:300;
+    src:url("fonts/lato-300.woff2") format("woff2"); font-display:swap; }
+  @font-face{ font-family:"Lato"; font-style:normal; font-weight:400;
+    src:url("fonts/lato-400.woff2") format("woff2"); font-display:swap; }
+  @font-face{ font-family:"Lato"; font-style:normal; font-weight:700;
+    src:url("fonts/lato-700.woff2") format("woff2"); font-display:swap; }
+/* =========================================================================
+   MVF Einreichung — eigene Site im Branding von Monitor Versorgungsforschung.
+   Farben und Schrift wie in den zwölf Knowledge-Hubs: Lato, Brand #0051A1,
+   Gold #BE9E53. Der Autor soll sehen, dass er bei MVF ist, und sonst nichts.
+   ========================================================================= */
+:root{
+  --paper:#EDF2FA; --card:#FFFFFF; --card-2:#F7FAFD; --card-3:#EFF4FA;
+  --ink:#111111; --ink-soft:#444A50; --ink-faint:#5A646D;
+  --line:#D0D8E4; --line-soft:#E3EAF3;
+  --brand:#0051A1; --brand-deep:#003B77; --brand-tint:#E1EAF6;
+  --gold:#BE9E53; --gold-tief:#8A6F2C; --on-gold:#2A2207;
+  --ok:#1F6B4F; --ok-tint:#E4F1EB;
+  --warn:#8A4A22; --warn-tint:#FBEEE4;
+  --stop:#9C2F1B; --stop-tint:#FBE9E5;
+  --schatten:0 1px 2px rgba(16,40,38,.05), 0 8px 24px -16px rgba(16,40,38,.28);
+  --s:"Lato",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --m:"IBM Plex Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0A1120; --card:#111B2E; --card-2:#0E1728; --card-3:#16233A;
+    --ink:#E9EEF6; --ink-soft:#AEBBCB; --ink-faint:#8FA0B7;
+    --line:#22314A; --line-soft:#1A2639;
+    --brand:#6FA8E8; --brand-deep:#9CC6F4; --brand-tint:#152742;
+    --gold:#D4B878; --gold-tief:#E0C88E; --on-gold:#221A08;
+    --ok:#7FC9A8; --ok-tint:#12251E;
+    --warn:#E0A276; --warn-tint:#2A1F17;
+    --stop:#E88E77; --stop-tint:#2C1A15;
+    --schatten:0 1px 2px rgba(0,0,0,.3), 0 10px 30px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0A1120; --card:#111B2E; --card-2:#0E1728; --card-3:#16233A;
+  --ink:#E9EEF6; --ink-soft:#AEBBCB; --ink-faint:#8FA0B7;
+  --line:#22314A; --line-soft:#1A2639;
+  --brand:#6FA8E8; --brand-deep:#9CC6F4; --brand-tint:#152742;
+  --gold:#D4B878; --gold-tief:#E0C88E; --on-gold:#221A08;
+  --ok:#7FC9A8; --ok-tint:#12251E;
+  --warn:#E0A276; --warn-tint:#2A1F17;
+  --stop:#E88E77; --stop-tint:#2C1A15;
+  --schatten:0 1px 2px rgba(0,0,0,.3), 0 10px 30px -18px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--s);font-size:16px;line-height:1.6}
+a{color:var(--brand);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--brand);outline-offset:2px;border-radius:3px}
+
+/* ---------------------------------------------------------------- Kopf */
+header.top{background:var(--card);border-bottom:1px solid var(--line)}
+.kopf{max-width:1180px;margin:0 auto;padding:18px 22px;display:flex;
+  align-items:center;justify-content:space-between;gap:20px}
+.marke{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit}
+.zeichen{width:38px;height:38px;flex:0 0 auto}
+.marke-text strong{display:block;font-size:16px;line-height:1.15;font-weight:700;letter-spacing:-.01em}
+.marke-text span{display:block;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);margin-top:2px}
+.kopf-rechts{display:flex;align-items:center;gap:16px;font-size:13.5px;color:var(--ink-faint)}
+.gesichert{display:flex;align-items:center;gap:7px}
+.gesichert i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:block}
+.gesichert.laeuft i{background:var(--gold)}
+
+/* ------------------------------------------------------------- Gerüst */
+.buehne{max-width:1180px;margin:0 auto;padding:26px 22px 90px}
+.spalten{display:grid;gap:26px;grid-template-columns:1fr}
+@media (min-width:980px){.spalten{grid-template-columns:250px 1fr;align-items:start}}
+
+/* ------------------------------------------------------- Schrittleiste */
+.leiste{position:sticky;top:18px;background:var(--card);border:1px solid var(--line);
+  border-radius:8px;padding:8px;box-shadow:var(--schatten)}
+@media (max-width:979px){.leiste{position:static;display:flex;overflow-x:auto;gap:6px;padding:8px}}
+.schritt{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;
+  background:transparent;border:0;border-radius:6px;padding:10px 11px;cursor:pointer;
+  font:inherit;color:var(--ink-soft);white-space:nowrap}
+.schritt:hover{background:var(--card-3)}
+.schritt[aria-current="step"]{background:var(--brand-tint);color:var(--brand-deep);font-weight:700}
+.schritt .nr{flex:0 0 auto;width:23px;height:23px;border-radius:50%;border:1.5px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;
+  background:var(--card);color:var(--ink-faint)}
+.schritt[aria-current="step"] .nr{border-color:var(--brand);color:var(--brand);background:var(--card)}
+.schritt.fertig .nr{background:var(--ok);border-color:var(--ok);color:#fff}
+.schritt.luecke .nr{border-color:var(--warn);color:var(--warn)}
+.schritt .txt{white-space:normal;font-size:14.5px;line-height:1.35}
+.schritt .txt small{display:block;font-weight:400;font-size:12px;color:var(--ink-faint);margin-top:2px}
+@media (max-width:979px){.schritt .txt small{display:none}}
+
+/* ------------------------------------------------------------- Blätter */
+.blatt{background:var(--card);border:1px solid var(--line);border-radius:8px;
+  padding:26px 28px 24px;box-shadow:var(--schatten)}
+.blatt[hidden]{display:none}
+.blatt h2{margin:0 0 6px;font-size:clamp(21px,3vw,26px);line-height:1.2;font-weight:700;letter-spacing:-.01em}
+.blatt .vor{margin:0 0 22px;color:var(--ink-soft);max-width:66ch;font-size:15.5px}
+.zaehler{font-size:11.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 8px}
+
+fieldset{border:0;margin:0 0 22px;padding:0}
+legend{font-weight:700;font-size:15px;padding:0;margin:0 0 4px}
+.gruppe{margin:0 0 18px;max-width:70ch}
+.gruppe > label,.gruppe .beschriftung{display:block;font-weight:700;font-size:14.5px;margin:0 0 5px}
+.pflicht{color:var(--stop);font-weight:700}
+.wink{margin:5px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink-faint)}
+input[type=text],input[type=email],select,textarea{
+  width:100%;padding:10px 12px;font:inherit;font-size:15px;color:var(--ink);
+  background:var(--card-2);border:1px solid var(--line);border-radius:5px}
+textarea{line-height:1.55;resize:vertical}
+input:disabled,textarea:disabled{opacity:.55}
+.zeichenzahl{float:right;font-weight:400;font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.zeichenzahl.knapp{color:var(--warn)}
+.zeichenzahl.gut{color:var(--ok)}
+
+.reihe{display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:680px){.reihe.zwei{grid-template-columns:1fr 1fr}}
+
+/* ------------------------------------------------------------- Knöpfe */
+.knopf{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font:inherit;font-size:15px;font-weight:700;padding:11px 22px;border-radius:6px;
+  border:1px solid transparent;cursor:pointer;text-decoration:none}
+.knopf.haupt{background:var(--brand);color:#fff}
+.knopf.haupt:hover{background:var(--brand-deep)}
+.knopf.gold{background:var(--gold);color:var(--on-gold)}
+.knopf.gold:hover{filter:brightness(1.06)}
+.knopf.rand{background:transparent;color:var(--brand);border-color:var(--line)}
+.knopf.rand:hover{border-color:var(--brand)}
+.knopf.klein{font-size:13.5px;padding:7px 14px}
+.knopf:disabled{opacity:.5;cursor:not-allowed}
+.fusszeile{display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  margin-top:26px;padding-top:20px;border-top:1px solid var(--line-soft)}
+.fusszeile .weit{margin-left:auto}
+
+/* ------------------------------------------------------------- Kästen */
+.kasten{border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:0 6px 6px 0;
+  background:var(--card-2);padding:15px 17px;margin:0 0 20px}
+.kasten.gut{border-left-color:var(--ok);background:var(--ok-tint)}
+.kasten.acht{border-left-color:var(--warn);background:var(--warn-tint)}
+.kasten.stop{border-left-color:var(--stop);background:var(--stop-tint)}
+.kasten p{margin:0 0 8px;font-size:14.5px;line-height:1.55}
+.kasten p:last-child{margin-bottom:0}
+.kasten b{font-weight:700}
+
+/* -------------------------------------------------------- Listenblöcke */
+.stueck{border:1px solid var(--line);border-radius:6px;background:var(--card-2);
+  padding:14px 16px;margin:0 0 10px}
+.stueck-kopf{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.stueck-kopf .name{font-weight:700;font-size:14.5px}
+.stueck-kopf .weg{margin-left:auto;background:transparent;border:0;cursor:pointer;
+  color:var(--ink-faint);font-size:20px;line-height:1;padding:2px 6px}
+.stueck-kopf .weg:hover{color:var(--stop)}
+.dateiname{font-family:var(--m);font-size:12.5px;color:var(--ink-soft);word-break:break-all}
+.marke-pill{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:2px 7px;border-radius:3px;background:var(--brand-tint);color:var(--brand)}
+.marke-pill.ok{background:var(--ok-tint);color:var(--ok)}
+.marke-pill.warn{background:var(--warn-tint);color:var(--warn)}
+
+.ablage{border:2px dashed var(--line);border-radius:7px;padding:22px;text-align:center;
+  background:var(--card-2);cursor:pointer}
+.ablage:hover,.ablage.drueber{border-color:var(--brand);background:var(--brand-tint)}
+.ablage p{margin:0;font-size:14.5px;color:var(--ink-soft)}
+.ablage b{color:var(--brand)}
+
+/* --------------------------------------------------------- Lizenzwahl */
+.wahl{display:grid;gap:11px}
+@media (min-width:680px){.wahl.zwei{grid-template-columns:1fr 1fr}}
+.wahl label{display:block;border:1px solid var(--line);border-radius:6px;padding:13px 15px;
+  cursor:pointer;background:var(--card-2)}
+.wahl label:hover{border-color:var(--brand)}
+.wahl input:checked + .w-name{color:var(--brand-deep)}
+.wahl label:has(input:checked){border-color:var(--brand);background:var(--brand-tint)}
+.w-name{font-weight:700}
+.w-text{display:block;margin-top:5px;font-size:13.5px;line-height:1.5;color:var(--ink-faint)}
+
+/* ------------------------------------------------------ Prüfen/Freigabe */
+.pruef-liste{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:8px}
+.pruef-liste li{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;
+  border:1px solid var(--line);border-radius:6px;background:var(--card-2);font-size:14.5px}
+.pruef-liste li.fehlt{border-color:var(--stop);background:var(--stop-tint)}
+.pruef-liste li.hinweis{border-color:var(--warn);background:var(--warn-tint)}
+.pruef-liste .zeichen{flex:0 0 auto;font-weight:700;width:20px;text-align:center}
+.pruef-liste li.fertig .zeichen{color:var(--ok)}
+.pruef-liste li.fehlt .zeichen{color:var(--stop)}
+.pruef-liste li.hinweis .zeichen{color:var(--warn)}
+.pruef-liste .springen{margin-left:auto;background:transparent;border:0;color:var(--brand);
+  font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;text-decoration:underline;white-space:nowrap}
+
+.uebersicht{border:1px solid var(--line);border-radius:7px;overflow:hidden;margin:0 0 22px}
+.uebersicht h3{margin:0;padding:12px 16px;background:var(--card-3);font-size:14px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);border-bottom:1px solid var(--line)}
+.uebersicht dl{margin:0;display:grid;grid-template-columns:1fr;gap:0}
+@media (min-width:680px){.uebersicht dl{grid-template-columns:200px 1fr}}
+.uebersicht dt{padding:10px 16px;font-weight:700;font-size:13.5px;color:var(--ink-faint);
+  border-bottom:1px solid var(--line-soft);background:var(--card-2)}
+.uebersicht dd{margin:0;padding:10px 16px;font-size:14.5px;border-bottom:1px solid var(--line-soft);
+  word-break:break-word}
+@media (max-width:679px){.uebersicht dt{border-bottom:0;padding-bottom:2px;background:var(--card)}}
+.uebersicht .leer{color:var(--ink-faint);font-style:italic}
+
+.freigabe{border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:0 7px 7px 0;
+  background:var(--card-2);padding:20px 22px}
+.haken{display:flex;gap:12px;align-items:flex-start;font-weight:700;cursor:pointer;
+  padding-top:14px;margin-top:14px;border-top:1px solid var(--line-soft)}
+.haken input{width:21px;height:21px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--brand)}
+.punkte{margin:0 0 0;padding-left:1.3em;font-size:14px;line-height:1.55;color:var(--ink-soft)}
+.punkte li{margin-bottom:7px}
+
+.fortschritt{height:5px;background:var(--line-soft);border-radius:3px;overflow:hidden;margin:0 0 18px}
+.fortschritt i{display:block;height:100%;background:var(--brand);width:0;transition:width .25s ease}
+@media (prefers-reduced-motion:reduce){.fortschritt i{transition:none}}
+
+.fahne{background:#17222e;color:#e8eef2;padding:13px 17px;border-radius:6px;font-size:13px;
+  line-height:1.55;margin:0 0 20px}
+.fahne b{color:#f0c65a}
+
+/* ===== Anleitung am Feld ================================================
+   Der Unterschied zur alten Fassung: Unter jeder Beschriftung steht ein
+   Satz im Imperativ, der sagt, was einzutragen ist und wie lang es sein
+   darf. Er ist dunkler und schwerer als der frühere graue Hinweis, weil
+   er gelesen werden muss und nicht nur darf. Der graue Hinweis darunter
+   bleibt für das Warum. */
+.anleitung{
+  margin:0 0 8px;font-size:14px;line-height:1.5;color:var(--ink-soft);
+  padding-left:13px;border-left:2px solid var(--brand-tint);
+}
+.anleitung b{color:var(--ink);font-weight:700}
+.anleitung .mass{
+  display:inline-block;font-weight:700;color:var(--brand-deep);
+  background:var(--brand-tint);border-radius:3px;padding:0 6px;white-space:nowrap;
+}
+
+.beispiel{
+  margin:8px 0 0;padding:9px 12px;font-size:13.5px;line-height:1.5;
+  background:var(--card-3);border-radius:5px;color:var(--ink-soft);
+}
+.beispiel b{color:var(--ink)}
+.beispiel .ja{color:var(--ok);font-weight:700}
+.beispiel .nein{color:var(--stop);font-weight:700}
+
+/* Was in diesem Schritt zu tun ist — steht ganz oben, bevor das erste
+   Feld kommt. Wer nur diesen Kasten liest, weiß trotzdem, was zu tun ist. */
+.auftrag{
+  border:1px solid var(--line);border-left:4px solid var(--gold);
+  border-radius:0 6px 6px 0;background:var(--card-2);
+  padding:15px 18px;margin:0 0 24px;
+}
+.auftrag p{margin:0 0 7px;font-size:14.5px;line-height:1.55}
+.auftrag p:last-child{margin-bottom:0}
+.auftrag .was{font-weight:700;font-size:15px;color:var(--ink)}
+.auftrag ol{margin:8px 0 0;padding-left:1.25em;font-size:14.5px;line-height:1.55}
+.auftrag li{margin-bottom:5px}
+
+/* Der Zähler sagt jetzt, wie viel noch fehlt oder frei ist — nicht nur,
+   wie viel schon dasteht. „noch 640 Zeichen“ ist eine Anweisung,
+   „260 Zeichen“ ist eine Beobachtung. */
+.zeichenzahl.zuviel{color:var(--stop)}
+
+
+/* ===== Leerstand und Unterschriften ====================================
+   Ein leerer Bereich muss sagen, was passieren wird - sonst sucht der Autor
+   nach einem Feld, das erst nach dem Hochladen entsteht. Genau daran ist die
+   erste Fassung gescheitert. */
+.leerstand{
+  margin:0 0 12px;padding:14px 16px;border:1px dashed var(--line);border-radius:6px;
+  background:var(--card-2);color:var(--ink-faint);font-size:14px;line-height:1.55;
+}
+.leerstand b{color:var(--ink-soft)}
+
+.unter-label{display:block;font-size:13px;font-weight:700;margin:12px 0 2px}
+
+/* Eine fehlende Unterschrift bleibt sichtbar, statt erst in Schritt 6
+   aufzufallen. */
+input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="kopf">
+    <a class="marke" href="#">
+      <svg class="zeichen" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="4" y="8" width="56" height="11" rx="1.5" fill="#BE9E53"/>
+        <rect x="4" y="25" width="25" height="14" rx="1.5" fill="#0051A1"/>
+        <rect x="35" y="25" width="25" height="14" rx="1.5" fill="#0051A1"/>
+        <rect x="4" y="45" width="25" height="14" rx="1.5" fill="#0051A1"/>
+        <rect x="35" y="45" width="25" height="14" rx="1.5" fill="#0051A1"/>
+      </svg>
+      <span class="marke-text">
+        <strong>Monitor Versorgungsforschung</strong>
+        <span>Beitrag einreichen</span>
+      </span>
+    </a>
+    <div class="kopf-rechts">
+      <span class="gesichert" id="sicherStand"><i></i><span>Zuletzt gesichert: noch nicht</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="buehne">
+
+  <p class="fahne"><b>Entwurf.</b> Diese Seite ist noch nicht in Betrieb. Alle Eingaben bleiben
+  in Ihrem Browser und werden nirgendwohin übertragen; der Knopf am Ende zeigt nur an, was
+  übergeben <i>würde</i>. Fragen und Anmerkungen an
+  <a href="mailto:stegmaier@m-vf.de" style="color:#f0c65a">stegmaier@m-vf.de</a>.</p>
+
+  <div class="spalten">
+
+    <nav class="leiste" id="leiste" aria-label="Schritte"></nav>
+
+    <main>
+      <div class="fortschritt"><i id="balken"></i></div>
+
+      <!-- ================================================== 1 Beitrag -->
+      <section class="blatt" data-blatt="0">
+        <p class="zaehler">Schritt 1 von 6</p>
+        <h2>Ihr Beitrag</h2>
+        <p class="vor">Wir gehen das gemeinsam durch. Bei jedem Feld steht, was hineingehört
+        und wie lang es sein darf. Sie können jederzeit aufhören — gespeichert wird laufend.</p>
+
+        <div class="auftrag">
+          <p class="was">In diesem Schritt legen Sie den Beitrag an.</p>
+          <ol>
+            <li>Rubrik wählen — sie bestimmt, wie Ihr Beitrag gesetzt und begutachtet wird.</li>
+            <li>Überschrift und Vorspann eintragen.</li>
+            <li>Das Manuskript als Word-Datei hochladen.</li>
+          </ol>
+        </div>
+
+        <div class="gruppe">
+          <label for="rubrik">Rubrik <span class="pflicht">*</span></label>
+          <p class="anleitung">Wählen Sie hier bitte <b>eine</b> Rubrik aus der Liste.
+          Wenn Sie unsicher sind, nehmen Sie die, die dem Charakter Ihres Textes am nächsten
+          kommt — die Redaktion korrigiert das notfalls.</p>
+          <select id="rubrik" data-feld="rubrik">
+            <option value="">Bitte wählen</option>
+            <option value="wissenschaft">Wissenschaft</option>
+            <option value="wissen">Wissen</option>
+            <option value="wissenstransfer">Wissenstransfer</option>
+            <option value="report">Report</option>
+            <option value="interview">Interview</option>
+            <option value="kommentar">Kommentar</option>
+            <option value="serie">Serie</option>
+          </select>
+          <p class="wink" id="rubrikWink">Sobald Sie gewählt haben, steht hier, was die Rubrik
+          bedeutet.</p>
+        </div>
+
+        <div class="gruppe">
+          <label for="vorzeile">Vorzeile
+            <span class="zeichenzahl" data-zaehlt="vorzeile"></span></label>
+          <p class="anleitung">Tragen Sie hier bitte die kleine Zeile ein, die im Heft
+          <b>über</b> der Überschrift steht und das Thema einordnet.
+          <span class="mass">höchstens 60 Zeichen</span> — zwei bis fünf Wörter, kein ganzer
+          Satz, kein Punkt am Ende. Dieses Feld ist freiwillig.</p>
+          <input type="text" id="vorzeile" data-feld="vorzeile" maxlength="60"
+                 data-max="60" placeholder="Ambulante Notfallversorgung">
+          <p class="beispiel"><b>So sieht das aus:</b> <i>Ambulante Notfallversorgung</i> ·
+          <i>Digitale Ersteinschätzung</i> · <i>Serie Pflegereform, Teil 3</i></p>
+        </div>
+
+        <div class="gruppe">
+          <label for="titel">Überschrift <span class="pflicht">*</span>
+            <span class="zeichenzahl" data-zaehlt="titel"></span></label>
+          <p class="anleitung">Tragen Sie hier bitte die Überschrift Ihres Beitrags ein.
+          <span class="mass">höchstens 100 Zeichen</span>, mindestens 20. Sie soll die
+          <b>Aussage</b> tragen, nicht nur das Thema nennen: Wenn Ihr Beitrag ein Ergebnis
+          hat, gehört es hierher.</p>
+          <input type="text" id="titel" data-feld="titel" data-min="20" data-max="100" maxlength="100">
+          <p class="beispiel"><span class="nein">Zu allgemein:</span>
+          „Ersteinschätzungsinstrumente im internationalen Vergleich“<br>
+          <span class="ja">Besser:</span> „Ersteinschätzung in der Versorgung: Handlungsoptionen
+          für Deutschland“</p>
+        </div>
+
+        <div class="gruppe">
+          <label for="vorspann">Vorspann <span class="pflicht">*</span>
+            <span class="zeichenzahl" data-zaehlt="vorspann"></span></label>
+          <p class="anleitung">Schreiben Sie hier bitte den eingerückten Absatz, der im Heft
+          <b>vor</b> dem Beitrag steht und zum Weiterlesen bringt.
+          <span class="mass">600 bis 900 Zeichen</span>. Er nennt die Frage und deutet die
+          Antwort an — abgehandelt wird sie erst im Beitrag.</p>
+          <textarea id="vorspann" data-feld="vorspann" rows="5" data-min="600" data-max="900"></textarea>
+          <p class="wink">Kein Abstract in Kurzform. Das Abstract kommt in Schritt 2 und ist
+          etwas anderes: sachlich, gegliedert, für die Fachdatenbanken.</p>
+        </div>
+
+        <div class="gruppe">
+          <span class="beschriftung">Manuskript <span class="pflicht">*</span></span>
+          <p class="anleitung">Laden Sie hier bitte Ihren fertigen Text als
+          <b>Word-Datei</b> hoch — <span class="mass">.docx, .doc oder .rtf</span>, eine Datei.
+          Bitte <b>ohne Layout</b>: keine Textrahmen, keine Spalten, und Bilder nicht in die
+          Datei einbetten — die laden Sie in Schritt 3 einzeln hoch.</p>
+          <div class="ablage" data-ablage="manuskript" tabindex="0" role="button">
+            <p><b>Datei wählen</b> oder hierher ziehen</p>
+          </div>
+          <div id="manuskriptListe"></div>
+        </div>
+      </section>
+
+      <!-- =============================================== 2 Zusammenfassung -->
+      <section class="blatt" data-blatt="1" hidden>
+        <p class="zaehler">Schritt 2 von 6</p>
+        <h2>Zusammenfassung und Schlagwörter</h2>
+        <p class="vor">Diese fünf Angaben entscheiden darüber, ob Ihr Beitrag gefunden wird —
+        deutsch bei uns, englisch international.</p>
+
+        <div class="auftrag">
+          <p class="was">In diesem Schritt schreiben Sie zwei Zusammenfassungen.</p>
+          <ol>
+            <li>Das deutsche Abstract und drei bis sechs deutsche Schlüsselwörter.</li>
+            <li>Dasselbe auf Englisch — Titel, Abstract, Keywords.</li>
+          </ol>
+          <p>Beides ist Pflicht. Das englische Abstract ist das, was international von Ihrem
+          Beitrag ankommt.</p>
+        </div>
+
+        <fieldset>
+          <legend>Deutsch</legend>
+          <div class="gruppe">
+            <label for="abstractDe">Abstract deutsch <span class="pflicht">*</span>
+              <span class="zeichenzahl" data-zaehlt="abstractDe"></span></label>
+            <p class="anleitung">Fassen Sie hier bitte Ihren Beitrag zusammen.
+            <span class="mass">1.000 bis 1.500 Zeichen</span>, in dieser Reihenfolge:
+            <b>Hintergrund, Methode, Ergebnis, Schlussfolgerung</b>. Ohne Zwischentitel und
+            ohne Literaturverweise.</p>
+            <textarea id="abstractDe" data-feld="abstractDe" rows="7" data-min="1000" data-max="1500"></textarea>
+          </div>
+          <div class="gruppe">
+            <label for="schlagDe">Schlüsselwörter deutsch <span class="pflicht">*</span>
+              <span class="zeichenzahl" data-zaehlt="schlagDe"></span></label>
+            <p class="anleitung">Tragen Sie hier bitte <span class="mass">3 bis 6 Begriffe</span>
+            ein, <b>mit Komma getrennt</b>. Bitte keine Wörter, die schon in der Überschrift
+            stehen — die helfen beim Finden nicht weiter.</p>
+            <input type="text" id="schlagDe" data-feld="schlagDe" data-komma="3" data-kommamax="6"
+                   placeholder="Triage, Versorgungssteuerung, Notaufnahme, Primärversorgung">
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Englisch</legend>
+          <div class="gruppe">
+            <label for="titelEn">Titel englisch <span class="pflicht">*</span>
+              <span class="zeichenzahl" data-zaehlt="titelEn"></span></label>
+            <p class="anleitung">Tragen Sie hier bitte die englische Überschrift ein.
+            <span class="mass">höchstens 100 Zeichen</span>. Keine wörtliche Übersetzung nötig —
+            im Englischen darf sie anders klingen, solange sie dasselbe sagt.</p>
+            <input type="text" id="titelEn" data-feld="titelEn" data-min="10" data-max="100" maxlength="100">
+          </div>
+          <div class="gruppe">
+            <label for="abstractEn">Abstract englisch <span class="pflicht">*</span>
+              <span class="zeichenzahl" data-zaehlt="abstractEn"></span></label>
+            <p class="anleitung">Schreiben Sie hier bitte das englische Abstract.
+            <span class="mass">1.000 bis 1.500 Zeichen</span>, gleicher Aufbau wie oben.
+            Bitte <b>keine ungeprüfte Maschinenübersetzung</b> — dieser Text steht mit Ihrem
+            Namen darunter.</p>
+            <textarea id="abstractEn" data-feld="abstractEn" rows="7" data-min="1000" data-max="1500"></textarea>
+          </div>
+          <div class="gruppe">
+            <label for="schlagEn">Keywords englisch <span class="pflicht">*</span>
+              <span class="zeichenzahl" data-zaehlt="schlagEn"></span></label>
+            <p class="anleitung">Tragen Sie hier bitte <span class="mass">3 bis 6 Begriffe</span>
+            ein, mit Komma getrennt. Nach Möglichkeit <b>MeSH-Begriffe</b> — dann wird Ihr
+            Beitrag in der internationalen Suche gefunden.</p>
+            <input type="text" id="schlagEn" data-feld="schlagEn" data-komma="3" data-kommamax="6"
+                   placeholder="Triage, Patient Navigation, Emergency Care">
+            <p class="wink"><a href="https://www.ncbi.nlm.nih.gov/mesh/" target="_blank"
+               rel="noopener">MeSH-Begriffe nachschlagen</a> — die Fachwortliste der
+            US-amerikanischen National Library of Medicine.</p>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- ============================================ 3 Abbildungen/Tabellen -->
+      <section class="blatt" data-blatt="2" hidden>
+        <p class="zaehler">Schritt 3 von 6</p>
+        <h2>Abbildungen und Tabellen</h2>
+        <p class="vor">Beides ist freiwillig. Wenn Sie etwas mitschicken, prüfen wir es hier
+        sofort — damit es nicht erst im Satz auffällt.</p>
+
+        <div class="auftrag">
+          <p class="was">In diesem Schritt laden Sie Ihr Bildmaterial hoch.</p>
+          <ol>
+            <li>Abbildungen einzeln hochladen — <b>jede braucht eine Unterschrift</b>.</li>
+            <li>Tabellen als Datei hochladen, nicht als Bild — auch je mit Unterschrift.</li>
+          </ol>
+          <p>Haben Sie weder Abbildungen noch Tabellen, gehen Sie einfach weiter.</p>
+        </div>
+
+        <div class="kasten">
+          <p><b>Warum wir in Pixeln messen und nicht in dpi.</b> „300 dpi“ steht in einer
+          Bilddatei nur als Notiz und lässt sich in jedem Programm umschreiben, ohne dass sich
+          ein einziger Bildpunkt ändert. Ein Bild mit 800 Pixeln Breite kann „300 dpi“
+          behaupten und bleibt im Druck unscharf.</p>
+          <p><b>So finden Sie die Breite:</b> Rechtsklick auf die Datei, <i>Eigenschaften</i>,
+          Reiter <i>Details</i>. Dort steht die Breite in Pixeln.</p>
+        </div>
+
+        <div class="gruppe" style="max-width:none">
+          <span class="beschriftung">Abbildungen</span>
+          <p class="anleitung">Laden Sie hier bitte Ihre Abbildungen hoch —
+          <span class="mass">.jpg oder .png, mindestens 2.126 Pixel breit</span>. Das
+          entspricht 180 mm Satzbreite bei 300 dpi. Die Breite wird sofort gemessen; zu
+          schmale Bilder sagen es Ihnen gleich.</p>
+          <div class="ablage" data-ablage="bild" tabindex="0" role="button">
+            <p><b>Bilder wählen</b> oder hierher ziehen</p>
+          </div>
+          <div id="bildListe"></div>
+          <button type="button" class="knopf rand klein" data-mehr="bild">Weitere Abbildung hinzufügen</button>
+          <p class="wink">Zu jeder Abbildung tragen Sie bitte eine <b>Unterschrift</b> ein —
+          keine Wiederholung des Titels, sondern: was ist zu sehen, und woher stammen die
+          Daten? Stammt eine Abbildung aus einer anderen Veröffentlichung, brauchen wir die
+          Rechte daran; bitte hier vermerken.</p>
+        </div>
+
+        <div class="gruppe" style="max-width:none">
+          <span class="beschriftung">Tabellen</span>
+          <p class="anleitung">Laden Sie Tabellen hier bitte als <b>Datei</b> hoch —
+          <span class="mass">.docx, .xlsx oder .csv</span>. Bitte <b>nicht als Bild</b> und
+          nicht abgetippt: Nur eine echte Tabelle lässt sich im Satz umbrechen und online
+          lesbar darstellen.</p>
+          <div class="ablage" data-ablage="tabelle" tabindex="0" role="button">
+            <p><b>Tabellen wählen</b> oder hierher ziehen</p>
+          </div>
+          <div id="tabelleListe"></div>
+          <button type="button" class="knopf rand klein" data-mehr="tabelle">Weitere Tabelle hinzufügen</button>
+        </div>
+      </section>
+
+      <!-- ================================================== 4 Autoren -->
+      <section class="blatt" data-blatt="3" hidden>
+        <p class="zaehler">Schritt 4 von 6</p>
+        <h2>Autorinnen und Autoren</h2>
+        <p class="vor">Die Reihenfolge hier ist die Reihenfolge im Heft.</p>
+
+        <div class="auftrag">
+          <p class="was">In diesem Schritt legen Sie zuerst den Haupt- und Korrespondenzautor
+          an — das sind Sie selbst.</p>
+          <ol>
+            <li>Ihre Angaben in das erste Feld: Name mit Titel, E-Mail, kurze Vita.</li>
+            <li>Danach über <i>Weiteren Autor hinzufügen</i> die Mitautoren ergänzen, in der
+            Reihenfolge, in der sie im Heft stehen sollen.</li>
+          </ol>
+          <p><b>Als Korrespondenzautor sind Sie die Person, an die sich die Redaktion bei
+          Rückfragen wendet.</b> Nur für Sie sind die Angaben Pflicht; bei Mitautoren genügt
+          zunächst der Name.</p>
+        </div>
+
+        <div id="autorListe"></div>
+        <button type="button" class="knopf rand klein" id="autorNeu">Weiteren Autor hinzufügen</button>
+        <p class="wink">Bis zu zehn Personen. Das Porträtfoto — mindestens 354 Pixel breit,
+        das sind 30 mm bei 300 dpi — fordert die Redaktion nach der Annahme an; hier brauchen
+        Sie es noch nicht.</p>
+      </section>
+
+      <!-- ================================================== 5 Formales -->
+      <section class="blatt" data-blatt="4" hidden>
+        <p class="zaehler">Schritt 5 von 6</p>
+        <h2>Literatur, Ausgabe, Lizenz</h2>
+        <p class="vor">Der letzte Teil vor der Freigabe.</p>
+
+        <div class="auftrag">
+          <p class="was">In diesem Schritt tragen Sie die Formalien ein.</p>
+          <ol>
+            <li>Literaturverzeichnis und Zitationsvorschlag.</li>
+            <li>Für welche Ausgabe der Beitrag gedacht ist.</li>
+            <li>Unter welcher Lizenz er erscheinen soll.</li>
+            <li>Interessenkonflikte und Förderung.</li>
+          </ol>
+        </div>
+
+        <div class="gruppe">
+          <label for="literatur">Literatur <span class="pflicht">*</span>
+            <span class="zeichenzahl" data-zaehlt="literatur"></span></label>
+          <p class="anleitung">Tragen Sie hier bitte Ihr Literaturverzeichnis ein,
+          <b>eine Quelle je Zeile</b>, in der Reihenfolge, in der sie im Text vorkommen.
+          Im Text verweisen Sie mit Ziffern in Klammern — (1), (1–3). Bitte
+          <b>mit DOI</b>, wo vorhanden.</p>
+          <textarea id="literatur" data-feld="literatur" rows="6" data-min="20"></textarea>
+        </div>
+
+        <div class="gruppe">
+          <label for="zitation">Zitationsvorschlag <span class="pflicht">*</span>
+            <span class="zeichenzahl" data-zaehlt="zitation"></span></label>
+          <p class="anleitung">Tragen Sie hier bitte ein, <b>wie Ihr Beitrag zitiert werden
+          soll</b>. Seitenzahl und DOI ergänzt die Redaktion nach dem Satz — Sie geben
+          Autoren, Titel und Ausgabe vor.</p>
+          <textarea id="zitation" data-feld="zitation" rows="3" data-min="20"
+            placeholder="Nachname, V., Nachname, V.: „Titel des Beitrags“, in „Monitor Versorgungsforschung“ (05/26)"></textarea>
+          <p class="beispiel"><b>Muster:</b> Ansmann, L., Ernstmann, N., Stegmaier, P.:
+          „Versorgungsforschung gelingt wirklich nur gemeinsam“, in „Monitor
+          Versorgungsforschung“ (04/26), S. 6–10.</p>
+        </div>
+
+        <div class="gruppe">
+          <label for="danksagung">Danksagung
+            <span class="zeichenzahl" data-zaehlt="danksagung"></span></label>
+          <p class="anleitung">Tragen Sie hier bitte ein, wem zu danken ist. <b>Fördermittel
+          gehören hierher</b>, mit Geldgeber und Kennzeichen. Dieses Feld ist freiwillig —
+          eine Förderung anzugeben ist es allerdings nicht.</p>
+          <textarea id="danksagung" data-feld="danksagung" rows="3"></textarea>
+        </div>
+
+        <div class="gruppe">
+          <label for="ausgabe">Vorgesehene Ausgabe <span class="pflicht">*</span></label>
+          <p class="anleitung">Wählen Sie hier bitte die Ausgabe, in der Ihr Beitrag
+          erscheinen soll. Angeboten werden nur Ausgaben mit
+          <span class="mass">mindestens 6 Wochen Vorlauf</span> — die braucht das Peer Review.</p>
+          <select id="ausgabe" data-feld="ausgabe">
+            <option value="">Bitte wählen</option>
+            <option value="MVF 06/26">MVF 06/26</option>
+            <option value="MVF 01/27">MVF 01/27</option>
+            <option value="MVF 02/27">MVF 02/27</option>
+            <option value="MVF 03/27">MVF 03/27</option>
+          </select>
+        </div>
+
+        <div class="gruppe" style="max-width:none">
+          <span class="beschriftung">Lizenz <span class="pflicht">*</span></span>
+          <p class="anleitung">Entscheiden Sie hier bitte, <b>was andere mit Ihrem Beitrag
+          tun dürfen</b>. Ihr Beitrag erscheint frei zugänglich, das Urheberrecht bleibt in
+          jedem Fall bei Ihnen. <b>CC BY ist voreingestellt.</b></p>
+          <div class="wahl zwei">
+            <label>
+              <input type="radio" name="lizenz" value="cc_by" data-feld="lizenz" checked>
+              <span class="w-name">CC BY 4.0</span>
+              <span class="w-text">Andere dürfen Ihren Beitrag weiterverwenden, bearbeiten und
+              auch kommerziell nutzen — solange Sie als Urheber genannt werden. Das gibt Ihrem
+              Beitrag die weiteste Verbreitung.</span>
+            </label>
+            <label>
+              <input type="radio" name="lizenz" value="cc_by_nc_nd" data-feld="lizenz">
+              <span class="w-name">CC BY-NC-ND 4.0</span>
+              <span class="w-text">Nennung ebenfalls Pflicht, aber keine kommerzielle Nutzung
+              und keine Bearbeitung. Sinnvoll, wenn Sie nicht möchten, dass Auszüge in fremdem
+              Zusammenhang erscheinen.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="gruppe">
+          <label for="konflikte">Interessenkonflikte und Förderung <span class="pflicht">*</span>
+            <span class="zeichenzahl" data-zaehlt="konflikte"></span></label>
+          <p class="anleitung">Tragen Sie hier bitte ein, ob Interessenkonflikte bestehen und
+          ob der Beitrag gefördert wurde. <b>Bestehen keine, schreiben Sie das ausdrücklich
+          hin</b> — ein leeres Feld lässt sich nicht von einem vergessenen unterscheiden.</p>
+          <textarea id="konflikte" data-feld="konflikte" rows="3" data-min="10"
+            placeholder="Es bestehen keine Interessenkonflikte. Der Beitrag wurde nicht gefördert."></textarea>
+          <p class="beispiel"><b>Zum Übernehmen, wenn es zutrifft:</b> „Es bestehen keine
+          Interessenkonflikte. Der Beitrag wurde nicht gefördert.“</p>
+        </div>
+      </section>
+
+      <!-- ============================================ 6 Prüfen und freigeben -->
+      <section class="blatt" data-blatt="5" hidden>
+        <p class="zaehler">Schritt 6 von 6</p>
+        <h2>Prüfen und freigeben</h2>
+        <p class="vor">Hier steht alles beisammen, was an die Redaktion geht.</p>
+
+        <div class="auftrag">
+          <p class="was">In diesem Schritt geben Sie Ihren Beitrag frei.</p>
+          <ol>
+            <li>Die Liste unten durchgehen — was noch fehlt, steht dort mit einem Sprung
+            zur richtigen Stelle.</li>
+            <li>Die Übersicht prüfen: Steht alles so da, wie es erscheinen soll?</li>
+            <li>Die Autorenerklärung ankreuzen und einreichen.</li>
+          </ol>
+          <p><b>Erst Ihr Klick am Ende gibt den Beitrag weiter.</b> Bis dahin ändert sich
+          nichts, und Sie können jederzeit zurückgehen.</p>
+        </div>
+
+        <ul class="pruef-liste" id="pruefListe"></ul>
+        <div id="uebersicht"></div>
+
+        <div class="freigabe">
+          <p style="margin:0 0 10px;font-weight:700">Autorenerklärung</p>
+          <p style="margin:0 0 10px;font-size:14.5px">Lesen Sie bitte die sieben Punkte und
+          kreuzen Sie darunter an. Ich bestätige für alle Autorinnen und Autoren dieses
+          Beitrags:</p>
+          <ol class="punkte">
+            <li>Der Beitrag ist von uns selbst verfasst, bisher unveröffentlicht und nicht
+            gleichzeitig anderswo zur Veröffentlichung eingereicht.</li>
+            <li>Alle genannten Personen haben wesentlich beigetragen, kennen die eingereichte
+            Fassung und sind mit der Einreichung einverstanden. Niemand mit wesentlichem
+            Beitrag ist ungenannt geblieben.</li>
+            <li>Für alle Abbildungen, Tabellen und längeren Zitate, die nicht von uns stammen,
+            liegen die Nutzungsrechte vor; die Quellen sind angegeben.</li>
+            <li>Waren Menschen einbezogen, wurden Einwilligung und — soweit erforderlich — ein
+            Ethikvotum eingeholt; die Angaben stehen im Beitrag.</li>
+            <li>Ein Einsatz KI-gestützter Werkzeuge über Sprachprüfung hinaus ist im Beitrag
+            offengelegt. Die Verantwortung für den Inhalt liegt bei uns.</li>
+            <li>Als einreichender Erstautor bin ich zugleich Korrespondenzautor und für die
+            Kommunikation mit der Redaktion zuständig.</li>
+            <li>Wir stimmen der Veröffentlichung unter der gewählten Lizenz zu und räumen
+            „Monitor Versorgungsforschung“ das Recht ein, den Beitrag in Print und online zu
+            veröffentlichen und dauerhaft verfügbar zu halten. Das Urheberrecht verbleibt
+            bei uns.</li>
+          </ol>
+          <label class="haken" for="erklaerung">
+            <input type="checkbox" id="erklaerung" data-feld="erklaerung">
+            <span>Ich bestätige die vorstehende Erklärung und gebe den Beitrag zur
+            Einreichung frei.</span>
+          </label>
+        </div>
+
+        <div class="fusszeile">
+          <button type="button" class="knopf rand" data-zurueck>Zurück</button>
+          <button type="button" class="knopf gold weit" id="absenden" disabled>
+            Beitrag einreichen
+          </button>
+        </div>
+        <div id="ergebnis"></div>
+      </section>
+
+      <div class="fusszeile" id="navZeile">
+        <button type="button" class="knopf rand" data-zurueck>Zurück</button>
+        <button type="button" class="knopf rand klein" id="jetztSichern">Zwischenspeichern</button>
+        <button type="button" class="knopf haupt weit" data-weiter>Weiter</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===================================================================
+     Der Zustand. Ein einziges Objekt — es ist zugleich das, was am Ende
+     an die Redaktion übergeben wird. Was hier nicht drinsteht, geht auch
+     nicht weg.
+     =================================================================== */
+  var LAGER = 'mvf-einreichung-entwurf';
+  var stand = laden() || {
+    rubrik:'', vorzeile:'', titel:'', vorspann:'',
+    abstractDe:'', schlagDe:'', titelEn:'', abstractEn:'', schlagEn:'',
+    literatur:'', zitation:'', danksagung:'', ausgabe:'', lizenz:'cc_by',
+    konflikte:'', erklaerung:false,
+    manuskript:[], bilder:[], tabellen:[],
+    autoren:[{name:'', mail:'', vita:'', bild:null}]
+  };
+
+  var SCHRITTE = [
+    {name:'Ihr Beitrag',        unter:'Rubrik, Überschrift, Manuskript'},
+    {name:'Zusammenfassung',    unter:'Abstract und Schlagwörter'},
+    {name:'Abbildungen',        unter:'Bilder und Tabellen'},
+    {name:'Autoren',            unter:'Wer beteiligt ist'},
+    {name:'Formales',           unter:'Literatur, Ausgabe, Lizenz'},
+    {name:'Prüfen',             unter:'und freigeben'}
+  ];
+  var MIN_BILD = 2126, MIN_PORTRAIT = 354;
+  var jetzt = 0;
+
+  var $  = function (w, k) { return (k||document).querySelector(w); };
+  var $$ = function (w, k) { return [].slice.call((k||document).querySelectorAll(w)); };
+  function esc(s){ var d=document.createElement('div'); d.textContent = s==null?'':s; return d.innerHTML; }
+
+  /* ------------------------------------------------------- Speichern */
+
+  function laden() {
+    try { var r = localStorage.getItem(LAGER); return r ? JSON.parse(r) : null; }
+    catch (e) { return null; }
+  }
+  var sicherUhr = null;
+  function sichern(sofort) {
+    clearTimeout(sicherUhr);
+    var tun = function () {
+      try { localStorage.setItem(LAGER, JSON.stringify(stand)); } catch (e) {}
+      var z = new Date();
+      $('#sicherStand').classList.remove('laeuft');
+      $('#sicherStand span:last-child').textContent = 'Zuletzt gesichert: ' +
+        z.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) + ' Uhr';
+    };
+    if (sofort) { tun(); return; }
+    $('#sicherStand').classList.add('laeuft');
+    sicherUhr = setTimeout(tun, 700);
+  }
+
+  /* ------------------------------------------------------- Schrittleiste */
+
+  function leisteBauen() {
+    var n = $('#leiste');
+    n.innerHTML = '';
+    SCHRITTE.forEach(function (s, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'schritt';
+      b.innerHTML = '<span class="nr">' + (i+1) + '</span>' +
+        '<span class="txt">' + esc(s.name) + '<small>' + esc(s.unter) + '</small></span>';
+      b.addEventListener('click', function(){ zeige(i); });
+      n.appendChild(b);
+    });
+  }
+
+  function leisteMalen() {
+    $$('#leiste .schritt').forEach(function (b, i) {
+      b.classList.remove('fertig','luecke');
+      b.removeAttribute('aria-current');
+      if (i === jetzt) { b.setAttribute('aria-current','step'); }
+      if (i < SCHRITTE.length - 1) {
+        var offen = luecken(i);
+        if (offen.length === 0) { b.classList.add('fertig'); }
+        else if (angefasst(i))  { b.classList.add('luecke'); }
+      }
+    });
+    $('#balken').style.width = Math.round((jetzt / (SCHRITTE.length - 1)) * 100) + '%';
+  }
+
+  function zeige(i) {
+    jetzt = Math.max(0, Math.min(SCHRITTE.length - 1, i));
+    $$('.blatt').forEach(function (b, k) { b.hidden = (k !== jetzt); });
+    $('#navZeile').hidden = (jetzt === SCHRITTE.length - 1);
+    if (jetzt === SCHRITTE.length - 1) { pruefenMalen(); }
+    leisteMalen();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  /* ------------------------------------------------------- Vollständigkeit */
+
+  // Was jeder Schritt braucht. Eine Regel je Zeile, damit die Prüfseite und
+  // die Schrittleiste dieselbe Wahrheit benutzen und nicht auseinanderlaufen.
+  var REGELN = [
+    {s:0, feld:'rubrik',    text:'Rubrik wählen'},
+    {s:0, feld:'titel',     text:'Überschrift eintragen (20 bis 100 Zeichen)', min:20, max:100},
+    {s:0, feld:'vorspann',  text:'Vorspann schreiben (mindestens 600 Zeichen)', min:600, max:900},
+    {s:0, liste:'manuskript', text:'Manuskript hochladen'},
+    {s:1, feld:'abstractDe', text:'Deutsches Abstract (1.000 bis 1.500 Zeichen)', min:1000, max:1500},
+    {s:1, feld:'schlagDe',  text:'Deutsche Schlüsselwörter (3 bis 6)', komma:3},
+    {s:1, feld:'titelEn',   text:'Englischer Titel', min:10, max:100},
+    {s:1, feld:'abstractEn', text:'Englisches Abstract (1.000 bis 1.500 Zeichen)', min:1000, max:1500},
+    {s:1, feld:'schlagEn',  text:'Englische Keywords (3 bis 6)', komma:3},
+    {s:3, autor:true,       text:'Haupt- und Korrespondenzautor anlegen: Name, E-Mail, Vita'},
+    {s:4, feld:'literatur', text:'Literatur', min:20},
+    {s:4, feld:'zitation',  text:'Zitation', min:20},
+    {s:4, feld:'ausgabe',   text:'Ausgabe wählen'},
+    {s:4, feld:'konflikte', text:'Interessenkonflikte und Förderung', min:10}
+  ];
+
+  function regelOffen(r) {
+    if (r.liste)  { return (stand[r.liste] || []).length === 0; }
+    if (r.autor)  {
+      var a = stand.autoren[0] || {};
+      return !(a.name && a.name.trim().length > 2 && /.+@.+\..+/.test(a.mail || '')
+               && (a.vita || '').trim().length >= 150);
+    }
+    var w = (stand[r.feld] || '').toString().trim();
+    if (!w) { return true; }
+    if (r.min && w.length < r.min) { return true; }
+    if (r.max && w.length > r.max) { return true; }
+    if (r.komma) {
+      var teile = w.split(',').map(function(t){return t.trim();}).filter(Boolean);
+      if (teile.length < r.komma) { return true; }
+    }
+    return false;
+  }
+
+  function luecken(schritt) {
+    return REGELN.filter(function (r) {
+      return (schritt === undefined || r.s === schritt) && regelOffen(r);
+    });
+  }
+
+  // Ein Schritt gilt als angefasst, sobald irgendein Feld daraus gefüllt ist.
+  // Ohne das trüge die Leiste vom ersten Blick an lauter Warnzeichen, und
+  // Warnzeichen, die immer da sind, liest niemand mehr.
+  function angefasst(schritt) {
+    return REGELN.some(function (r) {
+      if (r.s !== schritt) { return false; }
+      if (r.liste) { return (stand[r.liste] || []).length > 0; }
+      if (r.autor) { var a = stand.autoren[0] || {}; return !!(a.name || a.mail || a.vita); }
+      return !!(stand[r.feld] || '').toString().trim();
+    });
+  }
+
+  /* ------------------------------------------------------- Felder binden */
+
+  function felderBinden() {
+    $$('[data-feld]').forEach(function (el) {
+      var name = el.dataset.feld;
+      if (el.type === 'radio') {
+        el.checked = (stand[name] === el.value);
+        el.addEventListener('change', function () {
+          if (el.checked) { stand[name] = el.value; sichern(); }
+        });
+        return;
+      }
+      if (el.type === 'checkbox') {
+        el.checked = !!stand[name];
+        el.addEventListener('change', function () {
+          stand[name] = el.checked; sichern();
+          if (jetzt === SCHRITTE.length - 1) { absendbar(); }
+        });
+        return;
+      }
+      el.value = stand[name] || '';
+      el.addEventListener('input', function () {
+        stand[name] = el.value;
+        zaehlerMalen(name);
+        sichern();
+        leisteMalen();
+      });
+      el.addEventListener('change', function () { leisteMalen(); });
+      zaehlerMalen(name);
+    });
+
+    $('#rubrik').addEventListener('change', function () {
+      var t = {
+        wissenschaft:'Originalarbeit — geht ins Peer Review, rechnen Sie mit sechs Wochen.',
+        wissen:'Gesichertes Fachwissen, aufbereitet.',
+        wissenstransfer:'Der Weg von der Erkenntnis in die Praxis.',
+        report:'Bericht von Kongress oder Veranstaltung.',
+        interview:'Gespräch, redigiert und autorisiert.',
+        kommentar:'Standpunkt, gezeichnet.',
+        serie:'Teil einer laufenden Reihe.'
+      }[this.value];
+      $('#rubrikWink').textContent = t ||
+        'Die Rubrik bestimmt, wie Ihr Beitrag gesetzt und begutachtet wird.';
+    });
+  }
+
+  // Der Zaehler ist eine Anweisung, keine Beobachtung: "noch 640 Zeichen"
+  // sagt dem Autor, was zu tun ist. "260 Zeichen" sagt ihm nur, wo er steht.
+  function zaehlerMalen(name) {
+    var z = document.querySelector('[data-zaehlt="' + name + '"]');
+    if (!z) { return; }
+    var el = document.querySelector('[data-feld="' + name + '"]');
+    if (!el) { return; }
+    var wert = (stand[name] || '').toString();
+    var n = wert.length;
+    var min  = parseInt(el.dataset.min  || '0', 10);
+    var max  = parseInt(el.dataset.max  || '0', 10);
+    var kmin = parseInt(el.dataset.komma || '0', 10);
+    var kmax = parseInt(el.dataset.kommamax || '0', 10);
+
+    z.classList.remove('knapp','gut','zuviel');
+
+    if (kmin) {
+      var teile = wert.split(',').map(function(t){return t.trim();}).filter(Boolean);
+      if (teile.length === 0) { z.textContent = kmin + ' bis ' + kmax + ' Begriffe'; return; }
+      if (teile.length < kmin) {
+        z.textContent = 'noch ' + (kmin - teile.length) + ' Begriff' +
+          ((kmin - teile.length) === 1 ? '' : 'e') + ' nötig';
+        z.classList.add('knapp'); return;
+      }
+      if (kmax && teile.length > kmax) {
+        z.textContent = teile.length + ' Begriffe — ' + (teile.length - kmax) + ' zu viel';
+        z.classList.add('zuviel'); return;
+      }
+      z.textContent = teile.length + ' Begriffe'; z.classList.add('gut'); return;
+    }
+
+    if (n === 0) {
+      z.textContent = max ? ('höchstens ' + max.toLocaleString('de-DE') + ' Zeichen')
+                          : (min ? ('mindestens ' + min.toLocaleString('de-DE') + ' Zeichen') : '');
+      return;
+    }
+    if (min && n < min) {
+      z.textContent = 'noch ' + (min - n).toLocaleString('de-DE') + ' Zeichen bis zum Mindestmaß';
+      z.classList.add('knapp'); return;
+    }
+    if (max && n > max) {
+      z.textContent = (n - max).toLocaleString('de-DE') + ' Zeichen zu viel';
+      z.classList.add('zuviel'); return;
+    }
+    if (max) {
+      z.textContent = 'noch ' + (max - n).toLocaleString('de-DE') + ' Zeichen frei';
+      z.classList.add('gut'); return;
+    }
+    z.textContent = n.toLocaleString('de-DE') + ' Zeichen';
+    z.classList.add('gut');
+  }
+
+  /* ------------------------------------------------------- Dateien */
+
+  var DATEIWAHL = {};   // je Art ein verstecktes Dateifeld
+
+  function ablagenBinden() {
+    $$('[data-ablage]').forEach(function (a) {
+      var art = a.dataset.ablage;
+      var wahl = document.createElement('input');
+      wahl.type = 'file';
+      wahl.hidden = true;
+      wahl.accept = art === 'bild' ? '.jpg,.jpeg,.png'
+                  : art === 'tabelle' ? '.doc,.docx,.xls,.xlsx,.csv'
+                  : '.doc,.docx,.rtf';
+      if (art !== 'manuskript') { wahl.multiple = true; }
+      a.parentNode.appendChild(wahl);
+      DATEIWAHL[art] = wahl;
+
+      a.addEventListener('click', function(){ wahl.click(); });
+      a.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); wahl.click(); }
+      });
+      ['dragenter','dragover'].forEach(function (n) {
+        a.addEventListener(n, function (e) { e.preventDefault(); a.classList.add('drueber'); });
+      });
+      ['dragleave','drop'].forEach(function (n) {
+        a.addEventListener(n, function (e) { e.preventDefault(); a.classList.remove('drueber'); });
+      });
+      a.addEventListener('drop', function (e) { annehmen(art, e.dataTransfer.files); });
+      wahl.addEventListener('change', function () { annehmen(art, this.files); wahl.value=''; });
+    });
+  }
+
+  function annehmen(art, dateien) {
+    [].slice.call(dateien).forEach(function (d) {
+      if (art === 'bild') { bildPruefen(d); return; }
+      var ziel = art === 'manuskript' ? 'manuskript' : 'tabellen';
+      if (art === 'manuskript') { stand.manuskript = []; }
+      stand[ziel].push({name:d.name, groesse:d.size, unterschrift:''});
+      dateienMalen(); sichern(); leisteMalen();
+    });
+  }
+
+  // Die Breitenprüfung findet hier statt, im Browser, bevor irgendetwas
+  // hochgeladen wird. Das erspart dem Autor eine Wartezeit für eine Datei,
+  // die ohnehin abgewiesen würde.
+  function bildPruefen(datei) {
+    var url = URL.createObjectURL(datei);
+    var bild = new Image();
+    bild.onload = function () {
+      stand.bilder.push({
+        name: datei.name, groesse: datei.size,
+        breite: bild.naturalWidth, hoehe: bild.naturalHeight,
+        zuKlein: bild.naturalWidth < MIN_BILD, unterschrift: ''
+      });
+      URL.revokeObjectURL(url);
+      dateienMalen(); sichern(); leisteMalen();
+    };
+    bild.onerror = function () {
+      URL.revokeObjectURL(url);
+      stand.bilder.push({name:datei.name, groesse:datei.size, kaputt:true, unterschrift:''});
+      dateienMalen();
+    };
+    bild.src = url;
+  }
+
+  // Die Unterschrift bekommt eine eigene, sichtbare Beschriftung - nicht nur
+  // einen Platzhaltertext im Feld. Platzhalter verschwinden beim Hineinklicken
+  // und werden von vielen gar nicht als Aufforderung gelesen.
+  function dateienMalen() {
+    // ---- Manuskript ----
+    $('#manuskriptListe').innerHTML = stand.manuskript.length
+      ? stand.manuskript.map(function (d, i) {
+          return '<div class="stueck"><div class="stueck-kopf">' +
+            '<span class="marke-pill ok">Manuskript</span>' +
+            '<span class="dateiname">' + esc(d.name) + '</span>' +
+            '<button type="button" class="weg" data-weg="manuskript" data-i="' + i + '" ' +
+            'aria-label="Entfernen">&times;</button></div></div>';
+        }).join('')
+      : '<p class="leerstand">Noch keine Datei. Laden Sie Ihr Manuskript oben hoch.</p>';
+
+    // ---- Abbildungen ----
+    $('#bildListe').innerHTML = stand.bilder.length
+      ? stand.bilder.map(function (d, i) {
+          var pill = d.kaputt ? '<span class="marke-pill warn">nicht lesbar</span>'
+            : d.zuKlein ? '<span class="marke-pill warn">' + d.breite + ' px — zu schmal</span>'
+            : '<span class="marke-pill ok">' + d.breite + ' × ' + d.hoehe + ' px</span>';
+          var warn = d.zuKlein ? '<p class="wink" style="color:var(--warn)">Gebraucht werden ' +
+            MIN_BILD.toLocaleString('de-DE') + ' Pixel Breite. Bitte die Fassung in ' +
+            'Originalgröße hochladen — ein vergrößertes Bild wird dadurch nicht schärfer.</p>' : '';
+          var fehlt = !d.unterschrift.trim();
+          return '<div class="stueck"><div class="stueck-kopf">' +
+            '<span class="marke-pill">Abbildung ' + (i+1) + '</span>' + pill +
+            '<span class="dateiname">' + esc(d.name) + '</span>' +
+            '<button type="button" class="weg" data-weg="bilder" data-i="' + i + '" ' +
+            'aria-label="Entfernen">&times;</button></div>' +
+            '<label class="unter-label" for="bu' + i + '">Bildunterschrift zu Abbildung ' +
+            (i+1) + ' <span class="pflicht">*</span></label>' +
+            '<p class="anleitung" style="margin-bottom:6px">Tragen Sie hier bitte ein, ' +
+            '<b>was zu sehen ist</b> und <b>woher die Daten stammen</b>. Keine Wiederholung ' +
+            'der Überschrift. Stammt die Abbildung aus einer anderen Veröffentlichung, ' +
+            'vermerken Sie das bitte hier.</p>' +
+            '<input type="text" id="bu' + i + '" data-unterschrift="bilder" data-i="' + i + '" ' +
+            (fehlt ? 'class="fehlt-noch" ' : '') +
+            'placeholder="Abb. 1: Vergleich der Ersteinschätzungsinstrumente in sieben Ländern. Eigene Darstellung." ' +
+            'value="' + esc(d.unterschrift) + '">' + warn + '</div>';
+        }).join('')
+      : '<p class="leerstand">Noch keine Abbildung. Sobald Sie eine hochladen, erscheint ' +
+        'hier ein Feld für ihre <b>Bildunterschrift</b>.</p>';
+
+    // ---- Tabellen ----
+    $('#tabelleListe').innerHTML = stand.tabellen.length
+      ? stand.tabellen.map(function (d, i) {
+          var fehlt = !d.unterschrift.trim();
+          return '<div class="stueck"><div class="stueck-kopf">' +
+            '<span class="marke-pill">Tabelle ' + (i+1) + '</span>' +
+            '<span class="dateiname">' + esc(d.name) + '</span>' +
+            '<button type="button" class="weg" data-weg="tabellen" data-i="' + i + '" ' +
+            'aria-label="Entfernen">&times;</button></div>' +
+            '<label class="unter-label" for="tu' + i + '">Tabellenunterschrift zu Tabelle ' +
+            (i+1) + ' <span class="pflicht">*</span></label>' +
+            '<p class="anleitung" style="margin-bottom:6px">Tragen Sie hier bitte ein, ' +
+            '<b>was die Tabelle zeigt</b> und <b>woher die Daten stammen</b>.</p>' +
+            '<input type="text" id="tu' + i + '" data-unterschrift="tabellen" data-i="' + i + '" ' +
+            (fehlt ? 'class="fehlt-noch" ' : '') +
+            'placeholder="Tab. 1: Kennzahlen der sieben Länder im Überblick. Quelle: eigene Recherche." ' +
+            'value="' + esc(d.unterschrift) + '"></div>';
+        }).join('')
+      : '<p class="leerstand">Noch keine Tabelle. Sobald Sie eine hochladen, erscheint ' +
+        'hier ein Feld für ihre <b>Tabellenunterschrift</b>.</p>';
+  }
+
+  document.addEventListener('click', function (e) {
+    var w = e.target.closest('[data-weg]');
+    if (!w) { return; }
+    stand[w.dataset.weg].splice(parseInt(w.dataset.i, 10), 1);
+    dateienMalen(); sichern(); leisteMalen();
+  });
+  document.addEventListener('click', function (e) {
+    var m = e.target.closest('[data-mehr]');
+    if (m && DATEIWAHL[m.dataset.mehr]) { DATEIWAHL[m.dataset.mehr].click(); }
+  });
+
+  document.addEventListener('input', function (e) {
+    var u = e.target.closest('[data-unterschrift]');
+    if (!u) { return; }
+    stand[u.dataset.unterschrift][parseInt(u.dataset.i,10)].unterschrift = u.value;
+    u.classList.toggle('fehlt-noch', !u.value.trim());
+    sichern();
+  });
+
+  /* ------------------------------------------------------- Autoren */
+
+  function autorenMalen() {
+    document.querySelector('#autorListe').innerHTML = stand.autoren.map(function (a, i) {
+      var haupt = (i === 0);
+      var kopf = haupt
+        ? '<span class="marke-pill ok">Haupt- und Korrespondenzautor</span>'
+        : '<span class="marke-pill">Mitautor ' + (i+1) + '</span>';
+      var weg = haupt ? '' :
+        '<button type="button" class="weg" data-autorweg="' + i + '" aria-label="Entfernen">&times;</button>';
+      var stern = haupt ? ' <span class="pflicht">*</span>' : '';
+
+      var anleitung = haupt
+        ? '<p class="anleitung">Hier legen Sie sich selbst als <b>Haupt- und ' +
+          'Korrespondenzautor</b> an. An diese Adresse schreibt die Redaktion bei ' +
+          'Rückfragen, und unter diesem Namen steht Ihr Beitrag an erster Stelle.</p>'
+        : '<p class="anleitung">Tragen Sie hier bitte den nächsten Mitautor ein, in der ' +
+          'Reihenfolge, in der er im Heft stehen soll. Name genügt; E-Mail und Vita kann ' +
+          'die Redaktion später nachfordern.</p>';
+
+      return '<div class="stueck"><div class="stueck-kopf">' + kopf + weg + '</div>' +
+        anleitung +
+        '<div class="reihe zwei" style="margin-bottom:11px">' +
+        '<div><label style="font-size:13px;font-weight:700">Name mit akademischem Titel' + stern +
+        '</label><input type="text" data-autor="name" data-i="' + i + '" ' +
+        'placeholder="Prof. Dr. med. Vorname Nachname" value="' + esc(a.name) + '"></div>' +
+        '<div><label style="font-size:13px;font-weight:700">E-Mail-Adresse' + stern +
+        '</label><input type="email" data-autor="mail" data-i="' + i + '" ' +
+        'placeholder="name@einrichtung.de" value="' + esc(a.mail) + '"></div>' +
+        '</div>' +
+        '<label style="font-size:13px;font-weight:700">Kurze Vita' + stern +
+        '<span class="zeichenzahl" data-vitazahl="' + i + '"></span></label>' +
+        '<textarea rows="3" data-autor="vita" data-i="' + i + '" ' +
+        'placeholder="Zwei bis vier Sätze: Funktion, Einrichtung, Arbeitsschwerpunkt.">' +
+        esc(a.vita) + '</textarea>' +
+        (haupt ? '<p class="wink">Mindestens 150 Zeichen — sie erscheint neben Ihrem ' +
+                 'Beitrag im Heft.</p>' : '') +
+        '</div>';
+    }).join('');
+    vitaZaehler();
+  }
+
+  function vitaZaehler() {
+    stand.autoren.forEach(function (a, i) {
+      var z = document.querySelector('[data-vitazahl="' + i + '"]');
+      if (!z) { return; }
+      var n = (a.vita || '').length;
+      z.classList.remove('knapp','gut');
+      if (n === 0) { z.textContent = i === 0 ? 'mindestens 150 Zeichen' : ''; return; }
+      if (i === 0 && n < 150) {
+        z.textContent = 'noch ' + (150 - n) + ' Zeichen'; z.classList.add('knapp'); return;
+      }
+      z.textContent = n + ' Zeichen'; z.classList.add('gut');
+    });
+  }
+
+  document.addEventListener('input', function (e) {
+    var f = e.target.closest('[data-autor]');
+    if (!f) { return; }
+    stand.autoren[parseInt(f.dataset.i,10)][f.dataset.autor] = f.value;
+    if (f.dataset.autor === 'vita') { vitaZaehler(); }
+    sichern(); leisteMalen();
+  });
+  document.addEventListener('click', function (e) {
+    var w = e.target.closest('[data-autorweg]');
+    if (!w) { return; }
+    stand.autoren.splice(parseInt(w.dataset.autorweg,10), 1);
+    autorenMalen(); sichern(); leisteMalen();
+  });
+
+  /* ------------------------------------------------------- Prüfen */
+
+  function pruefenMalen() {
+    var offen = luecken();
+    var hinweise = [];
+    stand.bilder.forEach(function (b) {
+      if (b.zuKlein) { hinweise.push('Abbildung „' + b.name + '“ ist zu schmal für den Druck.'); }
+      if (!b.unterschrift.trim()) { hinweise.push('Abbildung „' + b.name + '“ hat keine Unterschrift.'); }
+    });
+    stand.tabellen.forEach(function (t) {
+      if (!t.unterschrift.trim()) { hinweise.push('Tabelle „' + t.name + '“ hat keine Unterschrift.'); }
+    });
+
+    var zeilen = [];
+    if (offen.length === 0 && hinweise.length === 0) {
+      zeilen.push('<li class="fertig"><span class="zeichen">✓</span>' +
+        '<span>Alles beisammen. Ihr Beitrag kann eingereicht werden.</span></li>');
+    }
+    offen.forEach(function (r) {
+      zeilen.push('<li class="fehlt"><span class="zeichen">!</span><span>' + esc(r.text) +
+        '</span><button type="button" class="springen" data-spring="' + r.s + '">' +
+        'zu Schritt ' + (r.s + 1) + '</button></li>');
+    });
+    hinweise.forEach(function (h) {
+      zeilen.push('<li class="hinweis"><span class="zeichen">·</span><span>' + esc(h) +
+        '</span><button type="button" class="springen" data-spring="2">zu Schritt 3</button></li>');
+    });
+    $('#pruefListe').innerHTML = zeilen.join('');
+
+    $('#uebersicht').innerHTML = uebersicht();
+    absendbar();
+  }
+
+  document.addEventListener('click', function (e) {
+    var s = e.target.closest('[data-spring]');
+    if (s) { zeige(parseInt(s.dataset.spring, 10)); }
+  });
+
+  function zeile(k, w) {
+    return '<dt>' + esc(k) + '</dt><dd>' +
+      (w ? esc(w) : '<span class="leer">— nicht angegeben —</span>') + '</dd>';
+  }
+
+  function uebersicht() {
+    var rub = $('#rubrik').options[$('#rubrik').selectedIndex];
+    var t = '<div class="uebersicht"><h3>Der Beitrag</h3><dl>' +
+      zeile('Rubrik', stand.rubrik ? rub.text : '') +
+      zeile('Vorzeile', stand.vorzeile) +
+      zeile('Überschrift', stand.titel) +
+      zeile('Vorspann', stand.vorspann ? stand.vorspann.length.toLocaleString('de-DE') + ' Zeichen' : '') +
+      zeile('Manuskript', stand.manuskript.map(function(d){return d.name;}).join(', ')) +
+      '</dl></div>';
+
+    t += '<div class="uebersicht"><h3>Zusammenfassung</h3><dl>' +
+      zeile('Abstract deutsch', stand.abstractDe ? stand.abstractDe.length.toLocaleString('de-DE') + ' Zeichen' : '') +
+      zeile('Schlüsselwörter', stand.schlagDe) +
+      zeile('Titel englisch', stand.titelEn) +
+      zeile('Abstract englisch', stand.abstractEn ? stand.abstractEn.length.toLocaleString('de-DE') + ' Zeichen' : '') +
+      zeile('Keywords', stand.schlagEn) +
+      '</dl></div>';
+
+    t += '<div class="uebersicht"><h3>Material</h3><dl>' +
+      zeile('Abbildungen', stand.bilder.length ? stand.bilder.map(function(b){
+        return b.name + (b.breite ? ' (' + b.breite + ' px)' : '');
+      }).join(', ') : '') +
+      zeile('Tabellen', stand.tabellen.map(function(d){return d.name;}).join(', ')) +
+      '</dl></div>';
+
+    t += '<div class="uebersicht"><h3>Autoren</h3><dl>' +
+      stand.autoren.map(function (a, i) {
+        return zeile(i === 0 ? 'Korrespondenzautor' : 'Autor ' + (i+1),
+          a.name ? a.name + (a.mail ? ' · ' + a.mail : '') : '');
+      }).join('') + '</dl></div>';
+
+    t += '<div class="uebersicht"><h3>Formales</h3><dl>' +
+      zeile('Literatur', stand.literatur ? stand.literatur.split(/\n/).filter(Boolean).length + ' Einträge' : '') +
+      zeile('Zitation', stand.zitation) +
+      zeile('Danksagung', stand.danksagung) +
+      zeile('Ausgabe', stand.ausgabe) +
+      zeile('Lizenz', stand.lizenz === 'cc_by' ? 'CC BY 4.0' : 'CC BY-NC-ND 4.0') +
+      zeile('Interessenkonflikte', stand.konflikte) +
+      '</dl></div>';
+    return t;
+  }
+
+  function absendbar() {
+    var frei = (luecken().length === 0) && !!stand.erklaerung;
+    $('#absenden').disabled = !frei;
+  }
+
+  /* ------------------------------------------------------- Übergabe */
+
+  $('#absenden').addEventListener('click', function () {
+    // Genau dieses Paket geht später an den Server, der es an WordPress
+    // weiterreicht. In der Vorschau wird es nur angezeigt.
+    var paket = {
+      rubrik: stand.rubrik, vorzeile: stand.vorzeile,
+      titel: stand.titel, vorspann: stand.vorspann,
+      abstract_de: stand.abstractDe, abstract_titel_en: stand.titelEn,
+      abstract_en: stand.abstractEn,
+      tag_de: stand.schlagDe, tag_en: stand.schlagEn,
+      literatur: stand.literatur, zitation: stand.zitation,
+      danksagung: stand.danksagung, ausgabe: stand.ausgabe, lizenz: stand.lizenz,
+      interessenkonflikte: stand.konflikte,
+      erklaerung_bestaetigt: true, erklaerung_fassung: '2026-09-04',
+      autoren: stand.autoren, manuskript: stand.manuskript,
+      abbildungen: stand.bilder, tabellen: stand.tabellen
+    };
+    $('#ergebnis').innerHTML =
+      '<div class="kasten gut" style="margin-top:22px">' +
+      '<p><b>So weit, so gut.</b> In der fertigen Fassung ginge Ihr Beitrag jetzt an die ' +
+      'MVF-Redaktion, und Sie bekämen eine Bestätigung per E-Mail mit Titel, Datum und ' +
+      'Uhrzeit.</p><p>Was übergeben würde:</p></div>' +
+      '<pre style="background:var(--card-2);border:1px solid var(--line);border-radius:6px;' +
+      'padding:14px;overflow:auto;font-size:12px;line-height:1.5;max-height:340px">' +
+      esc(JSON.stringify(paket, null, 2)) + '</pre>';
+    $('#ergebnis').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  /* ------------------------------------------------------- Aufbau */
+
+  $$('[data-weiter]').forEach(function(b){ b.addEventListener('click', function(){ zeige(jetzt+1); }); });
+  $$('[data-zurueck]').forEach(function(b){ b.addEventListener('click', function(){ zeige(jetzt-1); }); });
+  $('#jetztSichern').addEventListener('click', function(){ sichern(true); });
+  $('#autorNeu').addEventListener('click', function () {
+    if (stand.autoren.length >= 10) { return; }
+    stand.autoren.push({name:'', mail:'', vita:'', bild:null});
+    autorenMalen(); sichern();
+  });
+
+  leisteBauen();
+  felderBinden();
+  ablagenBinden();
+  dateienMalen();
+  autorenMalen();
+  zeige(0);
+  if (localStorage.getItem(LAGER)) { sichern(true); }
+
+})();
+</script>
+</body>
+</html>
