@@ -104,7 +104,22 @@ header.top{background:var(--card);border-bottom:1px solid var(--line)}
 /* ------------------------------------------------------- Schrittleiste */
 .leiste{position:sticky;top:18px;background:var(--card);border:1px solid var(--line);
   border-radius:8px;padding:8px;box-shadow:var(--schatten)}
-@media (max-width:979px){.leiste{position:static;display:flex;overflow-x:auto;gap:6px;padding:8px}}
+/* Unter 980px wird aus der Spalte eine waagerechte Leiste. Wichtig dabei:
+   .schritt traegt oben width:100% - in einer Flex-Zeile nimmt damit JEDER
+   Knopf die volle Breite, man sieht nur den ersten und der Rest liegt
+   ausserhalb. Auf dem iPad im Hochformat (768px) sah das aus, als fehle die
+   linke Spalte ganz. Deshalb hier width:auto und flex:0 0 auto. */
+@media (max-width:979px){
+  .leiste{
+    position:sticky;top:0;z-index:5;
+    display:flex;overflow-x:auto;gap:6px;padding:8px;
+    border-radius:0 0 8px 8px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .leiste .schritt{width:auto;flex:0 0 auto;padding:9px 12px}
+  .leiste .schritt .txt{font-size:14px}
+}
 .schritt{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;
   background:transparent;border:0;border-radius:6px;padding:10px 11px;cursor:pointer;
   font:inherit;color:var(--ink-soft);white-space:nowrap}
