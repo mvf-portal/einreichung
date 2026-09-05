@@ -805,7 +805,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
       <div class="fusszeile" id="navZeile">
         <button type="button" class="knopf rand" data-zurueck>Zurück</button>
-        <button type="button" class="knopf rand klein" id="jetztSichern">Zwischenspeichern</button>
+        <button type="button" class="knopf rand klein" id="jetztSichern">Im Browser sichern</button>
         <button type="button" class="knopf haupt weit" data-weiter>Weiter</button>
       </div>
 
@@ -815,9 +815,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         verloren, wenn Sie das Gerät wechseln, ein privates Fenster benutzen oder die
         Browserdaten löschen; auf iPhone und iPad räumt Safari solche Daten zudem nach sieben
         Tagen ohne Besuch von selbst weg. <b>Legen Sie deshalb von Zeit zu Zeit einen Stand
-        als Datei ab</b> — damit können Sie auch an einem anderen Gerät weiterarbeiten.</p>
+        als Datei ab.</b> Der Knopf <b>„Zwischenstand speichern“</b> erzeugt sie. Wohin sie
+        kommt, bestimmt Ihr Browser: in den Ordner, in dem er Downloads ablegt — meist
+        <b>Downloads</b>. Wo genau, steht in seinen Einstellungen; manche Browser fragen
+        bei jedem Mal nach. Von dort können Sie die Datei mitnehmen und an einem anderen
+        Gerät weiterarbeiten, sofern Sie dort Zugriff darauf haben.</p>
         <div class="knopfzeile">
-          <button type="button" class="knopf rand klein" id="standSichern">Zwischenstand sichern</button>
+          <button type="button" class="knopf rand klein" id="standSichern">Zwischenstand speichern</button>
           <button type="button" class="knopf rand klein" id="standLaden">Gesicherten Stand laden</button>
           <span id="sicherungMeldung" class="sicherung-meldung" role="status"></span>
         </div>
@@ -1612,7 +1616,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       a.click();
       a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-      meldung('Gesichert als ' + a.download);
+      meldung('Gespeichert als ' + a.download + ' — dort, wo Ihr Browser Downloads ablegt.');
     } catch (e) {
       meldung('Das Sichern hat nicht geklappt. Bitte prüfen, ob der Browser Downloads '
             + 'zulässt.', true);
