@@ -672,6 +672,38 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <p class="wink" id="ausgabeWink"></p>
         </div>
 
+        <div class="kasten acht" style="max-width:none">
+          <p><b>Ist Ihr Thema zeitkritisch?</b> Manche Themen hängen an einem engen Zeitpunkt —
+          meist, weil eine politische Entscheidung ansteht oder eben gefallen ist. Für solche
+          Fälle können Sie beim Herausgeber eine <b>eFirst-Veröffentlichung</b> beantragen:
+          Ihr Beitrag erscheint dann online, bevor das Heft gedruckt ist.</p>
+          <p>Für Mitglieder des
+          <a href="https://www.monitor-versorgungsforschung.de/internals/verlag-medium/beirat/" target="_blank" rel="noopener">MVF-Beirats</a> ist das
+          kostenfrei. Für alle anderen kostet eine eFirst-Veröffentlichung derzeit
+          <b>1.500 Euro</b> (Stand 2026).</p>
+          <p>Über die Aufnahme entscheidet der Herausgeber. <b>Mit dem Antrag entstehen Ihnen
+          noch keine Kosten</b> — die Redaktion meldet sich bei Ihnen.</p>
+        </div>
+
+        <div class="gruppe" style="max-width:none">
+          <span class="beschriftung">eFirst-Veröffentlichung beantragen?</span>
+          <div class="wahl zwei">
+            <label>
+              <input type="radio" name="efirst" value="nein" data-feld="efirst" checked>
+              <span class="w-name">Nein</span>
+              <span class="w-text">Ihr Beitrag erscheint mit der gewählten Ausgabe. Das ist die
+              Grundeinstellung.</span>
+            </label>
+            <label>
+              <input type="radio" name="efirst" value="ja" data-feld="efirst">
+              <span class="w-name">Ja, eFirst beantragen</span>
+              <span class="w-text">Der Antrag geht an Herausgeber und Chefredaktion. Für
+              Nicht-Beiratsmitglieder kostenpflichtig: derzeit 1.500 Euro.</span>
+            </label>
+          </div>
+          <p class="wink" id="efirstWink"></p>
+        </div>
+
         <div class="gruppe" style="max-width:none">
           <span class="beschriftung">Lizenz <span class="pflicht">*</span></span>
           <p class="anleitung">Entscheiden Sie hier bitte, <b>was andere mit Ihrem Beitrag
@@ -807,10 +839,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     rubrik:'', vorzeile:'', titel:'', vorspann:'',
     abstractDe:'', schlagDe:'', titelEn:'', abstractEn:'', schlagEn:'',
     literatur:'', zitation:'', danksagung:'', ausgabe:'', lizenz:'cc_by',
-    konflikte:'', erklaerung:false,
+    konflikte:'', erklaerung:false, efirst:'nein',
     manuskript:[], bilder:[], tabellen:[],
     autoren:[{name:'', mail:'', vita:'', bild:null}]
   };
+
+  // Ein Stand aus einer frueheren Fassung kennt das eFirst-Feld noch nicht.
+  if (stand.efirst !== 'ja') { stand.efirst = 'nein'; }
 
   var SCHRITTE = [
     {name:'Ihr Beitrag',        unter:'Rubrik, Überschrift, Manuskript'},
@@ -823,17 +858,49 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   var MIN_BILD = 2126, MIN_PORTRAIT = 354;
 
   /* ---------------------------------------------------------- Ausgaben ---
-     Erscheinungstermine. VORLAeUFIG: Diese Liste steht hier, damit die
-     Vorlauffrist ueberhaupt gerechnet werden kann. Sobald die Seite am
-     Endpunkt haengt, kommt sie von dort (Einstellung "Erscheinungstermine").
-     Wer die Termine aendert, aendert nur diesen Block.                    */
-  var ERSCHEINT = {
-    'MVF 06/26': '2026-10-15',
-    'MVF 01/27': '2026-12-15',
-    'MVF 02/27': '2027-02-15',
-    'MVF 03/27': '2027-04-15',
-    'MVF 04/27': '2027-06-15'
+     Erscheinungstermine werden gerechnet, nicht gepflegt.
+
+     Die Mediadaten nennen als Regel: zweimonatlich, "in der Regel am ersten
+     Montag des Monats". Heft 1 erscheint im Februar, dann alle zwei Monate.
+     Fuer 2026 stimmen damit alle sechs veroeffentlichten Termine exakt
+     ueberein - 02.02., 06.04., 01.06., 03.08., 05.10., 07.12.
+
+     Eine Tabelle veraltet, eine Regel nicht: So stehen auch 2028 die
+     richtigen Hefte zur Wahl, ohne dass jemand daran gedacht haben muss.
+     Weicht ein Heft doch einmal ab ("in der Regel"), traegt man es unten in
+     AUSNAHMEN ein - das schlaegt die Regel.
+     Quelle: monitor-versorgungsforschung.de/internals/mediadaten/          */
+
+  var AUSNAHMEN = {
+    // 'MVF 03/27': '2027-06-14'
   };
+
+  /** Der erste Montag eines Monats. Monat 1-12. */
+  function ersterMontag(jahr, monat) {
+    var d = new Date(jahr, monat - 1, 1);
+    d.setDate(1 + ((8 - d.getDay()) % 7));   // getDay: So=0, Mo=1
+    return d;
+  }
+
+  /** 'MVF 05/26' -> Date, oder null. */
+  function erscheintAm(heft) {
+    if (AUSNAHMEN[heft]) { return new Date(AUSNAHMEN[heft]); }
+    var m = /^MVF (0[1-6])\/(\d{2})$/.exec(heft);
+    if (!m) { return null; }
+    return ersterMontag(2000 + parseInt(m[2], 10), 2 * parseInt(m[1], 10));
+  }
+
+  /** Die naechsten Hefte ab heute - unabhaengig vom Jahreswechsel. */
+  function kommendeAusgaben(anzahl) {
+    var heute = new Date(), liste = [], jahr = heute.getFullYear();
+    for (var j = jahr; j <= jahr + 3 && liste.length < anzahl; j++) {
+      for (var h = 1; h <= 6 && liste.length < anzahl; h++) {
+        var heft = 'MVF ' + (h < 10 ? '0' : '') + h + '/' + String(j).slice(-2);
+        if (erscheintAm(heft) > heute) { liste.push(heft); }
+      }
+    }
+    return liste;
+  }
 
   /* Wieviel Vorlauf welche Rubrik braucht, in Wochen. Sechs fuer das Peer
      Review, vier fuer alles andere - Satz, Korrektur und Druck brauchen die
@@ -850,7 +917,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   }
 
   function ausgabeMoeglich(heft) {
-    var d = ERSCHEINT[heft];
+    var d = erscheintAm(heft);
     return !d || wochenBis(d) >= vorlaufWochen();
   }
   var jetzt = 0;
@@ -1032,6 +1099,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       ausgabenMalen();
       leisteMalen();
     });
+
+    $$('input[name="efirst"]').forEach(function (e) {
+      e.addEventListener('change', efirstWink);
+    });
+    efirstWink();
   }
 
   // Der Zaehler ist eine Anweisung, keine Beobachtung: "noch 640 Zeichen"
@@ -1041,6 +1113,22 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
    * gesperrt und mit Begruendung gezeigt - sonst waere unklar, warum das
    * gewuenschte Heft fehlt, und der Autor suchte den Fehler bei sich.
    */
+  /**
+   * Sagt beim Ankreuzen, was der Antrag ausloest. Wer 1.500 Euro liest, will
+   * wissen, wann sie faellig werden - und an wen die Sache geht.
+   */
+  function efirstWink() {
+    var w = $('#efirstWink');
+    if (!w) { return; }
+    if (stand.efirst === 'ja') {
+      w.innerHTML = 'Mit dem Einreichen geht Ihr Antrag an <b>roski@m-vf.de</b> '
+        + '(Herausgeber) und <b>stegmaier@m-vf.de</b> (Chefredaktion). '
+        + 'Die Redaktion meldet sich bei Ihnen, bevor Kosten entstehen.';
+    } else {
+      w.textContent = '';
+    }
+  }
+
   function ausgabenMalen() {
     var s = $('#ausgabe');
     if (!s) { return; }
@@ -1048,11 +1136,16 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var peer = PEER_RUBRIKEN.indexOf(stand.rubrik) > -1;
 
     s.innerHTML = '<option value="">Bitte wählen</option>';
-    Object.keys(ERSCHEINT).forEach(function (heft) {
+    kommendeAusgaben(8).forEach(function (heft) {
       var frei = ausgabeMoeglich(heft);
+      var d = erscheintAm(heft);
       var o = document.createElement('option');
       o.value = heft;
-      o.textContent = heft + (frei ? '' : ' — Vorlauf zu kurz');
+      // Das Datum steht mit dabei: "MVF 01/27" allein sagt niemandem, wie
+      // viel Zeit noch bleibt.
+      o.textContent = heft + ' — erscheint am '
+        + d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', year:'numeric'})
+        + (frei ? '' : ' — Vorlauf zu kurz');
       o.disabled = !frei;
       s.appendChild(o);
     });
@@ -1425,6 +1518,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       zeile('Zitation', stand.zitation) +
       zeile('Danksagung', stand.danksagung) +
       zeile('Ausgabe', stand.ausgabe) +
+      zeile('eFirst beantragt', stand.efirst === 'ja'
+        ? 'Ja — Antrag geht an Herausgeber und Chefredaktion' : 'Nein') +
       zeile('Lizenz', stand.lizenz === 'cc_by' ? 'CC BY 4.0' : 'CC BY-NC-ND 4.0') +
       zeile('Interessenkonflikte', stand.konflikte) +
       '</dl></div>';
@@ -1450,6 +1545,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       literatur: stand.literatur, zitation: stand.zitation,
       danksagung: stand.danksagung, ausgabe: stand.ausgabe, lizenz: stand.lizenz,
       interessenkonflikte: stand.konflikte,
+      efirst_beantragt: stand.efirst === 'ja',
       erklaerung_bestaetigt: true, erklaerung_fassung: '2026-09-04',
       autoren: stand.autoren, manuskript: stand.manuskript,
       abbildungen: stand.bilder, tabellen: stand.tabellen
@@ -1576,6 +1672,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     });
     felderFuellen();
     ausgabenMalen();
+    efirstWink();
     dateienMalen();
     autorenMalen();
     sichern(true);
