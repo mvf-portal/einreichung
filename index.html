@@ -455,6 +455,15 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <b>Word-Datei</b> hoch — <span class="mass">.docx, .doc oder .rtf</span>, eine Datei.
           Bitte <b>ohne Layout</b>: keine Textrahmen, keine Spalten, und Bilder nicht in die
           Datei einbetten — die laden Sie in Schritt 3 einzeln hoch.</p>
+          <p class="beispiel"><b>Zum Dateinamen:</b> Am besten
+          <i>Nachname_Stichwort_Manuskript.docx</i> — also <b>ohne Leerzeichen, Kommas,
+          Umlaute und Sonderzeichen</b>, Wörter mit Unterstrich verbunden.<br>
+          <span class="ja">Gut:</span> <i>Klakow-Franck_Transfermodell_Manuskript.docx</i><br>
+          <span class="nein">Unpraktisch:</span> <i>Titel, Zusammenfassung, Abstract – neue
+          Fassung (2).docx</i><br>
+          Nötig ist das nicht — wir benennen jede Datei beim Empfang ohnehin einheitlich um.
+          Aber solange sie bei Ihnen liegt und zwischen Ihnen und uns hin und her geht, erspart
+          ein einfacher Name allen Beteiligten Verwechslungen.</p>
           <div class="ablage" data-ablage="manuskript" tabindex="0" role="button">
             <p><b>Datei wählen</b> oder hierher ziehen</p>
           </div>
@@ -565,7 +574,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <p class="anleitung">Laden Sie hier bitte Ihre Abbildungen hoch —
           <span class="mass">.jpg oder .png, mindestens 2.126 Pixel breit</span>. Das
           entspricht 180 mm Satzbreite bei 300 dpi. Die Breite wird sofort gemessen; zu
-          schmale Bilder sagen es Ihnen gleich.</p>
+          schmale Bilder sagen es Ihnen gleich. Beim Dateinamen hilft die Nummer der
+          Abbildung: <i>Nachname_Abb1.jpg</i>, <i>Nachname_Abb2.jpg</i> — ohne Leerzeichen
+          und Sonderzeichen.</p>
           <div class="ablage" data-ablage="bild" tabindex="0" role="button">
             <p><b>Bilder wählen</b> oder hierher ziehen</p>
           </div>
@@ -582,7 +593,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <p class="anleitung">Laden Sie Tabellen hier bitte als <b>Datei</b> hoch —
           <span class="mass">.docx, .xlsx oder .csv</span>. Bitte <b>nicht als Bild</b> und
           nicht abgetippt: Nur eine echte Tabelle lässt sich im Satz umbrechen und online
-          lesbar darstellen.</p>
+          lesbar darstellen. Beim Dateinamen wie bei den Abbildungen:
+          <i>Nachname_Tab1.xlsx</i>.</p>
           <div class="ablage" data-ablage="tabelle" tabindex="0" role="button">
             <p><b>Tabellen wählen</b> oder hierher ziehen</p>
           </div>
@@ -863,6 +875,14 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   ];
   var MIN_BILD = 2126, MIN_PORTRAIT = 354;
 
+  /* Wieviel eine Hoechstgrenze ueberschritten werden darf: zehn Prozent.
+     Ein Abstract mit 1.510 statt 1.500 Zeichen ist kein Mangel, sondern ein
+     gutes Abstract - es hier zurueckzuweisen kostet eine Viertelstunde
+     Kuerzen ohne Gewinn. Die Untergrenzen bleiben hart: Zu kurz heisst, es
+     fehlt etwas. Derselbe Wert steht im Endpunkt (TOLERANZ). */
+  var TOLERANZ = 1.10;
+  function hoechstens(grenze) { return Math.floor(grenze * TOLERANZ); }
+
   /* ---------------------------------------------------------- Ausgaben ---
      Erscheinungstermine werden gerechnet, nicht gepflegt.
 
@@ -998,13 +1018,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   // die Schrittleiste dieselbe Wahrheit benutzen und nicht auseinanderlaufen.
   var REGELN = [
     {s:0, feld:'rubrik',    text:'Rubrik wählen'},
-    {s:0, feld:'titel',     text:'Überschrift eintragen (20 bis 100 Zeichen)', min:20, max:100},
-    {s:0, feld:'vorspann',  text:'Vorspann schreiben (mindestens 600 Zeichen)', min:600, max:900},
+    {s:0, feld:'titel',     text:'Überschrift eintragen (20 bis 100 Zeichen, bis 110 wird angenommen)', min:20, max:100},
+    {s:0, feld:'vorspann',  text:'Vorspann schreiben (600 bis 900 Zeichen, bis 990 wird angenommen)', min:600, max:900},
     {s:0, liste:'manuskript', text:'Manuskript hochladen'},
-    {s:1, feld:'abstractDe', text:'Deutsches Abstract (1.000 bis 1.500 Zeichen)', min:1000, max:1500},
+    {s:1, feld:'abstractDe', text:'Deutsches Abstract (1.000 bis 1.500 Zeichen, bis 1.650 wird angenommen)', min:1000, max:1500},
     {s:1, feld:'schlagDe',  text:'Deutsche Schlüsselwörter (3 bis 6)', komma:3},
     {s:1, feld:'titelEn',   text:'Englischer Titel', min:10, max:100},
-    {s:1, feld:'abstractEn', text:'Englisches Abstract (1.000 bis 1.500 Zeichen)', min:1000, max:1500},
+    {s:1, feld:'abstractEn', text:'Englisches Abstract (1.000 bis 1.500 Zeichen, bis 1.650 wird angenommen)', min:1000, max:1500},
     {s:1, feld:'schlagEn',  text:'Englische Keywords (3 bis 6)', komma:3},
     {s:3, autor:true,       text:'Haupt- und Korrespondenzautor anlegen: Name, E-Mail, Vita'},
     {s:4, feld:'literatur', text:'Literatur', min:20},
@@ -1026,7 +1046,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var w = (stand[r.feld] || '').toString().trim();
     if (!w) { return true; }
     if (r.min && w.length < r.min) { return true; }
-    if (r.max && w.length > r.max) { return true; }
+    if (r.max && w.length > hoechstens(r.max)) { return true; }
     if (r.komma) {
       var teile = w.split(',').map(function(t){return t.trim();}).filter(Boolean);
       if (teile.length < r.komma) { return true; }
@@ -1213,9 +1233,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       z.textContent = 'noch ' + (min - n).toLocaleString('de-DE') + ' Zeichen bis zum Mindestmaß';
       z.classList.add('knapp'); return;
     }
-    if (max && n > max) {
-      z.textContent = (n - max).toLocaleString('de-DE') + ' Zeichen zu viel';
+    if (max && n > hoechstens(max)) {
+      z.textContent = (n - max).toLocaleString('de-DE') + ' Zeichen über der Grenze — '
+        + 'bitte kürzen';
       z.classList.add('zuviel'); return;
+    }
+    if (max && n > max) {
+      // Zwischen Grenze und Toleranz: geht durch, aber der Autor soll wissen,
+      // dass er darüber ist.
+      z.textContent = (n - max).toLocaleString('de-DE') + ' Zeichen über der '
+        + 'Empfehlung — noch in Ordnung';
+      z.classList.add('knapp'); return;
     }
     if (max) {
       z.textContent = 'noch ' + (max - n).toLocaleString('de-DE') + ' Zeichen frei';
