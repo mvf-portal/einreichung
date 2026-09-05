@@ -319,6 +319,22 @@ input:disabled,textarea:disabled{opacity:.55}
    aufzufallen. */
 input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
+
+/* ===== Sicherung als Datei ==============================================
+   localStorage ueberlebt Fensterschliessen und Neustart, aber nicht den
+   Geraetewechsel, kein privates Fenster, kein "Browserdaten loeschen" - und,
+   der ernste Fall, nicht Safari auf iPhone und iPad: Apple raeumt von
+   Skripten geschriebene Daten nach sieben Tagen ohne Besuch weg. Deshalb ein
+   Weg, den Stand in die eigene Hand zu nehmen. */
+.sicherung{
+  margin:22px 0 0;padding:16px 18px;
+  border:1px solid var(--line);border-radius:8px;background:var(--card);
+}
+.sicherung p{margin:0 0 12px;font-size:14.5px;line-height:1.55;color:var(--ink-soft);max-width:72ch}
+.sicherung p b{color:var(--ink)}
+.sicherung .knopfzeile{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.sicherung-meldung{font-size:14px;font-weight:700;color:var(--ok)}
+.sicherung-meldung.fehler{color:var(--stop)}
 </style>
 </head>
 <body>
@@ -762,6 +778,20 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         <button type="button" class="knopf rand" data-zurueck>Zurück</button>
         <button type="button" class="knopf rand klein" id="jetztSichern">Zwischenspeichern</button>
         <button type="button" class="knopf haupt weit" data-weiter>Weiter</button>
+      </div>
+
+      <div class="sicherung">
+        <p><b>Ihre Arbeit liegt in diesem Browser.</b> Das genügt für den Regelfall — sie
+        übersteht das Schließen des Fensters und einen Neustart des Rechners. Sie geht aber
+        verloren, wenn Sie das Gerät wechseln, ein privates Fenster benutzen oder die
+        Browserdaten löschen; auf iPhone und iPad räumt Safari solche Daten zudem nach sieben
+        Tagen ohne Besuch von selbst weg. <b>Legen Sie deshalb von Zeit zu Zeit einen Stand
+        als Datei ab</b> — damit können Sie auch an einem anderen Gerät weiterarbeiten.</p>
+        <div class="knopfzeile">
+          <button type="button" class="knopf rand klein" id="standSichern">Zwischenstand sichern</button>
+          <button type="button" class="knopf rand klein" id="standLaden">Gesicherten Stand laden</button>
+          <span id="sicherungMeldung" class="sicherung-meldung" role="status"></span>
+        </div>
       </div>
 
     </main>
@@ -1363,6 +1393,129 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   $$('[data-weiter]').forEach(function(b){ b.addEventListener('click', function(){ zeige(jetzt+1); }); });
   $$('[data-zurueck]').forEach(function(b){ b.addEventListener('click', function(){ zeige(jetzt-1); }); });
   $('#jetztSichern').addEventListener('click', function(){ sichern(true); });
+
+  /* ------------------------------------------------- Sicherung als Datei */
+
+  function meldung(text, fehler) {
+    var m = $('#sicherungMeldung');
+    m.textContent = text;
+    m.classList.toggle('fehler', !!fehler);
+    clearTimeout(meldung.uhr);
+    meldung.uhr = setTimeout(function () { m.textContent = ''; }, 9000);
+  }
+
+  // Der Dateiname traegt den Beitragstitel, damit im Downloadordner nicht
+  // fuenf gleichnamige Dateien liegen.
+  function dateiname() {
+    var t = (stand.titel || 'entwurf').toLowerCase()
+      .replace(/[äöüß]/g, function (z) {
+        return {'ä':'ae','ö':'oe','ü':'ue','ß':'ss'}[z];
+      })
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'entwurf';
+    var d = new Date(), zwei = function (n) { return (n < 10 ? '0' : '') + n; };
+    return 'MVF-Einreichung-' + t + '-' + d.getFullYear()
+         + zwei(d.getMonth() + 1) + zwei(d.getDate()) + '.json';
+  }
+
+  $('#standSichern').addEventListener('click', function () {
+    // Ein Kopf im Klartext, damit die Datei auch in einem Jahr noch selbst
+    // erklaert, was sie ist und wohin sie gehoert.
+    var paket = {
+      _was: 'Zwischenstand einer Einreichung bei Monitor Versorgungsforschung',
+      _wieder_einlesen: 'Auf einreichung.m-vf.de mit „Gesicherten Stand laden“ öffnen.',
+      _gesichert_am: new Date().toISOString(),
+      _fassung: 1,
+      stand: stand
+    };
+    try {
+      var b = new Blob([JSON.stringify(paket, null, 2)], {type: 'application/json'});
+      var url = URL.createObjectURL(b);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = dateiname();
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      meldung('Gesichert als ' + a.download);
+    } catch (e) {
+      meldung('Das Sichern hat nicht geklappt. Bitte prüfen, ob der Browser Downloads '
+            + 'zulässt.', true);
+    }
+  });
+
+  var ladeFeld = document.createElement('input');
+  ladeFeld.type = 'file';
+  ladeFeld.accept = '.json,application/json';
+  ladeFeld.hidden = true;
+  document.body.appendChild(ladeFeld);
+
+  $('#standLaden').addEventListener('click', function () {
+    if (!ueberschreibenErlaubt()) { return; }
+    ladeFeld.value = '';
+    ladeFeld.click();
+  });
+
+  // Nur nachfragen, wenn wirklich etwas zu verlieren ist. Eine Rueckfrage vor
+  // einem leeren Formular ist blosse Huerde.
+  function ueberschreibenErlaubt() {
+    var gefuellt = ['titel', 'vorspann', 'abstractDe', 'abstractEn', 'literatur']
+      .some(function (f) { return (stand[f] || '').trim().length > 0; });
+    if (!gefuellt) { return true; }
+    return window.confirm('Der geladene Stand ersetzt Ihre jetzigen Eingaben vollständig. '
+      + 'Fortfahren?');
+  }
+
+  ladeFeld.addEventListener('change', function () {
+    var d = this.files && this.files[0];
+    if (!d) { return; }
+    var leser = new FileReader();
+    leser.onload = function () {
+      var neu;
+      try { neu = JSON.parse(String(leser.result)); }
+      catch (e) { meldung('Diese Datei lässt sich nicht lesen.', true); return; }
+      var inhalt = (neu && neu.stand) ? neu.stand : neu;
+      if (!inhalt || typeof inhalt !== 'object' || !('autoren' in inhalt)) {
+        meldung('Das ist kein gesicherter Einreichungsstand.', true);
+        return;
+      }
+      standUebernehmen(inhalt);
+      meldung('Stand geladen' + (neu && neu._gesichert_am
+        ? ' — gesichert am ' + new Date(neu._gesichert_am).toLocaleString('de-DE') : ''));
+    };
+    leser.readAsText(d);
+  });
+
+  /** Uebernimmt einen geladenen Stand und zeichnet alles neu. */
+  function standUebernehmen(neu) {
+    Object.keys(stand).forEach(function (k) {
+      if (k in neu) { stand[k] = neu[k]; }
+    });
+    if (!Array.isArray(stand.autoren) || !stand.autoren.length) {
+      stand.autoren = [{name: '', mail: '', vita: '', bild: null}];
+    }
+    ['manuskript', 'bilder', 'tabellen'].forEach(function (k) {
+      if (!Array.isArray(stand[k])) { stand[k] = []; }
+    });
+    felderFuellen();
+    dateienMalen();
+    autorenMalen();
+    sichern(true);
+    leisteMalen();
+    if (jetzt === SCHRITTE.length - 1) { pruefenMalen(); }
+  }
+
+  /** Schreibt den Zustand zurueck in die Eingabefelder. */
+  function felderFuellen() {
+    $$('[data-feld]').forEach(function (el) {
+      var name = el.dataset.feld;
+      if (el.type === 'radio')         { el.checked = (stand[name] === el.value); }
+      else if (el.type === 'checkbox') { el.checked = !!stand[name]; }
+      else { el.value = stand[name] || ''; zaehlerMalen(name); }
+    });
+    var r = $('#rubrik');
+    if (r) { r.dispatchEvent(new Event('change')); }
+  }
   $('#autorNeu').addEventListener('click', function () {
     if (stand.autoren.length >= 10) { return; }
     stand.autoren.push({name:'', mail:'', vita:'', bild:null});
