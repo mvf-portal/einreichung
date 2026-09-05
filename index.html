@@ -665,16 +665,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
         <div class="gruppe">
           <label for="ausgabe">Vorgesehene Ausgabe <span class="pflicht">*</span></label>
-          <p class="anleitung">Wählen Sie hier bitte die Ausgabe, in der Ihr Beitrag
-          erscheinen soll. Angeboten werden nur Ausgaben mit
-          <span class="mass">mindestens 6 Wochen Vorlauf</span> — die braucht das Peer Review in den Rubriken Wissenschaft und Wissen.</p>
-          <select id="ausgabe" data-feld="ausgabe">
-            <option value="">Bitte wählen</option>
-            <option value="MVF 06/26">MVF 06/26</option>
-            <option value="MVF 01/27">MVF 01/27</option>
-            <option value="MVF 02/27">MVF 02/27</option>
-            <option value="MVF 03/27">MVF 03/27</option>
-          </select>
+          <p class="anleitung" id="ausgabeAnleitung">Wählen Sie hier bitte die Ausgabe, in
+          der Ihr Beitrag erscheinen soll. Hefte mit zu kurzem Vorlauf stehen nicht zur
+          Wahl — wie viel Vorlauf nötig ist, hängt von Ihrer Rubrik ab.</p>
+          <select id="ausgabe" data-feld="ausgabe"></select>
+          <p class="wink" id="ausgabeWink"></p>
         </div>
 
         <div class="gruppe" style="max-width:none">
@@ -826,6 +821,38 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     {name:'Prüfen',             unter:'und freigeben'}
   ];
   var MIN_BILD = 2126, MIN_PORTRAIT = 354;
+
+  /* ---------------------------------------------------------- Ausgaben ---
+     Erscheinungstermine. VORLAeUFIG: Diese Liste steht hier, damit die
+     Vorlauffrist ueberhaupt gerechnet werden kann. Sobald die Seite am
+     Endpunkt haengt, kommt sie von dort (Einstellung "Erscheinungstermine").
+     Wer die Termine aendert, aendert nur diesen Block.                    */
+  var ERSCHEINT = {
+    'MVF 06/26': '2026-10-15',
+    'MVF 01/27': '2026-12-15',
+    'MVF 02/27': '2027-02-15',
+    'MVF 03/27': '2027-04-15',
+    'MVF 04/27': '2027-06-15'
+  };
+
+  /* Wieviel Vorlauf welche Rubrik braucht, in Wochen. Sechs fuer das Peer
+     Review, vier fuer alles andere - Satz, Korrektur und Druck brauchen die
+     ohnehin. */
+  var PEER_RUBRIKEN = ['wissenschaft', 'wissen'];
+  var VORLAUF_PEER = 6, VORLAUF_SONST = 4;
+
+  function vorlaufWochen() {
+    return PEER_RUBRIKEN.indexOf(stand.rubrik) > -1 ? VORLAUF_PEER : VORLAUF_SONST;
+  }
+
+  function wochenBis(datum) {
+    return (new Date(datum) - new Date()) / (7 * 24 * 3600 * 1000);
+  }
+
+  function ausgabeMoeglich(heft) {
+    var d = ERSCHEINT[heft];
+    return !d || wochenBis(d) >= vorlaufWochen();
+  }
   var jetzt = 0;
 
   var $  = function (w, k) { return (k||document).querySelector(w); };
@@ -910,10 +937,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     {s:4, feld:'literatur', text:'Literatur', min:20},
     {s:4, feld:'zitation',  text:'Zitation', min:20},
     {s:4, feld:'ausgabe',   text:'Ausgabe wählen'},
+    {s:4, pruef:function(){ return !!stand.ausgabe && !ausgabeMoeglich(stand.ausgabe); },
+     text:'Die gewählte Ausgabe liegt für Ihre Rubrik zu nah'},
     {s:4, feld:'konflikte', text:'Interessenkonflikte und Förderung', min:10}
   ];
 
   function regelOffen(r) {
+    if (r.pruef)  { return r.pruef(); }
     if (r.liste)  { return (stand[r.liste] || []).length === 0; }
     if (r.autor)  {
       var a = stand.autoren[0] || {};
@@ -943,6 +973,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   function angefasst(schritt) {
     return REGELN.some(function (r) {
       if (r.s !== schritt) { return false; }
+      if (r.pruef) { return false; }
       if (r.liste) { return (stand[r.liste] || []).length > 0; }
       if (r.autor) { var a = stand.autoren[0] || {}; return !!(a.name || a.mail || a.vita); }
       return !!(stand[r.feld] || '').toString().trim();
@@ -980,6 +1011,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       zaehlerMalen(name);
     });
 
+    ausgabenMalen();
+
     $('#rubrik').addEventListener('change', function () {
       var t = {
         wissenschaft:'Originalarbeit. Geht ins Peer Review — rechnen Sie mit sechs '
@@ -994,11 +1027,55 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       }[this.value];
       $('#rubrikWink').textContent = t ||
         'Die Rubrik bestimmt, wie Ihr Beitrag gesetzt und begutachtet wird.';
+      // Mit der Rubrik aendert sich die noetige Frist - und damit, welche
+      // Hefte ueberhaupt noch in Frage kommen.
+      ausgabenMalen();
+      leisteMalen();
     });
   }
 
   // Der Zaehler ist eine Anweisung, keine Beobachtung: "noch 640 Zeichen"
   // sagt dem Autor, was zu tun ist. "260 Zeichen" sagt ihm nur, wo er steht.
+  /**
+   * Baut die Ausgabenliste neu. Zu nahe Hefte werden nicht versteckt, sondern
+   * gesperrt und mit Begruendung gezeigt - sonst waere unklar, warum das
+   * gewuenschte Heft fehlt, und der Autor suchte den Fehler bei sich.
+   */
+  function ausgabenMalen() {
+    var s = $('#ausgabe');
+    if (!s) { return; }
+    var wochen = vorlaufWochen();
+    var peer = PEER_RUBRIKEN.indexOf(stand.rubrik) > -1;
+
+    s.innerHTML = '<option value="">Bitte wählen</option>';
+    Object.keys(ERSCHEINT).forEach(function (heft) {
+      var frei = ausgabeMoeglich(heft);
+      var o = document.createElement('option');
+      o.value = heft;
+      o.textContent = heft + (frei ? '' : ' — Vorlauf zu kurz');
+      o.disabled = !frei;
+      s.appendChild(o);
+    });
+
+    // Eine bereits gewaehlte Ausgabe, die durch den Rubrikwechsel zu nah
+    // geworden ist, wird zurueckgesetzt - aber mit Ansage.
+    if (stand.ausgabe && !ausgabeMoeglich(stand.ausgabe)) {
+      var verloren = stand.ausgabe;
+      stand.ausgabe = '';
+      sichern();
+      $('#ausgabeWink').innerHTML = '<b>' + esc(verloren) + '</b> reicht für Ihre Rubrik '
+        + 'nicht mehr aus. Bitte wählen Sie ein späteres Heft.';
+    } else {
+      s.value = stand.ausgabe || '';
+      $('#ausgabeWink').textContent = peer
+        ? 'Ihre Rubrik geht ins Peer Review: mindestens ' + wochen + ' Wochen Vorlauf.'
+        : (stand.rubrik
+            ? 'Für Ihre Rubrik genügen ' + wochen + ' Wochen Vorlauf.'
+            : 'Wählen Sie zuerst in Schritt 1 die Rubrik — davon hängt ab, welche Hefte '
+              + 'noch in Frage kommen.');
+    }
+  }
+
   function zaehlerMalen(name) {
     var z = document.querySelector('[data-zaehlt="' + name + '"]');
     if (!z) { return; }
@@ -1498,6 +1575,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       if (!Array.isArray(stand[k])) { stand[k] = []; }
     });
     felderFuellen();
+    ausgabenMalen();
     dateienMalen();
     autorenMalen();
     sichern(true);
