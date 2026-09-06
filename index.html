@@ -400,27 +400,28 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <option value="wissenschaft">Wissenschaft (Achtung: Peer Review)</option>
             <option value="wissen">Wissen (Achtung: Peer Review)</option>
             <option value="wissenstransfer">Wissenstransfer</option>
+            <option value="kommentar">Kommentar</option>
             <option value="report">Report</option>
             <option value="interview">Interview</option>
-            <option value="kommentar">Kommentar</option>
             <option value="serie">Serie</option>
+            <option value="kongress">Kongressnachbericht</option>
+            <option value="sonderdruck">Sonderdruck (Supplement)</option>
           </select>
           <p class="wink" id="rubrikWink">Sobald Sie gewählt haben, steht hier, was die Rubrik
           bedeutet.</p>
+          <div class="kasten" id="rubrikBedarf" hidden></div>
         </div>
 
-        <div class="gruppe">
-          <label for="vorzeile">Vorzeile
+        <div class="gruppe" data-teil="vorzeile">
+          <label for="vorzeile">Vorzeile <span class="pflicht" hidden>*</span>
             <span class="zeichenzahl" data-zaehlt="vorzeile"></span></label>
-          <p class="anleitung">Tragen Sie hier bitte die kleine Zeile ein, die im Heft
-          <b>über</b> der Überschrift steht und das Thema einordnet.
-          <span class="mass">höchstens 60 Zeichen</span> — zwei bis fünf Wörter, kein ganzer
-          Satz, kein Punkt am Ende. <b>Bei „Wissenschaft“ bitte freilassen</b> — dort gibt
-          es keine Vorzeilen.</p>
-          <input type="text" id="vorzeile" data-feld="vorzeile" maxlength="60"
+          <p class="anleitung" id="vorzeileAnleitung">Tragen Sie hier bitte die kleine Zeile
+          ein, die im Heft <b>über</b> der Überschrift steht und das Thema einordnet.
+          Wählen Sie zuerst die Rubrik — was hier hineingehört und wie lang es sein darf,
+          hängt von ihr ab.</p>
+          <input type="text" id="vorzeile" data-feld="vorzeile"
                  data-max="60" placeholder="Ambulante Notfallversorgung">
-          <p class="beispiel"><b>So sieht das aus:</b> <i>Ambulante Notfallversorgung</i> ·
-          <i>Digitale Ersteinschätzung</i> · <i>Serie Pflegereform, Teil 3</i></p>
+          <p class="beispiel" id="vorzeileBeispiel"></p>
         </div>
 
         <div class="gruppe">
@@ -437,7 +438,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           für Deutschland“</p>
         </div>
 
-        <div class="gruppe">
+        <div class="gruppe" data-teil="vorspann">
           <label for="vorspann">Vorspann <span class="pflicht">*</span>
             <span class="zeichenzahl" data-zaehlt="vorspann"></span></label>
           <p class="anleitung">Schreiben Sie hier bitte den nicht-eingerückten Absatz, der im Heft
@@ -455,15 +456,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <b>Word-Datei</b> hoch — <span class="mass">.docx, .doc oder .rtf</span>, eine Datei.
           Bitte <b>ohne Layout</b>: keine Textrahmen, keine Spalten, und Bilder nicht in die
           Datei einbetten — die laden Sie in Schritt 3 einzeln hoch.</p>
-          <p class="beispiel"><b>Zum Dateinamen:</b> Am besten
-          <i>Nachname_Stichwort_Manuskript.docx</i> — also <b>ohne Leerzeichen, Kommas,
-          Umlaute und Sonderzeichen</b>, Wörter mit Unterstrich verbunden.<br>
-          <span class="ja">Gut:</span> <i>Klakow-Franck_Transfermodell_Manuskript.docx</i><br>
-          <span class="nein">Unpraktisch:</span> <i>Titel, Zusammenfassung, Abstract – neue
-          Fassung (2).docx</i><br>
-          Nötig ist das nicht — wir benennen jede Datei beim Empfang ohnehin einheitlich um.
-          Aber solange sie bei Ihnen liegt und zwischen Ihnen und uns hin und her geht, erspart
-          ein einfacher Name allen Beteiligten Verwechslungen.</p>
+          <p class="anleitung">Zum <b>Dateinamen</b>: ohne Leerzeichen, Kommas, Umlaute und
+          Sonderzeichen, Wörter mit Unterstrich verbunden. Nötig ist das nicht — wir benennen
+          jede Datei beim Empfang ohnehin einheitlich um. Aber solange sie zwischen Ihnen und
+          uns hin und her geht, erspart ein einfacher Name allen Verwechslungen.</p>
+          <p class="beispiel"><span class="nein">Nicht so:</span> <i>Titel, Zusammenfassung,
+          Abstract – neue Fassung (2).docx</i><br>
+          <span class="ja">Besser:</span> <i>Name-Vorname_Modell_Manuskript.docx</i></p>
           <div class="ablage" data-ablage="manuskript" tabindex="0" role="button">
             <p><b>Datei wählen</b> oder hierher ziehen</p>
           </div>
@@ -478,6 +477,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         <p class="vor">Diese fünf Angaben entscheiden darüber, ob Ihr Beitrag gefunden wird —
         deutsch bei uns, englisch international.</p>
 
+        <p class="kasten" id="ohneZusammenfassung" hidden></p>
+
+        <div data-teil="zusammenfassung">
         <div class="auftrag">
           <p class="was">In diesem Schritt schreiben Sie zwei Zusammenfassungen.</p>
           <ol>
@@ -542,6 +544,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             US-amerikanischen National Library of Medicine.</p>
           </div>
         </fieldset>
+        </div>
       </section>
 
       <!-- ============================================ 3 Abbildungen/Tabellen -->
@@ -580,6 +583,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <div class="ablage" data-ablage="bild" tabindex="0" role="button">
             <p><b>Bilder wählen</b> oder hierher ziehen</p>
           </div>
+          <p class="wink" id="bildWink" hidden></p>
           <div id="bildListe"></div>
           <button type="button" class="knopf rand klein" data-mehr="bild">Weitere Abbildung hinzufügen</button>
           <p class="wink">Zu jeder Abbildung tragen Sie bitte eine <b>Unterschrift</b> ein —
@@ -645,7 +649,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           </ol>
         </div>
 
-        <div class="gruppe">
+        <div class="gruppe" data-teil="literatur">
           <label for="literatur">Literatur <span class="pflicht">*</span>
             <span class="zeichenzahl" data-zaehlt="literatur"></span></label>
           <p class="anleitung">Tragen Sie hier bitte Ihr Literaturverzeichnis ein,
@@ -655,7 +659,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <textarea id="literatur" data-feld="literatur" rows="6" data-min="20"></textarea>
         </div>
 
-        <div class="gruppe">
+        <div class="gruppe" data-teil="zitation">
           <label for="zitation">Zitationsvorschlag <span class="pflicht">*</span>
             <span class="zeichenzahl" data-zaehlt="zitation"></span></label>
           <p class="anleitung">Tragen Sie hier bitte ein, <b>wie Ihr Beitrag zitiert werden
@@ -663,9 +667,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           Autoren, Titel und Ausgabe vor.</p>
           <textarea id="zitation" data-feld="zitation" rows="3" data-min="20"
             placeholder="Nachname, V., Nachname, V.: „Titel des Beitrags“, in „Monitor Versorgungsforschung“ (05/26)"></textarea>
-          <p class="beispiel"><b>Muster:</b> Ansmann, L., Ernstmann, N., Stegmaier, P.:
+          <p class="beispiel"><span class="nein">Nicht so:</span> <i>Nachname u.a.,
+          Versorgungsforschung gelingt nur gemeinsam, MVF 2026</i><br>
+          <span class="ja">Besser:</span> <i>Nachname, V., Nachname, V., Nachname, V.:
           „Versorgungsforschung gelingt wirklich nur gemeinsam“, in „Monitor
-          Versorgungsforschung“ (04/26), S. 6–10.</p>
+          Versorgungsforschung“ (04/26), S. 6–10.</i></p>
         </div>
 
         <div class="gruppe">
@@ -743,7 +749,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           </div>
         </div>
 
-        <div class="gruppe">
+        <div class="gruppe" data-teil="konflikte">
           <label for="konflikte">Interessenkonflikte und Förderung <span class="pflicht">*</span>
             <span class="zeichenzahl" data-zaehlt="konflikte"></span></label>
           <p class="anleitung">Tragen Sie hier bitte ein, ob Interessenkonflikte bestehen und
@@ -751,8 +757,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           hin</b> — ein leeres Feld lässt sich nicht von einem vergessenen unterscheiden.</p>
           <textarea id="konflikte" data-feld="konflikte" rows="3" data-min="10"
             placeholder="Es bestehen keine Interessenkonflikte. Der Beitrag wurde nicht gefördert."></textarea>
-          <p class="beispiel"><b>Zum Übernehmen, wenn es zutrifft:</b> „Es bestehen keine
-          Interessenkonflikte. Der Beitrag wurde nicht gefördert.“</p>
+          <p class="beispiel"><span class="nein">Nicht so:</span> <i>keine</i><br>
+          <span class="ja">Besser:</span> <i>Es bestehen keine Interessenkonflikte. Der Beitrag
+          wurde nicht gefördert.</i></p>
         </div>
       </section>
 
@@ -930,14 +937,168 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     return liste;
   }
 
+  /* ---------------------------------------------------------- Rubriken ---
+     Jede Rubrik bringt ihre eigenen Regeln mit. Grundlage sind die
+     gesetzten Seiten des Hefts, nicht eine Wunschliste: Ein Interview hat
+     kein Abstract, ein Kommentar keine Vorzeile, ein Kongressnachbericht
+     kein Literaturverzeichnis. Wer alles von allen verlangt, bekommt
+     erfundene Felder - und ein Formular, das sich nicht absenden laesst.
+
+     Drei Zustaende je Bestandteil:
+       pflicht  ohne das geht die Einreichung nicht ab
+       frei     das Feld steht da, darf aber leer bleiben
+       nie      das Feld wird gar nicht erst gezeigt
+
+     Was hier nicht steht, gilt fuer alle: Rubrik, Ueberschrift, Manuskript,
+     Ausgabe und der Erstautor sind immer Pflicht.
+
+     'intern' heisst: Diese Rubrik fuellt die Redaktion selbst aus. Externe
+     Autorinnen und Autoren reichen Wissenschaft, Wissen, Wissenstransfer
+     und Kommentar ein - alles andere entsteht im Haus.                    */
+
+  /* Alle Beispiele auf dieser Seite haben dieselbe Form: erst, was nicht
+     gemeint ist, dann die bessere Fassung. Zwei Zeilen, gleiche Farben,
+     gleiche Reihenfolge - so liest ein Autor sie nicht jedes Mal neu,
+     sondern erkennt sie wieder. */
+  function BEISPIEL(schlecht, gut) {
+    return '<span class="nein">Nicht so:</span> <i>' + schlecht + '</i><br>'
+         + '<span class="ja">Besser:</span> <i>' + gut + '</i>';
+  }
+  var VORZEILE_BEISPIEL_STANDARD =
+    BEISPIEL('Ein Beitrag zur Notfallversorgung', 'Ambulante Notfallversorgung');
+
+  var RUBRIKEN = {
+    wissenschaft: {
+      name:'Wissenschaft', peer:true, intern:false,
+      wink:'Originalarbeit mit eigener Empirie. Geht ins Peer Review — rechnen Sie '
+        + 'mit sechs Wochen zwischen Einreichung und Erscheinen.',
+      teile:{vorzeile:'nie', vorspann:'pflicht', zusammenfassung:'pflicht',
+             literatur:'pflicht', zitation:'pflicht', konflikte:'pflicht'}
+    },
+    wissen: {
+      name:'Wissen', peer:true, intern:false,
+      wink:'Gesichertes Fachwissen, aufbereitet. Geht ebenfalls ins Peer Review — '
+        + 'rechnen Sie mit sechs Wochen zwischen Einreichung und Erscheinen.',
+      vorzeileMax:60, vorzeileZweck:'ein Stichwort, das den Beitrag einordnet',
+      vorzeileText:'Ein Stichwort, das den Beitrag einordnet — im Heft steht es klein '
+        + 'über der Überschrift. <span class="mass">höchstens 60 Zeichen</span>, '
+        + 'kein ganzer Satz, kein Punkt am Ende.',
+      vorzeileBeispiel:BEISPIEL('Was die neue EU-HTA-Verordnung für die Onkologie in '
+        + 'Deutschland bedeutet', 'EU-HTA-Verfahren'),
+      teile:{vorzeile:'frei', vorspann:'pflicht', zusammenfassung:'pflicht',
+             literatur:'pflicht', zitation:'pflicht', konflikte:'pflicht'}
+    },
+    wissenstransfer: {
+      name:'Wissenstransfer', peer:false, intern:false,
+      wink:'Der Weg von der Erkenntnis in die Praxis — mit Zusammenfassung und '
+        + 'Literatur wie in der Wissenschaftsstrecke, aber ohne Peer Review.',
+      vorzeileMax:60,
+      vorzeileBeispiel:BEISPIEL('Wie Erkenntnisse aus der Versorgungsforschung in die '
+        + 'Praxis kommen', 'Transfermodell'),
+      teile:{vorzeile:'frei', vorspann:'pflicht', zusammenfassung:'pflicht',
+             literatur:'pflicht', zitation:'pflicht', konflikte:'pflicht'}
+    },
+    kommentar: {
+      name:'Kommentar', peer:false, intern:false,
+      wink:'Standpunkt, gezeichnet. Im Heft steht über dem Text Ihr Name mit Funktion, '
+        + 'keine Vorzeile und kein Abstract — der Kommentar fängt sofort an.',
+      teile:{vorzeile:'nie', vorspann:'frei', zusammenfassung:'nie',
+             literatur:'frei', zitation:'pflicht', konflikte:'pflicht'}
+    },
+    report: {
+      name:'Report', peer:false, intern:true,
+      wink:'Bericht über ein Thema, ein Haus oder eine Veranstaltung. Vorzeile und '
+        + 'Vorspann tragen den Einstieg, ein Abstract gibt es nicht.',
+      vorzeileMax:90, vorzeileZweck:'die Unterzeile zur Überschrift',
+      vorzeileText:'Die Unterzeile, die im Heft die Überschrift erklärt — sie darf '
+        + 'ein halber Satz sein. <span class="mass">höchstens 90 Zeichen</span>.',
+      vorzeileBeispiel:BEISPIEL('Neue Rechercheportale',
+        '1.009 Fachquellen und jeden Morgen sechs neue Studien je Themenfeld'),
+      teile:{vorzeile:'pflicht', vorspann:'pflicht', zusammenfassung:'nie',
+             literatur:'frei', zitation:'frei', konflikte:'frei'}
+    },
+    interview: {
+      name:'Interview', peer:false, intern:true,
+      wink:'Gespräch, redigiert und autorisiert. Kein Abstract, keine Schlagwörter — '
+        + 'dafür Vorzeile, Vorspann, Porträt und Vita des Gesprächspartners.',
+      vorzeileMax:200, vorzeileZweck:'wer spricht: Name, Funktion, Haus',
+      vorzeileText:'Hier steht, <b>wer</b> spricht: Name mit Titel, Funktion, Haus — im '
+        + 'Heft steht die Zeile klein neben oder unter dem Porträt. '
+        + '<span class="mass">höchstens 200 Zeichen</span>. Sie darf ein ganzer Satz sein.',
+      vorzeileBeispiel:BEISPIEL('Im Interview: Vorname Nachname',
+        'Im Interview: Dipl.-Volksw. Vorname Nachname, Vorstandsvorsitzender der '
+        + 'Krankenkasse XY'),
+      teile:{vorzeile:'pflicht', vorspann:'pflicht', zusammenfassung:'nie',
+             literatur:'frei', zitation:'pflicht', konflikte:'frei'}
+    },
+    serie: {
+      name:'Serie', peer:false, intern:true,
+      wink:'Teil einer laufenden Reihe. Die Vorzeile nennt Reihe und Folge, damit die '
+        + 'Leserin den Anschluss findet.',
+      vorzeileMax:90, vorzeileZweck:'Reihe und Folge',
+      vorzeileText:'Reihe und Folge — genau so, wie es in den vorigen Teilen stand. '
+        + '<span class="mass">höchstens 90 Zeichen</span>.',
+      vorzeileBeispiel:BEISPIEL('Serie, Fortsetzung', 'Serie Pflegereform, Teil 3'),
+      teile:{vorzeile:'pflicht', vorspann:'pflicht', zusammenfassung:'nie',
+             literatur:'frei', zitation:'pflicht', konflikte:'frei'}
+    },
+    kongress: {
+      name:'Kongressnachbericht', peer:false, intern:true,
+      wink:'Bericht von einem Kongress. Im Heft steht als Rubrik nur „Kongress“. '
+        + 'Die Vorzeile nennt die Veranstaltung, jede Abbildung nennt den Vortrag, aus '
+        + 'dem sie stammt.',
+      vorzeileMax:90, vorzeileZweck:'der Name der Veranstaltung',
+      vorzeileText:'Der volle Name der Veranstaltung, mit Nummer und Untertitel — er '
+        + 'steht im Heft klein über der Überschrift. '
+        + '<span class="mass">höchstens 90 Zeichen</span>.',
+      vorzeileBeispiel:BEISPIEL('MVF-Fachkongress 2026',
+        'MVF-Fachkongress „Impfstatus 2026 – Status und Ökonomie des Impfens“'),
+      bildwink:'Bei einem Kongressnachbericht gehört in jede Bildunterschrift, aus '
+        + 'welchem Vortrag die Abbildung stammt — Referent, Haus, Vortragstitel, '
+        + 'Veranstaltung und Datum. Muster: „Aus Vortrag von Dr. Maike Schmitt, WifOR '
+        + 'Institut: ›Impfen als Investition‹, MVF-Fachkongress ›Impfstatus 2026‹ am '
+        + '17.06.2026“. Bei Porträts und fremden Folien zusätzlich den Bildnachweis.',
+      teile:{vorzeile:'pflicht', vorspann:'pflicht', zusammenfassung:'nie',
+             literatur:'frei', zitation:'pflicht', konflikte:'frei'}
+    },
+    sonderdruck: {
+      name:'Sonderdruck (Supplement)', peer:false, intern:true,
+      wink:'Ein Supplement ist kein Beitrag, sondern ein eigenes Heft: Titelseite, '
+        + 'Editorial, Inhalt, mehrere Beiträge, Rückseite. Legen Sie hier den '
+        + '<b>Rahmen</b> an — Anlass, Auftraggeber und Titel des Supplements — und '
+        + 'reichen Sie jeden Beitrag daraus einzeln ein.',
+      vorzeileMax:90, vorzeileZweck:'Anlass und Auftraggeber',
+      vorzeileText:'Anlass und Auftraggeber des Supplements. '
+        + '<span class="mass">höchstens 90 Zeichen</span>.',
+      vorzeileBeispiel:BEISPIEL('MSD-Supplement',
+        '15. MSD Gesundheitsforum und MSD Gesundheitspreis 2025'),
+      teile:{vorzeile:'frei', vorspann:'frei', zusammenfassung:'nie',
+             literatur:'frei', zitation:'frei', konflikte:'frei'}
+    }
+  };
+
+  /** Die Beschreibung der gewaehlten Rubrik, oder null. */
+  function rubrik() { return RUBRIKEN[stand.rubrik] || null; }
+
+  /**
+   * Was ein Bestandteil bei der gewaehlten Rubrik ist: pflicht, frei, nie.
+   * Ohne gewaehlte Rubrik gilt alles als 'frei' - dann steht in der
+   * Maengelliste nur der eine Satz, der jetzt wirklich zaehlt: Rubrik waehlen.
+   */
+  function noetig(teil) {
+    var r = rubrik();
+    if (!r) { return 'frei'; }
+    return (r.teile && r.teile[teil]) || 'frei';
+  }
+
   /* Wieviel Vorlauf welche Rubrik braucht, in Wochen. Sechs fuer das Peer
      Review, vier fuer alles andere - Satz, Korrektur und Druck brauchen die
      ohnehin. */
-  var PEER_RUBRIKEN = ['wissenschaft', 'wissen'];
   var VORLAUF_PEER = 6, VORLAUF_SONST = 4;
 
   function vorlaufWochen() {
-    return PEER_RUBRIKEN.indexOf(stand.rubrik) > -1 ? VORLAUF_PEER : VORLAUF_SONST;
+    var r = rubrik();
+    return (r && r.peer) ? VORLAUF_PEER : VORLAUF_SONST;
   }
 
   function wochenBis(datum) {
@@ -998,8 +1159,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       if (i === jetzt) { b.setAttribute('aria-current','step'); }
       if (i < SCHRITTE.length - 1) {
         var offen = luecken(i);
-        if (offen.length === 0) { b.classList.add('fertig'); }
-        else if (angefasst(i))  { b.classList.add('luecke'); }
+        // Solange keine Rubrik gewaehlt ist, steht noch nicht fest, was ein
+        // Schritt braucht. Ein Haken waere dann eine Zusage ins Blaue.
+        if (offen.length === 0 && stand.rubrik) { b.classList.add('fertig'); }
+        else if (offen.length && angefasst(i))  { b.classList.add('luecke'); }
       }
     });
     $('#balken').style.width = Math.round((jetzt / (SCHRITTE.length - 1)) * 100) + '%';
@@ -1020,24 +1183,54 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   // die Schrittleiste dieselbe Wahrheit benutzen und nicht auseinanderlaufen.
   var REGELN = [
     {s:0, feld:'rubrik',    text:'Rubrik wählen'},
+    {s:0, teil:'vorzeile', feld:'vorzeile',
+     text:function(){ return 'Vorzeile eintragen — ' + vorzeileZweck(); }},
+    {s:0, teil:'vorzeile', auchFrei:true,
+     pruef:function(){ return (stand.vorzeile || '').length > hoechstens(vorzeileGrenze()); },
+     text:function(){ return 'Vorzeile kürzen (höchstens ' + vorzeileGrenze() + ' Zeichen)'; }},
     {s:0, feld:'titel',     text:'Überschrift eintragen (20 bis 100 Zeichen, bis 110 wird angenommen)', min:20, max:100},
-    {s:0, feld:'vorspann',  text:'Vorspann schreiben (600 bis 900 Zeichen, bis 990 wird angenommen)', min:600, max:900},
+    {s:0, teil:'vorspann', feld:'vorspann',  text:'Vorspann schreiben (600 bis 900 Zeichen, bis 990 wird angenommen)', min:600, max:900},
     {s:0, liste:'manuskript', text:'Manuskript hochladen'},
-    {s:1, feld:'abstractDe', text:'Deutsches Abstract (1.000 bis 1.500 Zeichen, bis 1.650 wird angenommen)', min:1000, max:1500},
-    {s:1, feld:'schlagDe',  text:'Deutsche Schlüsselwörter (3 bis 6)', komma:3},
-    {s:1, feld:'titelEn',   text:'Englischer Titel', min:10, max:100},
-    {s:1, feld:'abstractEn', text:'Englisches Abstract (1.000 bis 1.500 Zeichen, bis 1.650 wird angenommen)', min:1000, max:1500},
-    {s:1, feld:'schlagEn',  text:'Englische Keywords (3 bis 6)', komma:3},
+    {s:1, teil:'zusammenfassung', feld:'abstractDe', text:'Deutsches Abstract (1.000 bis 1.500 Zeichen, bis 1.650 wird angenommen)', min:1000, max:1500},
+    {s:1, teil:'zusammenfassung', feld:'schlagDe',  text:'Deutsche Schlüsselwörter (3 bis 6)', komma:3},
+    {s:1, teil:'zusammenfassung', feld:'titelEn',   text:'Englischer Titel', min:10, max:100},
+    {s:1, teil:'zusammenfassung', feld:'abstractEn', text:'Englisches Abstract (1.000 bis 1.500 Zeichen, bis 1.650 wird angenommen)', min:1000, max:1500},
+    {s:1, teil:'zusammenfassung', feld:'schlagEn',  text:'Englische Keywords (3 bis 6)', komma:3},
     {s:3, autor:true,       text:'Haupt- und Korrespondenzautor anlegen: Name, E-Mail, Vita'},
-    {s:4, feld:'literatur', text:'Literatur', min:20},
-    {s:4, feld:'zitation',  text:'Zitation', min:20},
+    {s:4, teil:'literatur', feld:'literatur', text:'Literatur', min:20},
+    {s:4, teil:'zitation', feld:'zitation',  text:'Zitation', min:20},
     {s:4, feld:'ausgabe',   text:'Ausgabe wählen'},
     {s:4, pruef:function(){ return !!stand.ausgabe && !ausgabeMoeglich(stand.ausgabe); },
      text:'Die gewählte Ausgabe liegt für Ihre Rubrik zu nah'},
-    {s:4, feld:'konflikte', text:'Interessenkonflikte und Förderung', min:10}
+    {s:4, teil:'konflikte', feld:'konflikte', text:'Interessenkonflikte und Förderung', min:10}
   ];
 
+  /* Der Text einer Regel darf von der Rubrik abhaengen - dann steht er als
+     Funktion da und wird erst beim Anzeigen ausgerechnet. */
+  function regelText(r) {
+    return (typeof r.text === 'function') ? r.text() : r.text;
+  }
+
+  function vorzeileGrenze() {
+    var r = rubrik();
+    return (r && r.vorzeileMax) || 60;
+  }
+
+  function vorzeileZweck() {
+    var r = rubrik();
+    return (r && r.vorzeileZweck) || 'die kleine Zeile über der Überschrift';
+  }
+
   function regelOffen(r) {
+    /* Eine Regel gilt nur, wenn ihr Bestandteil bei dieser Rubrik verlangt
+       ist. Was die Rubrik gar nicht kennt, kann auch nicht fehlen - und was
+       freiwillig ist, ist kein Mangel. Ausnahme: 'auchFrei' pruefen auch
+       freiwillige Angaben, denn eine zu lange Vorzeile bleibt zu lang. */
+    if (r.teil) {
+      var z = noetig(r.teil);
+      if (z === 'nie') { return false; }
+      if (z === 'frei' && !r.auchFrei) { return false; }
+    }
     if (r.pruef)  { return r.pruef(); }
     if (r.liste)  { return (stand[r.liste] || []).length === 0; }
     if (r.autor)  {
@@ -1068,6 +1261,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   function angefasst(schritt) {
     return REGELN.some(function (r) {
       if (r.s !== schritt) { return false; }
+      if (r.teil && noetig(r.teil) === 'nie') { return false; }
       if (r.pruef) { return false; }
       if (r.liste) { return (stand[r.liste] || []).length > 0; }
       if (r.autor) { var a = stand.autoren[0] || {}; return !!(a.name || a.mail || a.vita); }
@@ -1106,26 +1300,16 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       zaehlerMalen(name);
     });
 
+    rubrikAnwenden();
     ausgabenMalen();
 
     $('#rubrik').addEventListener('change', function () {
-      var t = {
-        wissenschaft:'Originalarbeit. Geht ins Peer Review — rechnen Sie mit sechs '
-          + 'Wochen zwischen Einreichung und Erscheinen.',
-        wissen:'Gesichertes Fachwissen, aufbereitet. Geht ebenfalls ins Peer Review — '
-          + 'rechnen Sie mit sechs Wochen zwischen Einreichung und Erscheinen.',
-        wissenstransfer:'Der Weg von der Erkenntnis in die Praxis.',
-        report:'Bericht von Kongress oder Veranstaltung.',
-        interview:'Gespräch, redigiert und autorisiert.',
-        kommentar:'Standpunkt, gezeichnet.',
-        serie:'Teil einer laufenden Reihe.'
-      }[this.value];
-      $('#rubrikWink').textContent = t ||
-        'Die Rubrik bestimmt, wie Ihr Beitrag gesetzt und begutachtet wird.';
+      rubrikAnwenden();
       // Mit der Rubrik aendert sich die noetige Frist - und damit, welche
       // Hefte ueberhaupt noch in Frage kommen.
       ausgabenMalen();
       leisteMalen();
+      if (jetzt === SCHRITTE.length - 1) { pruefenMalen(); }
     });
 
     $$('input[name="efirst"]').forEach(function (e) {
@@ -1157,11 +1341,109 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     }
   }
 
+  /**
+   * Traegt die Regeln der gewaehlten Rubrik in die Seite ein: blendet aus,
+   * was diese Rubrik nicht kennt, nimmt das Sternchen weg, wo etwas
+   * freiwillig ist, und stellt die Vorzeile auf ihre eigene Laenge.
+   *
+   * Ausblenden statt sperren: Ein graues Feld laedt zum Ausfuellen ein und
+   * kostet den Autor Zeit fuer etwas, das nie gedruckt wird.
+   */
+  function rubrikAnwenden() {
+    var r = rubrik();
+
+    $('#rubrikWink').textContent = (r && r.wink && r.wink.replace(/<[^>]+>/g, '')) ||
+      'Die Rubrik bestimmt, wie Ihr Beitrag gesetzt und begutachtet wird.';
+
+    $$('[data-teil]').forEach(function (g) {
+      var z = noetig(g.dataset.teil);
+      g.hidden = (z === 'nie');
+      var stern = g.querySelector('.pflicht');
+      if (stern) { stern.hidden = (z !== 'pflicht'); }
+    });
+
+    // Schritt 2 faellt bei den meisten Rubriken ganz weg. Statt eines leeren
+    // Blattes steht dort dann der Grund - sonst sucht jemand das Abstract.
+    var ohne = $('#ohneZusammenfassung');
+    if (ohne) {
+      var weg = (noetig('zusammenfassung') === 'nie');
+      ohne.hidden = !weg;
+      if (weg) {
+        ohne.innerHTML = '<b>F\u00fcr ' + esc(r ? r.name : 'diese Rubrik') + ' brauchen wir '
+          + 'keine Zusammenfassung.</b> Abstract, englischen Titel und Schlagw\u00f6rter '
+          + 'tragen im Heft nur Wissenschaft, Wissen und Wissenstransfer. Gehen Sie '
+          + 'einfach weiter \u2014 hier fehlt Ihnen nichts.';
+      }
+    }
+
+    // Vorzeile: Grenze, Erklaerung und Beispiel haengen an der Rubrik.
+    var vz = $('#vorzeile');
+    if (vz) {
+      var max = vorzeileGrenze();
+      vz.dataset.max = max;
+      // Die harte Grenze liegt bei der Toleranz, nicht bei der Empfehlung -
+      // sonst schneidet der Browser beim Einfuegen stumm ab, und die
+      // Meldung "zu lang" waere nie zu sehen.
+      vz.setAttribute('maxlength', hoechstens(max));
+      var at = $('#vorzeileAnleitung');
+      if (at) {
+        at.innerHTML = (r && r.vorzeileText) ||
+          'Tragen Sie hier bitte die kleine Zeile ein, die im Heft \u00fcber der '
+          + '\u00dcberschrift steht. <span class="mass">h\u00f6chstens 60 Zeichen</span>.';
+      }
+      var bs = $('#vorzeileBeispiel');
+      if (bs) {
+        bs.innerHTML = (r && r.vorzeileBeispiel) || VORZEILE_BEISPIEL_STANDARD;
+      }
+      zaehlerMalen('vorzeile');
+    }
+
+    // Ein Hinweis, der nur eine Rubrik betrifft (bisher: Kongress).
+    var bw = $('#bildWink');
+    if (bw) {
+      bw.hidden = !(r && r.bildwink);
+      if (r && r.bildwink) { bw.innerHTML = r.bildwink; }
+    }
+
+    bedarfMalen();
+  }
+
+  /**
+   * Sagt gleich bei der Rubrikwahl, was diese Rubrik verlangt - bevor der
+   * Autor sechs Schritte weit geht und es dann in der Maengelliste erfaehrt.
+   */
+  function bedarfMalen() {
+    var k = $('#rubrikBedarf'), r = rubrik();
+    if (!k) { return; }
+    if (!r) { k.hidden = true; return; }
+    var namen = {vorzeile:'Vorzeile', vorspann:'Vorspann',
+                 zusammenfassung:'Abstract und Schlagw\u00f6rter (deutsch und englisch)',
+                 literatur:'Literaturverzeichnis', zitation:'Zitationsvorschlag',
+                 konflikte:'Interessenkonflikte'};
+    var muss = ['\u00dcberschrift', 'Manuskript', 'Ausgabe', 'Erstautor mit Vita'];
+    var kann = [], weg = [];
+    Object.keys(namen).forEach(function (t) {
+      var z = noetig(t);
+      if (z === 'pflicht') { muss.push(namen[t]); }
+      else if (z === 'frei') { kann.push(namen[t]); }
+      else { weg.push(namen[t]); }
+    });
+    var t = '<p><b>' + esc(r.name) + ':</b> ' + esc(r.wink.replace(/<[^>]+>/g, '')) + '</p>';
+    t += '<p><b>Gebraucht wird:</b> ' + esc(muss.join(', ')) + '.</p>';
+    if (kann.length) { t += '<p><b>Freiwillig:</b> ' + esc(kann.join(', ')) + '.</p>'; }
+    if (weg.length)  { t += '<p><b>Entf\u00e4llt:</b> ' + esc(weg.join(', ')) + '.</p>'; }
+    if (r.intern) {
+      t += '<p>Diese Rubrik f\u00fcllt die Redaktion selbst aus.</p>';
+    }
+    k.innerHTML = t;
+    k.hidden = false;
+  }
+
   function ausgabenMalen() {
     var s = $('#ausgabe');
     if (!s) { return; }
     var wochen = vorlaufWochen();
-    var peer = PEER_RUBRIKEN.indexOf(stand.rubrik) > -1;
+    var r = rubrik(), peer = !!(r && r.peer);
 
     s.innerHTML = '<option value="">Bitte wählen</option>';
     kommendeAusgaben(8).forEach(function (heft) {
@@ -1494,7 +1776,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         '<span>Alles beisammen. Ihr Beitrag kann eingereicht werden.</span></li>');
     }
     offen.forEach(function (r) {
-      zeilen.push('<li class="fehlt"><span class="zeichen">!</span><span>' + esc(r.text) +
+      zeilen.push('<li class="fehlt"><span class="zeichen">!</span><span>' + esc(regelText(r)) +
         '</span><button type="button" class="springen" data-spring="' + r.s + '">' +
         'zu Schritt ' + (r.s + 1) + '</button></li>');
     });
@@ -1520,21 +1802,25 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
   function uebersicht() {
     var rub = $('#rubrik').options[$('#rubrik').selectedIndex];
+    // Was die Rubrik nicht kennt, steht auch nicht in der Uebersicht. Sonst
+    // laese der Autor fünfmal "nicht angegeben" und suchte den Fehler.
+    function wenn(teil, inhalt) { return noetig(teil) === 'nie' ? '' : inhalt; }
+
     var t = '<div class="uebersicht"><h3>Der Beitrag</h3><dl>' +
       zeile('Rubrik', stand.rubrik ? rub.text : '') +
-      zeile('Vorzeile', stand.vorzeile) +
+      wenn('vorzeile', zeile('Vorzeile', stand.vorzeile)) +
       zeile('Überschrift', stand.titel) +
-      zeile('Vorspann', stand.vorspann ? stand.vorspann.length.toLocaleString('de-DE') + ' Zeichen' : '') +
+      wenn('vorspann', zeile('Vorspann', stand.vorspann ? stand.vorspann.length.toLocaleString('de-DE') + ' Zeichen' : '')) +
       zeile('Manuskript', stand.manuskript.map(function(d){return d.name;}).join(', ')) +
       '</dl></div>';
 
-    t += '<div class="uebersicht"><h3>Zusammenfassung</h3><dl>' +
+    t += wenn('zusammenfassung', '<div class="uebersicht"><h3>Zusammenfassung</h3><dl>' +
       zeile('Abstract deutsch', stand.abstractDe ? stand.abstractDe.length.toLocaleString('de-DE') + ' Zeichen' : '') +
       zeile('Schlüsselwörter', stand.schlagDe) +
       zeile('Titel englisch', stand.titelEn) +
       zeile('Abstract englisch', stand.abstractEn ? stand.abstractEn.length.toLocaleString('de-DE') + ' Zeichen' : '') +
       zeile('Keywords', stand.schlagEn) +
-      '</dl></div>';
+      '</dl></div>');
 
     t += '<div class="uebersicht"><h3>Material</h3><dl>' +
       zeile('Abbildungen', stand.bilder.length ? stand.bilder.map(function(b){
@@ -1550,14 +1836,14 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       }).join('') + '</dl></div>';
 
     t += '<div class="uebersicht"><h3>Formales</h3><dl>' +
-      zeile('Literatur', stand.literatur ? stand.literatur.split(/\n/).filter(Boolean).length + ' Einträge' : '') +
-      zeile('Zitation', stand.zitation) +
+      wenn('literatur', zeile('Literatur', stand.literatur ? stand.literatur.split(/\n/).filter(Boolean).length + ' Einträge' : '')) +
+      wenn('zitation', zeile('Zitation', stand.zitation)) +
       zeile('Danksagung', stand.danksagung) +
       zeile('Ausgabe', stand.ausgabe) +
       zeile('eFirst beantragt', stand.efirst === 'ja'
         ? 'Ja — Antrag geht an Herausgeber und Chefredaktion' : 'Nein') +
       zeile('Lizenz', stand.lizenz === 'cc_by' ? 'CC BY 4.0' : 'CC BY-NC-ND 4.0') +
-      zeile('Interessenkonflikte', stand.konflikte) +
+      wenn('konflikte', zeile('Interessenkonflikte', stand.konflikte)) +
       '</dl></div>';
     return t;
   }
