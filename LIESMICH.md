@@ -1,93 +1,57 @@
 # einreichung.m-vf.de
 
-Die Einreichungsseite von *Monitor Versorgungsforschung*. Autorinnen und Autoren
-stellen hier ihren Beitrag Schritt für Schritt selbst ein, statt sich durch die
-WordPress-Oberfläche zu arbeiten.
+**Dieses Repo ist seit dem 06.09.2026 nur noch eine Weiterleitung.**
 
-**Stand: Entwurf.** Die Seite ist noch nicht in Betrieb. Sie speichert nichts auf
-einem Server; alle Eingaben bleiben im Browser des Autors (`localStorage`). Der
-Knopf am Ende zeigt an, was übergeben *würde*.
-
-## Warum es diese Seite gibt
-
-Das WordPress-Plugin *Medical Monitor* hat ein Einreichungsformular. Es ist
-vollständig und kann viel — aber es ist eine Redaktionsoberfläche. Autoren, denen
-sie vorgestellt wurde, wollten nicht damit arbeiten: **Wer einmal im Jahr
-einreicht, lernt keine Redaktionsoberfläche.**
-
-Diese Seite nimmt den Autor an die Hand. Bei jedem Feld steht, was hineingehört
-und wie lang es sein darf. Was fehlt, wird laufend angezeigt, nicht erst beim
-Absenden. Am Ende sieht der Autor alles beisammen und gibt es frei — erst dann
-geht etwas weg.
-
-## Aufbau
+Die Einreichungsseite selbst liegt auf dem MVF-Server:
 
 | | |
 |---|---|
-| `index.html` | die ganze Seite: eine Datei, kein Skript von außen |
-| `fonts/` | Lato, wie in den zwölf Knowledge-Hubs |
-| `logo/` | Zeichen und MVF-Logo |
-| `CNAME` | `einreichung.m-vf.de` |
+| Autorenseite | <https://www.monitor-versorgungsforschung.de/einreichung/> |
+| Redaktionsansicht | <https://www.monitor-versorgungsforschung.de/einreichung/intern/> |
+| Endpunkt | `/einreichung/einreichung.php` |
 
-Keine Abhängigkeiten, kein Bauschritt, kein Generator. Ändern heißt: `index.html`
-bearbeiten, committen, pushen.
+## Warum sie dort liegen muss
 
-## Sechs Schritte
+Der Endpunkt lädt WordPress über `wp-load.php` **direkt**. Das war der Umbau,
+der die Sache überhaupt zum Laufen gebracht hat: Der vorherige Weg über die
+REST-Schnittstelle rief die eigene öffentliche Adresse auf, lief damit über
+Cloudflare und bekam dessen Bot-Prüfung als Antwort — HTML statt JSON, gelesen
+als 403.
 
-1. **Ihr Beitrag** — Rubrik, Vorzeile, Überschrift, Vorspann, Manuskript
-2. **Zusammenfassung** — Abstract und Schlagwörter, deutsch und englisch
-3. **Abbildungen** — Bilder und Tabellen, jeweils mit Unterschrift
-4. **Autoren** — Haupt- und Korrespondenzautor zuerst, dann die Mitautoren
-5. **Formales** — Literatur, Zitation, Ausgabe, Lizenz, Interessenkonflikte
-6. **Prüfen und freigeben** — Mängelliste, Übersicht, Autorenerklärung
+Direkt laden geht nur aus demselben Verzeichnisbaum heraus. Eine Subdomain auf
+einen eigenen Server zu legen hätte genau diesen Zugriff gekostet; die
+Alternative wäre ein Proxy gewesen. Deshalb: eine Adresse, ein Ordner.
 
-Die Reihenfolge in Schritt 4 trägt eine Information: **Position 1 ist der
-Korrespondenzautor.** Ein eigenes Feld dafür gibt es in Medical Monitor bewusst
-nicht.
+## Warum diese Weiterleitung trotzdem bleibt
 
-## Was die Seite selbst prüft
+Die kurze Adresse steht in gedruckten Heften und in Mails. Sie einfach sterben
+zu lassen hieße, dass jemand mit einem Heft in der Hand vor einer
+Fehlermeldung steht.
 
-- **Längen** — Überschrift 20 bis 100 Zeichen, Vorspann 600 bis 900, Abstracts je
-  1.000 bis 1.500. Der Zähler sagt, wie viel noch fehlt, nicht nur wie viel
-  dasteht.
-- **Schlagwörter** — drei bis sechs je Sprache, mit Komma getrennt.
-- **Bildbreite im Browser gemessen**, bevor etwas hochgeht. „300 dpi“ steht in
-  einer Bilddatei nur als Notiz und lässt sich ohne Qualitätsgewinn umschreiben;
-  prüfbar ist allein die Pixelbreite. Abbildungen brauchen 2.126 px (180 mm bei
-  300 dpi), Porträts 354 px (30 mm).
-- **Unterschriften** — jede Abbildung und jede Tabelle braucht eine; ein leeres
-  Feld bleibt sichtbar markiert.
-- **Editorial** steht nicht zur Wahl. Das ist Sache des Herausgebers.
-- **Wissenschaft und Wissen gehen ins Peer Review.** Beide Rubriken tragen den
-  Hinweis schon in der Auswahlliste, damit die sechs Wochen Vorlauf niemanden
-  überraschen.
+## Wo die Quelle liegt — und warum unter `_quelle/`
 
-## Was noch fehlt
+Die eigentliche Seite steht in `_quelle/index.html`. Der Unterstrich ist kein
+Geschmack: GitHub Pages läuft hier mit Jekyll, und Jekyll veröffentlicht
+Verzeichnisse mit führendem Unterstrich nicht. Damit ist ausgeschlossen, dass
+hier je eine zweite, veraltete Fassung der Seite erreichbar ist.
 
-**Der Anschluss an WordPress.** Er kann nicht aus dem Browser kommen — das
-Anwendungspasswort dürfte dort nicht liegen. Dafür gibt es ein PHP-Skript für den
-MVF-Server, gebaut wie `/anmeldung/anmeldung.php`. Es nimmt die Einreichung
-entgegen, prüft alles noch einmal (was aus einem Browser kommt, ist eine
-Behauptung), lädt die Dateien in die Mediathek und legt den Beitrag als Entwurf
-im Typ `abstract` an.
+Genau das war nämlich passiert. Am 06.09.2026 stand unter dieser Adresse
+stundenlang ein Formular ohne die Rubriken *Kongressnachbericht* und
+*Sonderdruck*, während der Server sie schon kannte — ein Autor hätte etwas
+einreichen können, das der Endpunkt gar nicht mehr annimmt.
 
-**Die Anmeldung des Autors**, damit ein Zwischenstand auf dem Server liegt und
-nicht nur im Browser — und damit ein Autor an einem anderen Gerät weitermachen
-kann.
+## Ändern und ausliefern
 
-**Zwei Freigaben beim Plugin-Entwickler**, beide je eine Zeile: Der Beitragstyp
-`autoren` und die Schlagwortlisten `tag_de`/`tag_en` sind nicht über REST
-erreichbar (`show_in_rest` steht nur bei `abstract`). Solange das so ist, landen
-Autorenangaben und Schlagwörter lesbar unter „Sonstige Hinweise“ am Beitrag, und
-die Redaktion überträgt sie.
+1. `_quelle/index.html` bearbeiten, committen, pushen.
+2. Die Datei als `index.html` nach `/einreichung/` auf den MVF-Server legen,
+   zusammen mit `fonts/` und `logo/`, falls die sich geändert haben.
 
-## Der Wortlaut der Autorenerklärung
+Es gibt keinen Bauschritt und keine Abhängigkeit von außen — eine Datei, die
+Schrift daneben.
 
-Steht in Schritt 6 und ist **rechtlich bindend, aber noch nicht juristisch
-geprüft**. Er muss mit dem übereinstimmen, was das Server-Skript speichert —
-sonst bestätigt jemand etwas anderes, als abgelegt wird. Wer ihn ändert, ändert
-beide Stellen.
+Die Redaktionsansicht hat ein eigenes Repo (`einreichung-intern`); dort
+erzeugt ein Skript aus der `index.html` die `index.php` mit Anmeldung.
 
 ---
 
-*eRelation AG – Content in Health, Bonn · [Impressum](https://www.monitor-versorgungsforschung.de/impressum/)*
+*eRelation AG – Content in Health, Bonn*
