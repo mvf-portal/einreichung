@@ -335,6 +335,51 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 .sicherung .knopfzeile{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .sicherung-meldung{font-size:14px;font-weight:700;color:var(--ok)}
 .sicherung-meldung.fehler{color:var(--stop)}
+
+/* --- Anmeldung --------------------------------------------------------
+   Der Zwischenstand im Browser genuegt fuer den Regelfall, aber nicht fuer
+   den Geraetewechsel. Wer sich anmeldet, hat seinen Stand bei uns liegen -
+   ohne Passwort, weil ein Autor einmal im Jahr einreicht und ein Passwort
+   dafuer am zweiten Mal vergessen ist. */
+.anmeldung{
+  margin:22px 0 0;padding:16px 18px;
+  border:1px solid var(--line);border-radius:8px;background:var(--card);
+}
+.anmeldung h3{margin:0 0 8px;font-size:16px;color:var(--ink)}
+.anmeldung p{margin:0 0 12px;font-size:14.5px;line-height:1.55;color:var(--ink-soft);max-width:72ch}
+.anmeldung p b{color:var(--ink)}
+.anmeldung .zeile{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.anmeldung input[type=email]{
+  flex:1 1 260px;min-width:0;padding:9px 11px;font:inherit;font-size:15px;
+  color:var(--ink);background:var(--card-2);
+  border:1px solid var(--line);border-radius:6px;
+}
+.anmeldung input[type=email]:focus{outline:2px solid var(--brand);outline-offset:1px}
+.anmelde-meldung{font-size:14px;line-height:1.5;font-weight:700;color:var(--ok);flex-basis:100%}
+.anmelde-meldung.fehler{color:var(--stop)}
+.anmelde-meldung.ruhig{font-weight:400;color:var(--ink-faint)}
+
+/* Der Zustand im Kopf. Er beantwortet die Frage, die sich der Autor beim
+   Weiterarbeiten stellt: Liegt das jetzt bei denen oder nur bei mir? */
+.angemeldet{display:flex;align-items:center;gap:7px;max-width:42vw}
+.angemeldet i{width:8px;height:8px;border-radius:50%;background:var(--gold);display:block;flex:0 0 auto}
+.angemeldet.ja i{background:var(--ok)}
+.angemeldet span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.angemeldet button{
+  background:none;border:0;padding:0;margin:0;font:inherit;font-size:13px;
+  color:var(--brand);text-decoration:underline;cursor:pointer;flex:0 0 auto;
+}
+@media (max-width:720px){
+  .angemeldet{display:none}     /* im Kopf ist dafuer kein Platz; der Kasten sagt es ohnehin */
+}
+
+/* Der Kasten, der beim Anmelden erscheint und fragt, welcher Stand gilt. */
+.wahl{
+  margin:12px 0 0;padding:14px 16px;border:1px solid var(--gold);
+  border-radius:8px;background:var(--card-2);
+}
+.wahl h4{margin:0 0 8px;font-size:15px;color:var(--ink)}
+.wahl p{margin:0 0 10px;font-size:14px}
 </style>
 </head>
 <body>
@@ -354,6 +399,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       </span>
     </a>
     <div class="kopf-rechts">
+      <span class="angemeldet" id="anmeldeStand" hidden><i></i><span></span>
+        <button type="button" id="abmelden">abmelden</button></span>
       <span class="gesichert" id="sicherStand"><i></i><span>Zuletzt gesichert: noch nicht</span></span>
     </div>
   </div>
@@ -361,7 +408,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
 <div class="buehne">
 
-  <p class="fahne"><b>Vorschau.</b> Alle Eingaben bleiben vorläufig in Ihrem eigenen Browser gespeichert. Die Übergabe an die MVF-Redaktion ist noch nicht angeschlossen — der Knopf am Ende zeigt Ihnen, was final gespeichert und an MVF übergeben wird, wenn Sie den Vorgang mit <b>„Beitrag einreichen“</b> abschließen. Im fertigen Betrieb erhalten Sie danach automatisch eine Bestätigungs-E-Mail, die den Eingang Ihres Beitrags bei MVF mit Datum und Uhrzeit quittiert. Fragen und Anmerkungen an <a href="mailto:stegmaier@m-vf.de" style="color:#f0c65a">stegmaier@m-vf.de</a>.</p>
+  <p class="fahne"><b>Vorschau.</b> Ihre Eingaben bleiben vorläufig in Ihrem eigenen Browser gespeichert; wer sich unten mit einem Zugangslink anmeldet, hat seinen Zwischenstand zusätzlich bei uns liegen. Die Übergabe des fertigen Beitrags an die MVF-Redaktion ist noch nicht angeschlossen — der Knopf am Ende zeigt Ihnen, was final gespeichert und an MVF übergeben wird, wenn Sie den Vorgang mit <b>„Beitrag einreichen“</b> abschließen. Im fertigen Betrieb erhalten Sie danach automatisch eine Bestätigungs-E-Mail, die den Eingang Ihres Beitrags bei MVF mit Datum und Uhrzeit quittiert. Fragen und Anmerkungen an <a href="mailto:stegmaier@m-vf.de" style="color:#f0c65a">stegmaier@m-vf.de</a>.</p>
 
   <div class="spalten">
 
@@ -830,13 +877,35 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         <button type="button" class="knopf haupt weit" data-weiter>Weiter</button>
       </div>
 
+      <!-- ============================================== Anmeldung -->
+      <div class="anmeldung" id="anmeldeKasten">
+        <h3>Auf mehreren Geräten arbeiten</h3>
+        <p>Wenn Sie Ihren Beitrag an mehr als einem Gerät bearbeiten möchten — im Büro
+        anfangen, zu Hause weiterschreiben —, lassen Sie sich einen <b>Zugangslink</b>
+        schicken. Ihr Zwischenstand liegt dann bei uns statt nur in diesem Browser, und
+        Sie kommen an jedem Gerät an denselben Stand. <b>Ein Passwort brauchen Sie
+        nicht.</b> Sie geben Ihre E-Mail-Adresse ein, bekommen einen Link zugeschickt und
+        klicken ihn an — das ist alles. Der Link gilt sieben Tage und lässt sich einmal
+        verwenden; danach bleiben Sie auf diesem Gerät angemeldet.</p>
+        <p>Nötig ist das nicht. Wer an einem Gerät bleibt, kann die Anmeldung
+        überspringen und einfach weiterarbeiten.</p>
+        <div class="zeile">
+          <input type="email" id="anmeldeMail" placeholder="ihre.adresse@einrichtung.de"
+                 autocomplete="email" spellcheck="false" aria-label="E-Mail-Adresse für den Zugangslink">
+          <button type="button" class="knopf haupt klein" id="anmeldeSenden">Zugangslink schicken</button>
+          <span id="anmeldeMeldung" class="anmelde-meldung" role="status"></span>
+        </div>
+        <div id="standWahl"></div>
+      </div>
+
       <div class="sicherung">
         <p><b>Ihre Arbeit liegt in diesem Browser.</b> Das genügt für den Regelfall — sie
         übersteht das Schließen des Fensters und einen Neustart des Rechners. Sie geht aber
         verloren, wenn Sie das Gerät wechseln, ein privates Fenster benutzen oder die
         Browserdaten löschen; auf iPhone und iPad räumt Safari solche Daten zudem nach sieben
-        Tagen ohne Besuch von selbst weg. <b>Legen Sie deshalb von Zeit zu Zeit einen Stand
-        als Datei ab.</b> Der Knopf <b>„Zwischenstand speichern“</b> erzeugt sie. Wohin sie
+        Tagen ohne Besuch von selbst weg. Dagegen helfen zwei Dinge: die <b>Anmeldung</b>
+        weiter oben — dann liegt Ihr Stand bei uns — und eine Kopie in Ihrer eigenen Hand.
+        <b>Legen Sie deshalb von Zeit zu Zeit einen Stand als Datei ab.</b> Der Knopf <b>„Zwischenstand speichern“</b> erzeugt sie. Wohin sie
         kommt, bestimmt Ihr Browser: in den Ordner, in dem er Downloads ablegt — meist
         <b>Downloads</b>. Wo genau, steht in seinen Einstellungen; manche Browser fragen
         bei jedem Mal nach. Von dort können Sie die Datei mitnehmen und an einem anderen
@@ -1131,6 +1200,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       $('#sicherStand span:last-child').textContent = 'Zuletzt gesichert: ' +
         z.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) + ' Uhr';
     };
+    zumServer(sofort);   // wer angemeldet ist, legt denselben Stand auch bei uns ab
     if (sofort) { tun(); return; }
     $('#sicherStand').classList.add('laeuft');
     sicherUhr = setTimeout(tun, 700);
@@ -2019,6 +2089,190 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     autorenMalen(); sichern();
   });
 
+  /* ==================================================== Anmeldung
+     Drei Dinge liegen hier beieinander:
+
+       1. Adresse eingeben  -> action=anmelden, der Server verschickt den Link
+       2. Link angeklickt   -> ?zugang=... gegen eine Sitzung tauschen
+       3. angemeldet        -> jeder gesicherte Stand geht zusaetzlich zum Server
+
+     Der Sitzungsschluessel liegt in localStorage, wie der Zwischenstand auch.
+     Das ist derselbe Speicher, der geleert werden kann - dann ist man
+     abgemeldet und fordert einen neuen Link an. Mehr soll es auch nicht sein:
+     Ein Cookie waere ein Cookie, mit allem, was daran haengt, und hier geht es
+     um einen Entwurf, nicht um ein Konto. */
+
+  var SITZUNG = 'mvf-einreichung-sitzung';
+  var ZIEL = 'https://www.monitor-versorgungsforschung.de/einreichung/einreichung.php';
+
+  function sitzung()      { try { return localStorage.getItem(SITZUNG) || ''; } catch (e) { return ''; } }
+  function sitzungSetzen(w) {
+    try { w ? localStorage.setItem(SITZUNG, w) : localStorage.removeItem(SITZUNG); } catch (e) {}
+  }
+
+  function ruf(aktion, daten) {
+    var f = new FormData();
+    f.append('action', aktion);
+    Object.keys(daten || {}).forEach(function (k) { f.append(k, daten[k]); });
+    return fetch(ZIEL, {method:'POST', body:f})
+      .then(function (a) { return a.json().catch(function () { return {ok:false, grund:'keine-antwort'}; }); });
+  }
+
+  function anmeldeMeldung(text, art) {
+    var n = $('#anmeldeMeldung');
+    n.className = 'anmelde-meldung' + (art ? ' ' + art : '');
+    n.textContent = text || '';
+  }
+
+  function kopfMalen() {
+    var n = $('#anmeldeStand'), mail = stand._angemeldet_als || '';
+    if (!mail) { n.hidden = true; return; }
+    n.hidden = false;
+    n.classList.add('ja');
+    $('#anmeldeStand span').textContent = 'Angemeldet als ' + mail;
+  }
+
+  /* --- 1. Link anfordern ------------------------------------------------ */
+  $('#anmeldeSenden').addEventListener('click', function () {
+    var mail = ($('#anmeldeMail').value || '').trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(mail)) {
+      anmeldeMeldung('Bitte prüfen Sie die E-Mail-Adresse.', 'fehler'); return;
+    }
+    var b = this;
+    b.disabled = true;
+    anmeldeMeldung('Wird verschickt …', 'ruhig');
+    ruf('anmelden', {mail: mail}).then(function (a) {
+      b.disabled = false;
+      if (a && a.ok) {
+        /* Bewusst dieselbe Antwort, auch wenn die Adresse unbekannt ist oder
+           zu oft angefragt wurde: Eine Seite, die verraet, welche Adressen sie
+           kennt, ist ein Verzeichnis. */
+        anmeldeMeldung('Wenn zu dieser Adresse etwas zu schicken war, ist die Nachricht '
+          + 'unterwegs. Bitte sehen Sie in Ihrem Postfach nach — auch im Spam-Ordner. '
+          + 'Der Link gilt sieben Tage.', '');
+      } else {
+        anmeldeMeldung('Das hat gerade nicht geklappt. Bitte versuchen Sie es später '
+          + 'noch einmal, oder schreiben Sie an stegmaier@m-vf.de.', 'fehler');
+      }
+    }).catch(function () {
+      b.disabled = false;
+      anmeldeMeldung('Keine Verbindung zum Server. Ihre Eingaben sind nicht verloren — '
+        + 'sie liegen weiter in diesem Browser.', 'fehler');
+    });
+  });
+
+  /* --- 2. Den Link einloesen -------------------------------------------- */
+  function zugangEinloesen(schluessel) {
+    anmeldeMeldung('Anmeldung wird geprüft …', 'ruhig');
+    ruf('zugang', {zugang: schluessel}).then(function (a) {
+      if (!a || !a.ok) {
+        anmeldeMeldung((a && a.meldung) || 'Dieser Link gilt nicht mehr. Bitte fordern Sie '
+          + 'unten einen neuen an.', 'fehler');
+        return;
+      }
+      sitzungSetzen(a.sitzung);
+      stand._angemeldet_als = a.mail;
+      kopfMalen();
+      anmeldeMeldung('Angemeldet als ' + a.mail + '. Ihr Zwischenstand liegt ab jetzt '
+        + 'auch bei uns.', '');
+      /* Vor dem ersten Wort auf dem Server steht die Frage, welcher Stand gilt. */
+      standAbgleichen(a.stand);
+    }).catch(function () {
+      anmeldeMeldung('Keine Verbindung zum Server. Bitte versuchen Sie es später.', 'fehler');
+    });
+  }
+
+  /* --- Welcher Stand gilt? ---------------------------------------------
+     Der heikle Moment. Auf dem Server liegt vielleicht ein Stand von gestern,
+     im Browser einer von eben - oder umgekehrt. Etwas stillschweigend zu
+     ueberschreiben, waere das Schlimmste, was diese Seite tun kann: Es faellt
+     erst auf, wenn die Arbeit schon weg ist. Also fragen wir, und zwar mit
+     Datum und Umfang, damit die Frage beantwortbar ist. */
+  function etwasGeschrieben() {
+    return ['titel', 'vorspann', 'abstractDe', 'abstractEn', 'literatur']
+      .some(function (f) { return (stand[f] || '').trim().length > 0; });
+  }
+
+  function standAbgleichen(vomServer) {
+    abgleichFertig = true;
+    var kasten = $('#standWahl');
+    kasten.innerHTML = '';
+    var dort = vomServer && vomServer.stand ? vomServer.stand : null;
+
+    if (!dort) { zumServer(true); return; }                 // nichts dort: unseren hinlegen
+    if (!etwasGeschrieben()) { standUebernehmen(dort); return; }  // hier nichts: seinen nehmen
+
+    var wann = vomServer.zeit
+      ? new Date(vomServer.zeit * 1000).toLocaleString('de-DE',
+          {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}) + ' Uhr'
+      : 'unbekanntem Zeitpunkt';
+    kasten.innerHTML =
+      '<div class="wahl"><h4>Es gibt zwei Stände. Welcher gilt?</h4>' +
+      '<p>Bei uns liegt ein Zwischenstand vom <b>' + esc(wann) + '</b>. In diesem Browser ' +
+      'steht ebenfalls etwas. Wir überschreiben nichts von selbst — bitte entscheiden Sie:</p>' +
+      '<div class="zeile">' +
+      '<button type="button" class="knopf haupt klein" id="wahlHier">Was hier steht, gilt</button>' +
+      '<button type="button" class="knopf rand klein" id="wahlDort">Den gespeicherten Stand laden</button>' +
+      '</div></div>';
+    $('#wahlHier').addEventListener('click', function () {
+      kasten.innerHTML = '';
+      zumServer(true);
+      anmeldeMeldung('Ihr Stand aus diesem Browser gilt und liegt jetzt auch bei uns.', '');
+    });
+    $('#wahlDort').addEventListener('click', function () {
+      kasten.innerHTML = '';
+      standUebernehmen(dort);
+      anmeldeMeldung('Der gespeicherte Stand ist geladen.', '');
+    });
+  }
+
+  /* --- 3. Mitspeichern --------------------------------------------------
+     Nicht bei jedem Tastendruck: Die Seite sichert im Browser nach 0,7
+     Sekunden Ruhe, zum Server geht es erst nach fuenf. Der Browser ist der
+     schnelle Speicher, der Server der belastbare. */
+  /**
+   * Erst wenn geklaert ist, welcher Stand gilt, darf etwas zum Server.
+   *
+   * Beim Oeffnen der Seite sichert sie ihren Browserstand sofort - und wenn
+   * das ungebremst zum Server ginge, ueberschriebe ein frisch geoeffneter,
+   * fast leerer Browser den Stand, an dem gestern an einem anderen Geraet
+   * gearbeitet wurde. Erst fragen, dann schreiben.
+   */
+  var abgleichFertig = false;
+
+  var serverUhr = null;
+  function zumServer(sofort) {
+    if (!sitzung() || !abgleichFertig) { return; }
+    clearTimeout(serverUhr);
+    var tun = function () {
+      ruf('sichern', {sitzung: sitzung(), stand: JSON.stringify(stand)})
+        .then(function (a) {
+          if (a && a.ok) { return; }
+          if (a && (a.grund === 'nicht-angemeldet' || a.grund === 'anmeldung-abgelaufen')) {
+            sitzungSetzen(''); delete stand._angemeldet_als; kopfMalen();
+            anmeldeMeldung('Ihre Anmeldung gilt nicht mehr. Ihre Arbeit ist nicht verloren — '
+              + 'sie liegt weiter in diesem Browser. Fordern Sie bei Gelegenheit einen neuen '
+              + 'Zugangslink an.', 'fehler');
+          }
+        })
+        .catch(function () { /* kein Netz: der Browser hat den Stand, das genuegt vorerst */ });
+    };
+    if (sofort) { tun(); return; }
+    serverUhr = setTimeout(tun, 5000);
+  }
+
+  $('#abmelden').addEventListener('click', function () {
+    if (!confirm('Abmelden? Ihr Zwischenstand bleibt sowohl in diesem Browser als auch '
+               + 'bei uns erhalten. Zum Weiterarbeiten an einem anderen Gerät fordern Sie '
+               + 'dort einfach einen neuen Zugangslink an.')) { return; }
+    ruf('abmelden', {sitzung: sitzung()});
+    sitzungSetzen('');
+    delete stand._angemeldet_als;
+    sichern(true);
+    kopfMalen();
+    anmeldeMeldung('Abgemeldet.', 'ruhig');
+  });
+
   leisteBauen();
   felderBinden();
   ablagenBinden();
@@ -2026,6 +2280,32 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   autorenMalen();
   zeige(0);
   if (localStorage.getItem(LAGER)) { sichern(true); }
+
+  /* Zum Schluss die Anmeldung anschliessen - erst jetzt steht alles, was
+     standUebernehmen() braucht. */
+  kopfMalen();
+  var ausUrl = new URLSearchParams(location.search).get('zugang');
+  if (ausUrl) {
+    /* Den Schluessel aus der Adresszeile nehmen, bevor irgendetwas ihn
+       mitliest: Verlauf, Lesezeichen, ein Screenshot ueber die Schulter. */
+    history.replaceState(null, '', location.pathname);
+    zugangEinloesen(ausUrl);
+    abgleichFertig = false;   // erst nach dem Einloesen
+  } else if (sitzung()) {
+    /* Angemeldet, aber die Seite frisch geoeffnet - vielleicht an einem
+       anderen Geraet. Also nachsehen, was auf dem Server liegt. */
+    ruf('stand', {sitzung: sitzung()}).then(function (a) {
+      if (a && a.ok) {
+        stand._angemeldet_als = a.mail;
+        kopfMalen();
+        standAbgleichen(a.stand);
+      } else if (a && (a.grund === 'nicht-angemeldet' || a.grund === 'anmeldung-abgelaufen')) {
+        sitzungSetzen(''); delete stand._angemeldet_als; kopfMalen();
+      }
+    }).catch(function () { /* kein Netz: die Sperre bleibt, es geht nichts hinaus */ });
+  } else {
+    abgleichFertig = true;    // niemand angemeldet: nichts zu klaeren
+  }
 
 })();
 </script>
