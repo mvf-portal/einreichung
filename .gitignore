@@ -1,0 +1,4 @@
+# Arbeitssicherungen neben der Quelle. Sie entstehen vor jeder groesseren
+# Aenderung und heissen nach dem, was danach kam. Im Repo haetten sie keinen
+# Wert - dafuer gibt es die Historie.
+_quelle/*.vor-*

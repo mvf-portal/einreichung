@@ -149,9 +149,15 @@ legend{font-weight:700;font-size:15px;padding:0;margin:0 0 4px}
 .gruppe{margin:0 0 18px;max-width:70ch}
 .gruppe > label,.gruppe .beschriftung{display:block;font-weight:700;font-size:14.5px;margin:0 0 5px}
 .pflicht{color:var(--stop);font-weight:700}
+/* Freiwillige Felder tragen kein rotes Sternchen, sondern ein leises Wort -
+   sonst sucht man beim Ausfuellen nach einer Pflicht, die es nicht gibt. */
+.freiwillig{font-weight:400;font-size:12.5px;opacity:.65;margin-left:6px}
+.vorschlag{border-left:2px solid var(--rand,#d9d9d9);padding:2px 0 2px 14px;margin:14px 0}
+.vorschlag .klein{margin:0 0 6px;font-size:13px;opacity:.75}
+.vorschlag label{margin-top:10px}
 .wink{margin:5px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink-faint)}
 input[type=text],input[type=email],select,textarea{
-  width:100%;padding:10px 12px;font:inherit;font-size:15px;color:var(--ink);
+  width:100%;padding:10px 12px;font:inherit;font-size:16px;color:var(--ink);
   background:var(--card-2);border:1px solid var(--line);border-radius:5px}
 textarea{line-height:1.55;resize:vertical}
 input:disabled,textarea:disabled{opacity:.55}
@@ -174,6 +180,17 @@ input:disabled,textarea:disabled{opacity:.55}
 .knopf.rand:hover{border-color:var(--brand)}
 .knopf.klein{font-size:13.5px;padding:7px 14px}
 .knopf:disabled{opacity:.5;cursor:not-allowed}
+/* Am Finger bedient: Wer mit dem Daumen zielt, trifft eine Flaeche von
+   44 Punkten zuverlaessig - darunter wird es Gluecksache. Mit der Maus ist
+   das kein Thema, deshalb greift die Regel nur bei grobem Zeigegeraet
+   (pointer:coarse), also auf Telefon und Tablet. Am Rechner bleibt alles,
+   wie es ist. */
+@media (pointer:coarse){
+  .knopf{min-height:44px}
+  .knopf.klein{min-height:44px;padding:9px 16px}
+  input[type=text],input[type=email],select,textarea{min-height:44px}
+  .schritt{min-height:44px}
+}
 .fusszeile{display:flex;flex-wrap:wrap;gap:12px;align-items:center;
   margin-top:26px;padding-top:20px;border-top:1px solid var(--line-soft)}
 .fusszeile .weit{margin-left:auto}
@@ -362,6 +379,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 /* Der Zustand im Kopf. Er beantwortet die Frage, die sich der Autor beim
    Weiterarbeiten stellt: Liegt das jetzt bei denen oder nur bei mir? */
 .angemeldet{display:flex;align-items:center;gap:7px;max-width:42vw}
+/* display:flex schlaegt das hidden-Attribut - ohne diese Zeile stand der
+   Knopf "abmelden" im Kopf, auch wenn niemand angemeldet war. Gefunden am
+   11.09.2026 auf einem Screenshot der Seite. */
+.angemeldet[hidden]{display:none}
 .angemeldet i{width:8px;height:8px;border-radius:50%;background:var(--gold);display:block;flex:0 0 auto}
 .angemeldet.ja i{background:var(--ok)}
 .angemeldet span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -408,7 +429,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
 <div class="buehne">
 
-  <p class="fahne"><b>Vorschau.</b> Ihre Eingaben bleiben vorläufig in Ihrem eigenen Browser gespeichert; wer sich unten mit einem Zugangslink anmeldet, hat seinen Zwischenstand zusätzlich bei uns liegen. Die Übergabe des fertigen Beitrags an die MVF-Redaktion ist noch nicht angeschlossen — der Knopf am Ende zeigt Ihnen, was final gespeichert und an MVF übergeben wird, wenn Sie den Vorgang mit <b>„Beitrag einreichen“</b> abschließen. Im fertigen Betrieb erhalten Sie danach automatisch eine Bestätigungs-E-Mail, die den Eingang Ihres Beitrags bei MVF mit Datum und Uhrzeit quittiert. Fragen und Anmerkungen an <a href="mailto:stegmaier@m-vf.de" style="color:#f0c65a">stegmaier@m-vf.de</a>.</p>
+  <!-- Dieser Kasten sagte bis zum 09.09.2026, die Übergabe sei „noch nicht angeschlossen“. Das stimmte, solange der Knopf nur anzeigte, was übergeben würde. Seit die Einreichung wirklich läuft, wäre es eine Falschaussage an genau der Stelle, an der Vertrauen entsteht — deshalb neu geschrieben. -->
+  <p class="fahne">Ihre Eingaben bleiben <b>in Ihrem eigenen Browser</b> gespeichert, während Sie arbeiten; wer sich unten mit einem Zugangslink anmeldet, hat seinen Zwischenstand zusätzlich bei uns liegen. Hochgeladene Dateien gehen sofort an die Redaktion — der übrige Beitrag erst, wenn Sie am Ende auf <b>„Beitrag einreichen“</b> klicken. Danach erhalten Sie eine Bestätigung per E-Mail, die den Eingang mit Datum und Uhrzeit quittiert, und können Ihren Beitrag zurückziehen, solange die Begutachtung noch nicht begonnen hat. Fragen und Anmerkungen an <a href="mailto:stegmaier@m-vf.de" style="color:#f0c65a">stegmaier@m-vf.de</a>.</p>
 
   <div class="spalten">
 
@@ -431,7 +453,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <ol>
             <li>Rubrik wählen — sie bestimmt, wie Ihr Beitrag gesetzt und begutachtet wird.</li>
             <li>Überschrift und Vorspann eintragen.</li>
-            <li>Das Manuskript als Word-Datei hochladen.</li>
+            <li>Das Manuskript als Dokument hochladen.</li>
           </ol>
         </div>
 
@@ -448,11 +470,14 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <option value="wissen">Wissen (Achtung: Peer Review)</option>
             <option value="wissenstransfer">Wissenstransfer</option>
             <option value="kommentar">Kommentar</option>
-            <option value="report">Report</option>
-            <option value="interview">Interview</option>
-            <option value="serie">Serie</option>
-            <option value="kongress">Kongressnachbericht</option>
-            <option value="sonderdruck">Sonderdruck (Supplement)</option>
+            <!-- Report, Interview, Serie, Kongressnachbericht, Sonderdruck und
+                 Editorial stehen hier NICHT: Das sind die Rubriken, die das
+                 Haus selbst einstellt (`intern: true`), und der Endpunkt weist
+                 sie von dieser Seite ab. Stuenden sie hier, waehlte ein Autor
+                 eine davon, fuellte sechs Schritte aus - und bekaeme am Ende
+                 "Die Rubrik stellt die Redaktion selbst ein." Die Liste wird
+                 unten zusaetzlich zur Laufzeit gegen RUBRIKEN geprueft, damit
+                 sie nicht wieder auseinanderlaufen kann. -->
           </select>
           <p class="wink" id="rubrikWink">Sobald Sie gewählt haben, steht hier, was die Rubrik
           bedeutet.</p>
@@ -500,7 +525,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         <div class="gruppe">
           <span class="beschriftung">Manuskript <span class="pflicht">*</span></span>
           <p class="anleitung">Laden Sie hier bitte Ihren fertigen Text als
-          <b>Word-Datei</b> hoch — <span class="mass">.docx, .doc oder .rtf</span>, eine Datei.
+          <b>Dokument</b> hoch — <span class="mass">.docx, .doc oder .rtf</span>, eine Datei.
           Bitte <b>ohne Layout</b>: keine Textrahmen, keine Spalten, und Bilder nicht in die
           Datei einbetten — die laden Sie in Schritt 3 einzeln hoch.</p>
           <p class="anleitung">Zum <b>Dateinamen</b>: ohne Leerzeichen, Kommas, Umlaute und
@@ -514,6 +539,25 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <p><b>Datei wählen</b> oder hierher ziehen</p>
           </div>
           <div id="manuskriptListe"></div>
+        <div class="gruppe" data-teil="textpruefung">
+          <label>Text prüfen lassen <span class="freiwillig">freiwillig</span></label>
+          <p class="anleitung">Mit unserem KI-Lektorat helfen wir Ihnen, ein
+          möglichst fehlerfreies Dokument einzureichen. Die KI macht mögliche
+          Fehlerstellen sichtbar — Sprache, Widersprüche, uneinheitliche
+          Schreibweisen.</p>
+          <p class="anleitung">Lesen lässt sich nur <b>.docx</b>. Bei
+          <b>.doc</b> und <b>.rtf</b> nehmen wir Ihre Datei an, aber der Text
+          bleibt für die Prüfung verschlossen.</p>
+          <p class="anleitung">Sie ändern <b>oder auch nicht</b> und laden Ihr
+          Dokument erst dann final hoch. So kommt der bereinigte Text zu MVF.
+          <b>Wir ändern nichts</b>, und nichts davon hindert Sie am
+          Einreichen.</p>
+          <p style="margin:10px 0 0">
+            <button type="button" class="knopf" id="pruefStart">Text prüfen</button>
+          </p>
+          <div id="pruefBefunde" style="margin-top:10px"></div>
+        </div>
+
         </div>
       </section>
 
@@ -530,7 +574,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         <div class="auftrag">
           <p class="was">In diesem Schritt schreiben Sie zwei Zusammenfassungen.</p>
           <ol>
-            <li>Das deutsche Abstract und drei bis sechs deutsche Schlüsselwörter.</li>
+            <li>Das deutsche Abstract und drei bis sieben deutsche Schlüsselwörter.</li>
             <li>Dasselbe auf Englisch — Titel, Abstract, Keywords.</li>
           </ol>
           <p>Beides ist Pflicht. Das englische Abstract ist das, was international von Ihrem
@@ -551,10 +595,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <div class="gruppe">
             <label for="schlagDe">Schlüsselwörter deutsch <span class="pflicht">*</span>
               <span class="zeichenzahl" data-zaehlt="schlagDe"></span></label>
-            <p class="anleitung">Tragen Sie hier bitte <span class="mass">3 bis 6 Begriffe</span>
+            <p class="anleitung">Tragen Sie hier bitte <span class="mass">3 bis 7 Begriffe</span>
             ein, <b>mit Komma getrennt</b>. Bitte keine Wörter, die schon in der Überschrift
             stehen — die helfen beim Finden nicht weiter.</p>
-            <input type="text" id="schlagDe" data-feld="schlagDe" data-komma="3" data-kommamax="6"
+            <input type="text" id="schlagDe" data-feld="schlagDe" data-komma="3" data-kommamax="7"
                    placeholder="Triage, Versorgungssteuerung, Notaufnahme, Primärversorgung">
           </div>
         </fieldset>
@@ -581,10 +625,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <div class="gruppe">
             <label for="schlagEn">Keywords englisch <span class="pflicht">*</span>
               <span class="zeichenzahl" data-zaehlt="schlagEn"></span></label>
-            <p class="anleitung">Tragen Sie hier bitte <span class="mass">3 bis 6 Begriffe</span>
+            <p class="anleitung">Tragen Sie hier bitte <span class="mass">3 bis 7 Begriffe</span>
             ein, mit Komma getrennt. Nach Möglichkeit <b>MeSH-Begriffe</b> — dann wird Ihr
             Beitrag in der internationalen Suche gefunden.</p>
-            <input type="text" id="schlagEn" data-feld="schlagEn" data-komma="3" data-kommamax="6"
+            <input type="text" id="schlagEn" data-feld="schlagEn" data-komma="3" data-kommamax="7"
                    placeholder="Triage, Patient Navigation, Emergency Care">
             <p class="wink"><a href="https://www.ncbi.nlm.nih.gov/mesh/" target="_blank"
                rel="noopener">MeSH-Begriffe nachschlagen</a> — die Fachwortliste der
@@ -646,6 +690,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           nicht abgetippt: Nur eine echte Tabelle lässt sich im Satz umbrechen und online
           lesbar darstellen. Beim Dateinamen wie bei den Abbildungen:
           <i>Nachname_Tab1.xlsx</i>.</p>
+          <!-- Rueckmeldung zum Hochladen. Die Dateien gehen sofort zum Server,
+               nicht erst beim Absenden - also muss hier stehen, ob es geklappt
+               hat. -->
+          <div class="kasten" id="dateiMeldung" hidden style="margin-bottom:14px"></div>
+          <!-- Hinweis auf Überlänge. Sperrt nichts - über Ausnahmen entscheidet
+               die Chefredaktion, nicht ein Zähler. -->
+          <div class="kasten acht" id="laengeHinweis" hidden style="margin-bottom:14px"></div>
           <div class="ablage" data-ablage="tabelle" tabindex="0" role="button">
             <p><b>Tabellen wählen</b> oder hierher ziehen</p>
           </div>
@@ -808,6 +859,59 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <span class="ja">Besser:</span> <i>Es bestehen keine Interessenkonflikte. Der Beitrag
           wurde nicht gefördert.</i></p>
         </div>
+
+        <div class="gruppe" data-teil="gutachtervorschlag">
+          <label>Gutachterinnen und Gutachter vorschlagen
+            <span class="freiwillig">freiwillig</span></label>
+          <p class="anleitung">Sie kennen Ihr Fachgebiet. Wir laden Sie hiermit
+          ein, bis zu zwei Personen zur Begutachtung Ihres Beitrags vorzuschlagen.
+          <b>Ihr Vorschlag ist unverbindlich</b> — er geht an den Herausgeber,
+          der über die Begutachtung entscheidet. Sie erfahren
+          nicht, wer Ihren Beitrag am Ende begutachtet hat; das Peer Review bei
+          <i>Monitor Versorgungsforschung</i> ist anonym.</p>
+          <p class="anleitung">Nicht infrage kommen Personen, mit denen ein
+          Interessenkonflikt bestünde: aus derselben Einrichtung, gemeinsame
+          Veröffentlichungen oder Projekte in den letzten drei Jahren, oder eine
+          persönliche Nähe, die eine unabhängige Beurteilung erschwert. Solche
+          Vorschläge müssten wir übergehen — dann ist das Feld besser leer.</p>
+
+          <div class="vorschlag">
+            <p class="klein"><b>Erster Vorschlag</b></p>
+            <label for="gutachter1_titel">Titel</label>
+            <input type="text" id="gutachter1_titel" data-feld="gutachter1_titel"
+              placeholder="Prof. Dr. med.">
+            <label for="gutachter1_name">Name</label>
+            <input type="text" id="gutachter1_name" data-feld="gutachter1_name"
+              placeholder="Vorname Nachname">
+            <label for="gutachter1_institution">Institution</label>
+            <input type="text" id="gutachter1_institution" data-feld="gutachter1_institution"
+              placeholder="Institut, Universität oder Einrichtung">
+            <label for="gutachter1_mail">E-Mail</label>
+            <input type="email" id="gutachter1_mail" data-feld="gutachter1_mail"
+              placeholder="vorname.nachname@einrichtung.de">
+            <label for="gutachter1_warum">Warum ist Ihr Vorschlag Ihrer Ansicht nach
+              für ein Peer Review geeignet?</label>
+            <p class="anleitung">Ein, zwei Sätze genügen. Wichtig ist die fachliche
+            Nähe zum Gegenstand Ihres Beitrags — nicht die Bekanntheit der Person.</p>
+            <textarea id="gutachter1_warum" data-feld="gutachter1_warum" rows="3"
+              placeholder="Arbeitet seit Jahren zur Versorgung von … und hat die hier verwendete Methode selbst mitentwickelt."></textarea>
+          </div>
+
+          <div class="vorschlag">
+            <p class="klein"><b>Zweiter Vorschlag</b></p>
+            <label for="gutachter2_titel">Titel</label>
+            <input type="text" id="gutachter2_titel" data-feld="gutachter2_titel">
+            <label for="gutachter2_name">Name</label>
+            <input type="text" id="gutachter2_name" data-feld="gutachter2_name">
+            <label for="gutachter2_institution">Institution</label>
+            <input type="text" id="gutachter2_institution" data-feld="gutachter2_institution">
+            <label for="gutachter2_mail">E-Mail</label>
+            <input type="email" id="gutachter2_mail" data-feld="gutachter2_mail">
+            <label for="gutachter2_warum">Warum ist Ihr Vorschlag Ihrer Ansicht nach
+              für ein Peer Review geeignet?</label>
+            <textarea id="gutachter2_warum" data-feld="gutachter2_warum" rows="3"></textarea>
+          </div>
+        </div>
       </section>
 
       <!-- ============================================ 6 Prüfen und freigeben -->
@@ -937,7 +1041,14 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     literatur:'', zitation:'', danksagung:'', ausgabe:'', lizenz:'cc_by',
     konflikte:'', erklaerung:false, efirst:'nein',
     manuskript:[], bilder:[], tabellen:[],
-    autoren:[{name:'', mail:'', vita:'', bild:null}]
+    autoren:[{name:'', mail:'', institution:'', orcid:'', vita:'', bild:null}],
+    /* Die Vorgangsnummer entsteht mit dem Entwurf und bleibt bei ihm. Zu
+       derselben Nummer legt der Server keinen zweiten Beitrag an - das ist
+       der Schutz gegen den doppelten Klick, gegen die Wiederholung nach
+       abgerissener Verbindung und gegen das "sicherheitshalber noch
+       einmal". */
+    vorgang: 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+    eingereicht: null
   };
 
   // Ein Stand aus einer frueheren Fassung kennt das eFirst-Feld noch nicht.
@@ -952,14 +1063,41 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     {name:'Prüfen',             unter:'und freigeben'}
   ];
   var MIN_BILD = 2126, MIN_PORTRAIT = 354;
+  /* Obergrenze: WordPress rechnet beim Empfang alles ueber 2560 px auf 2560
+     herunter (`big_image_size_threshold`) - darueber ist nichts gewonnen. Und
+     bei genuegend Pixeln stirbt der Vorgang: Ein Portrait mit 6153 x 4102 px
+     brachte ihn am 11.09.2026 zum Absturz, nach 60 Sekunden in Imagick.
+     Dieselbe Zahl steht als MAX_BILDKANTE im Endpunkt und in der
+     Redaktionsansicht. Wer eine aendert, muss alle drei aendern. */
+  var MAX_BILDKANTE = 2560;
 
-  /* Wieviel eine Hoechstgrenze ueberschritten werden darf: zehn Prozent.
+  /* Laenge der Vita des Korrespondenzautors. Die Untergrenze gab es schon:
+     Unter 150 Zeichen steht neben dem Beitrag ein Satzfragment. Die
+     Obergrenze kam am 11.09.2026 aus den Autorenunterlagen dazu - im Heft ist
+     der Platz neben dem Beitrag begrenzt, und was darueber hinausgeht, kuerzt
+     sonst die Redaktion von Hand.
+     Dieselben beiden Zahlen stehen im Endpunkt (VITA_MIN/VITA_MAX) und in der
+     Redaktionsansicht. Wer eine aendert, muss alle drei aendern. */
+  var VITA_MIN = 150, VITA_MAX = 380;
+
+  /* Wieviel eine Hoechstgrenze ueberschritten werden darf: fuenfzehn Prozent.
      Ein Abstract mit 1.510 statt 1.500 Zeichen ist kein Mangel, sondern ein
      gutes Abstract - es hier zurueckzuweisen kostet eine Viertelstunde
-     Kuerzen ohne Gewinn. Die Untergrenzen bleiben hart: Zu kurz heisst, es
+     Kuerzen ohne Gewinn. Zehn Prozent waren zu eng: Ueberschritten wurde in
+     der Praxis meist um wenig mehr, und dann stand ein fertiger Beitrag wegen
+     zwanzig Zeichen still. Die Untergrenzen bleiben hart: Zu kurz heisst, es
      fehlt etwas. Derselbe Wert steht im Endpunkt (TOLERANZ). */
-  var TOLERANZ = 1.10;
-  function hoechstens(grenze) { return Math.floor(grenze * TOLERANZ); }
+  var TOLERANZ = 1.15;
+  /* Gerundet, nicht abgeschnitten: 1500 * 1.15 ergibt in Fliesskomma
+     1724,999..., und daraus wurde mit floor die krumme Zahl 1.724. Endpunkt
+     und Redaktionsansicht rechnen genauso - sonst laufen die Grenzen um ein
+     Zeichen auseinander, und das faellt erst beim Absenden auf. */
+  function hoechstens(grenze) { return Math.round(grenze * TOLERANZ); }
+  function zahl(n) { return n.toLocaleString('de-DE'); }
+  function spanne(was, min, max) {
+    return was + ' (' + zahl(min) + ' bis ' + zahl(max) + ' Zeichen, bis '
+         + zahl(hoechstens(max)) + ' wird angenommen)';
+  }
 
   /* ---------------------------------------------------------- Ausgaben ---
      Erscheinungstermine werden gerechnet, nicht gepflegt.
@@ -1069,9 +1207,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     },
     kommentar: {
       name:'Kommentar', peer:false, intern:false,
-      wink:'Standpunkt, gezeichnet. Im Heft steht über dem Text Ihr Name mit Funktion, '
-        + 'keine Vorzeile und kein Abstract — der Kommentar fängt sofort an.',
-      teile:{vorzeile:'nie', vorspann:'frei', zusammenfassung:'nie',
+      wink:'Standpunkt, gezeichnet. Der Kommentar fängt sofort an — keine Vorzeile, '
+        + 'kein Vorspann, kein Abstract. Über dem Text stehen zwei Zeilen: der Name, '
+        + 'darunter Institution und ORCID.',
+      teile:{vorzeile:'nie', vorspann:'nie', zusammenfassung:'nie',
              literatur:'frei', zitation:'pflicht', konflikte:'pflicht'}
     },
     report: {
@@ -1187,7 +1326,21 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   /* ------------------------------------------------------- Speichern */
 
   function laden() {
-    try { var r = localStorage.getItem(LAGER); return r ? JSON.parse(r) : null; }
+    try {
+      var r = localStorage.getItem(LAGER);
+      if (!r) { return null; }
+      var e = JSON.parse(r);
+      /* Entwuerfe von vor der Vorgangsnummer bekommen eine. Ohne sie griffe
+         der Schutz gegen die zweite Einreichung gerade bei denen nicht, die
+         am laengsten liegen - und das sind die, bei denen am ehesten jemand
+         unsicher ist, ob er schon abgeschickt hat. */
+      if (e && !e.vorgang) {
+        e.vorgang = 'v' + Date.now().toString(36)
+                  + Math.random().toString(36).slice(2, 8);
+      }
+      if (e && e.eingereicht === undefined) { e.eingereicht = null; }
+      return e;
+    }
     catch (e) { return null; }
   }
   var sicherUhr = null;
@@ -1258,15 +1411,28 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     {s:0, teil:'vorzeile', auchFrei:true,
      pruef:function(){ return (stand.vorzeile || '').length > hoechstens(vorzeileGrenze()); },
      text:function(){ return 'Vorzeile kürzen (höchstens ' + vorzeileGrenze() + ' Zeichen)'; }},
-    {s:0, feld:'titel',     text:'Überschrift eintragen (20 bis 100 Zeichen, bis 110 wird angenommen)', min:20, max:100},
-    {s:0, teil:'vorspann', feld:'vorspann',  text:'Vorspann schreiben (600 bis 900 Zeichen, bis 990 wird angenommen)', min:600, max:900},
+    /* Die Annahmegrenze steht hier nicht als Zahl, sondern wird gerechnet.
+       Sie stand dreimal fest im Text und war nach der ersten Aenderung an
+       TOLERANZ dreimal falsch. */
+    {s:0, feld:'titel',     text:spanne('Überschrift eintragen', 20, 100), min:20, max:100},
+    {s:0, teil:'vorspann', feld:'vorspann',  text:spanne('Vorspann schreiben', 600, 900), min:600, max:900},
     {s:0, liste:'manuskript', text:'Manuskript hochladen'},
-    {s:1, teil:'zusammenfassung', feld:'abstractDe', text:'Deutsches Abstract (1.000 bis 1.500 Zeichen, bis 1.650 wird angenommen)', min:1000, max:1500},
-    {s:1, teil:'zusammenfassung', feld:'schlagDe',  text:'Deutsche Schlüsselwörter (3 bis 6)', komma:3},
+    {s:1, teil:'zusammenfassung', feld:'abstractDe', text:spanne('Deutsches Abstract', 1000, 1500), min:1000, max:1500},
+    {s:1, teil:'zusammenfassung', feld:'schlagDe',  text:'Deutsche Schlüsselwörter (3 bis 7)', komma:3},
     {s:1, teil:'zusammenfassung', feld:'titelEn',   text:'Englischer Titel', min:10, max:100},
-    {s:1, teil:'zusammenfassung', feld:'abstractEn', text:'Englisches Abstract (1.000 bis 1.500 Zeichen, bis 1.650 wird angenommen)', min:1000, max:1500},
-    {s:1, teil:'zusammenfassung', feld:'schlagEn',  text:'Englische Keywords (3 bis 6)', komma:3},
+    {s:1, teil:'zusammenfassung', feld:'abstractEn', text:spanne('Englisches Abstract', 1000, 1500), min:1000, max:1500},
+    {s:1, teil:'zusammenfassung', feld:'schlagEn',  text:'Englische Keywords (3 bis 7)', komma:3},
     {s:3, autor:true,       text:'Haupt- und Korrespondenzautor anlegen: Name, E-Mail, Vita'},
+    /* Zu lang steht als eigene Regel daneben: Die Regel darueber prueft, ob
+       ueberhaupt etwas dasteht - hier geht es um eine Vita, die vollstaendig
+       ist und nur gekuerzt werden muss. Zwei verschiedene Meldungen, sonst
+       heisst es "Vita anlegen", obwohl sie laengst dasteht. */
+    {s:3, auchFrei:true,
+     pruef:function(){
+       var a = stand.autoren[0] || {};
+       return (a.vita || '').trim().length > hoechstens(VITA_MAX);
+     },
+     text:'Vita kürzen (höchstens ' + VITA_MAX + ' Zeichen)'},
     {s:4, teil:'literatur', feld:'literatur', text:'Literatur', min:20},
     {s:4, teil:'zitation', feld:'zitation',  text:'Zitation', min:20},
     {s:4, feld:'ausgabe',   text:'Ausgabe wählen'},
@@ -1276,9 +1442,21 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   ];
 
   /* Der Text einer Regel darf von der Rubrik abhaengen - dann steht er als
-     Funktion da und wird erst beim Anzeigen ausgerechnet. */
+     Funktion da und wird erst beim Anzeigen ausgerechnet.
+
+     Ist ein Feld zu lang, steht dahinter, um wieviel. Vorher stand in der
+     Liste dasselbe wie bei einem leeren Feld ("Vorspann schreiben") - wer
+     900 Zeichen geschrieben hatte, suchte dann nach etwas, das gar nicht
+     fehlte. */
   function regelText(r) {
-    return (typeof r.text === 'function') ? r.text() : r.text;
+    var t = (typeof r.text === 'function') ? r.text() : r.text;
+    if (r.max && r.feld) {
+      var n = (stand[r.feld] || '').toString().trim().length;
+      if (n > hoechstens(r.max)) {
+        t += ' — ' + zahl(n - hoechstens(r.max)) + ' Zeichen zu viel';
+      }
+    }
+    return t;
   }
 
   function vorzeileGrenze() {
@@ -1306,7 +1484,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     if (r.autor)  {
       var a = stand.autoren[0] || {};
       return !(a.name && a.name.trim().length > 2 && /.+@.+\..+/.test(a.mail || '')
-               && (a.vita || '').trim().length >= 150);
+               && (a.vita || '').trim().length >= VITA_MIN);
     }
     var w = (stand[r.feld] || '').toString().trim();
     if (!w) { return true; }
@@ -1509,6 +1687,22 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     k.hidden = false;
   }
 
+  /* Sicherheitsnetz gegen ein Auseinanderlaufen von Liste und Regel.
+     Die Rubriken stehen fest im HTML, damit die Seite auch ohne JavaScript
+     etwas anzeigt. Was dort steht, muss aber mit RUBRIKEN uebereinstimmen -
+     eine interne Rubrik im Auswahlfeld kostet einen Autor sechs Schritte
+     Arbeit, bevor der Endpunkt sie abweist. Hier wird deshalb beim Laden
+     entfernt, was `intern` ist oder gar nicht existiert. */
+  (function rubrikenPruefen() {
+    var s = $('#rubrik');
+    if (!s) { return; }
+    [].slice.call(s.options).forEach(function (o) {
+      if (o.value === '') { return; }
+      var r = RUBRIKEN[o.value];
+      if (!r || r.intern) { o.remove(); }
+    });
+  }());
+
   function ausgabenMalen() {
     var s = $('#ausgabe');
     if (!s) { return; }
@@ -1588,14 +1782,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       z.classList.add('knapp'); return;
     }
     if (max && n > hoechstens(max)) {
-      z.textContent = (n - max).toLocaleString('de-DE') + ' Zeichen über der Grenze — '
-        + 'bitte kürzen';
+      /* Genannt wird, was WEG muss - nicht der Abstand zur Empfehlung. Wer
+         "244 Zeichen über der Grenze" liest, streicht 244 und ist unnoetig
+         weit unten; anzunehmen ist der Text schon 19 Zeichen frueher. */
+      z.textContent = zahl(n) + ' Zeichen — ' + zahl(n - hoechstens(max))
+        + ' zu viel, bitte kürzen';
       z.classList.add('zuviel'); return;
     }
     if (max && n > max) {
       // Zwischen Grenze und Toleranz: geht durch, aber der Autor soll wissen,
       // dass er darüber ist.
-      z.textContent = (n - max).toLocaleString('de-DE') + ' Zeichen über der '
+      z.textContent = zahl(n - max) + ' Zeichen über der '
         + 'Empfehlung — noch in Ordnung';
       z.classList.add('knapp'); return;
     }
@@ -1639,30 +1836,225 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     });
   }
 
+  /* Die Datei geht SOFORT zum Server, nicht erst beim Absenden.
+
+     Der Grund ist nicht Bequemlichkeit: Ein File-Objekt laesst sich nicht im
+     Browser zwischenspeichern. Merkte sich diese Seite nur Name und Groesse,
+     haetten Sie nach dem naechsten Neuladen einen Entwurf mit Dateinamen,
+     aber ohne Dateien - und merkten es erst beim Absenden, wenn alles andere
+     fertig ist. */
+
+  function dateiSenden(zweck, datei, fertig) {
+    var f = new FormData();
+    f.append('action', 'datei');
+    f.append('zweck', zweck);
+    f.append('datei', datei);
+    if (sitzung()) { f.append('sitzung', sitzung()); }
+    /* Kein Content-Type setzen - die Grenzmarke setzt der Browser selbst. */
+    fetch(ZIEL, {method:'POST', body:f})
+      .then(function (a) { return a.json().catch(function () { return {ok:false}; }); })
+      .then(fertig)
+      .catch(function () { fertig({ok:false, meldung:'Keine Verbindung zum Server.'}); });
+  }
+
+  /* Zu lang? Dann sagen wir es JETZT, nicht im Umbruch.
+
+     Die Zeichenzahl kommt vom Server - eine .docx ist ein ZIP-Archiv, der
+     Browser kann sie nicht lesen. Die Hausgroesse kommt ebenfalls von dort,
+     damit sie an einer Stelle steht und nicht an zweien.
+
+     Der Hinweis sperrt nichts. Ein Beitrag kann gute Gruende haben, laenger
+     zu sein; darueber entscheidet die Chefredaktion und nicht ein Zaehler.
+     Deshalb steht daneben eine fertige Mail statt einer Absage. */
+
+  function laengePruefen(a) {
+    var n = a.zeichen || 0;
+    var normal = a.zeichenNormal || 30000;
+    var kasten = $('#laengeHinweis');
+    if (!kasten) { return; }
+    if (!n || n <= normal) { kasten.hidden = true; return; }
+
+    var tausend = function (x) { return x.toLocaleString('de-DE'); };
+    var betreff = 'Überlänge: ' + (stand.titel || 'Beitrag ohne Titel');
+    /* Der Zeilenumbruch steht als Zeichencode und nicht als Escape: Beim
+       Erzeugen dieser Datei wurde ein maskiertes \n einmal zu viel
+       aufgeloest und zerriss die Zeichenkette. Mit fromCharCode kann das
+       nicht passieren. */
+    var U = String.fromCharCode(10);
+    var leib = [
+      'Guten Tag,', '',
+      'ich möchte einen Beitrag einreichen, der über die normale Länge',
+      'hinausgeht, und bitte um Ihre Zustimmung.', '',
+      'Titel:       ' + (stand.titel || '-'),
+      'Autor:       ' + ((stand.autoren[0] && stand.autoren[0].name) || '-'),
+      'Rubrik:      ' + ((RUBRIKEN[stand.rubrik] || {}).name || '-'),
+      'Ausgabe:     ' + (stand.ausgabe || 'noch nicht gewählt'),
+      'Zeichenzahl: ' + tausend(n) + ' (normal sind rund ' + tausend(normal) + ')',
+      '', 'Mit freundlichen Grüßen', ''
+    ].join(U);
+
+    kasten.hidden = false;
+    kasten.innerHTML =
+      '<p><b>Ihr Text geht mit ' + tausend(n) + ' Zeichen über die bei MVF normale '
+      + 'Länge von rund ' + tausend(normal) + ' Zeichen weit hinaus.</b></p>'
+      + '<p>Bitte wenden Sie sich an die Chefredaktion und holen Sie die Zustimmung '
+      + 'ein, bevor Sie einreichen. Über Ausnahmen entscheidet die Redaktion, nicht '
+      + 'die Zeichenzahl — es gibt gute Gründe für einen langen Beitrag.</p>'
+      + '<p><b>Zwischenspeichern müssen Sie nichts:</b> Ihre Eingaben werden laufend '
+      + 'in diesem Browser gesichert, und die hochgeladene Datei liegt bereits bei '
+      + 'uns. Sie können die Seite schließen und später weitermachen.</p>'
+      + '<p><a class="knopf" href="mailto:stegmaier@m-vf.de'
+      + '?subject=' + encodeURIComponent(betreff)
+      + '&body=' + encodeURIComponent(leib) + '">Fertige E-Mail öffnen</a></p>'
+      + '<p class="wink">Die Mail ist vorausgefüllt mit Titel, Autor, Rubrik, Ausgabe '
+      + 'und Zeichenzahl — Sie müssen nur noch absenden.</p>';
+  }
+
+  function dateiMeldung(text, schlimm) {
+    var n = $('#dateiMeldung');
+    if (!n) { return; }
+    n.className = 'kasten' + (schlimm ? ' stop' : ' gut');
+    n.innerHTML = text ? '<p>' + text + '</p>' : '';
+    n.hidden = !text;
+  }
+
   function annehmen(art, dateien) {
     [].slice.call(dateien).forEach(function (d) {
       if (art === 'bild') { bildPruefen(d); return; }
-      var ziel = art === 'manuskript' ? 'manuskript' : 'tabellen';
-      if (art === 'manuskript') { stand.manuskript = []; }
-      stand[ziel].push({name:d.name, groesse:d.size, unterschrift:''});
-      dateienMalen(); sichern(); leisteMalen();
+      var zweck = art === 'manuskript' ? 'manuskript' : 'tabelle';
+      var ziel  = art === 'manuskript' ? 'manuskript' : 'tabellen';
+      dateiMeldung(esc(d.name) + ' wird hochgeladen …');
+      dateiSenden(zweck, d, function (a) {
+        if (!a.ok) {
+          dateiMeldung('<b>' + esc(d.name) + '</b> wurde nicht angenommen: '
+            + esc(a.meldung || a.grund || 'unbekannter Grund'), true);
+          return;
+        }
+        if (art === 'manuskript') { stand.manuskript = []; }
+        stand[ziel].push({id:a.id, name:a.dateiname || d.name, groesse:d.size,
+                          zeichen:a.zeichen || 0, unterschrift:''});
+        /* Der Tabellenhinweis gehört hierher und nicht später ins
+           Lektorat: Jetzt kann die Datei noch geändert werden. Eine Tabelle,
+           die als Fließtext im Dokument steht, muss im Satz von Hand
+           nachgebaut werden — als richtige Word-Tabelle geht sie unverändert
+           durch. */
+        dateiMeldung('<b>' + esc(a.dateiname || d.name) + '</b> ist angekommen '
+          + '(' + esc(a.groesse || '') + ').'
+          + (a.tabellenSatz ? '<br>' + esc(a.tabellenSatz) : ''),
+          !!a.tabellenSatz);
+        if (art === 'manuskript') { laengePruefen(a); }
+        dateienMalen(); sichern(); leisteMalen();
+      });
     });
   }
 
   // Die Breitenprüfung findet hier statt, im Browser, bevor irgendetwas
   // hochgeladen wird. Das erspart dem Autor eine Wartezeit für eine Datei,
   // die ohnehin abgewiesen würde.
+  /* Verkleinert ein bereits geladenes Bild ueber eine Leinwand.
+
+     Der Anlass (Peter Stegmaier, 11.09.2026): "WordPress bietet doch die
+     Moeglichkeit Bild bearbeiten an." Der Bildeditor von WordPress kaeme zu
+     spaet - der Absturz passiert beim Hochladen, er arbeitet erst danach.
+     Aber der Gedanke stimmt: Niemand soll ein Bildbearbeitungsprogramm
+     oeffnen muessen, um eine Groesse herzustellen, die WordPress beim
+     Empfang ohnehin herstellt. Verkleinert wird deshalb hier, im Browser,
+     bevor irgendetwas losgeschickt wird - und es wird gesagt.
+
+     JPEG bleibt JPEG, alles andere wird PNG: Ein PNG kann durchsichtig sein,
+     und als JPEG waere das Durchsichtige ploetzlich schwarz.
+
+     Die Datei des Autors bleibt unberuehrt. Verkleinert wird eine Kopie im
+     Arbeitsspeicher. */
+  function bildVerkleinern(datei, bild, faktor, weiter, misslungen) {
+    var b = Math.round(bild.naturalWidth * faktor),
+        h = Math.round(bild.naturalHeight * faktor);
+    var leinwand = document.createElement('canvas');
+    leinwand.width = b;
+    leinwand.height = h;
+    var stift = leinwand.getContext('2d');
+    stift.imageSmoothingEnabled = true;
+    stift.imageSmoothingQuality = 'high';
+    stift.drawImage(bild, 0, 0, b, h);
+
+    var jpeg = /^image\/jpe?g$/i.test(datei.type);
+    var typ  = jpeg ? 'image/jpeg' : 'image/png';
+    leinwand.toBlob(function (klumpen) {
+      if (!klumpen) { misslungen(); return; }
+      var stamm = datei.name.replace(/\.[A-Za-z0-9]+$/, '');
+      weiter(new File([klumpen], stamm + (jpeg ? '.jpg' : '.png'), {type: typ}));
+    }, typ, jpeg ? 0.92 : undefined);
+  }
+
   function bildPruefen(datei) {
     var url = URL.createObjectURL(datei);
     var bild = new Image();
     bild.onload = function () {
-      stand.bilder.push({
-        name: datei.name, groesse: datei.size,
-        breite: bild.naturalWidth, hoehe: bild.naturalHeight,
-        zuKlein: bild.naturalWidth < MIN_BILD, unterschrift: ''
-      });
+      var breite = bild.naturalWidth, hoehe = bild.naturalHeight;
       URL.revokeObjectURL(url);
-      dateienMalen(); sichern(); leisteMalen();
+
+      /* Ein Bild kommt auf zwei Wegen hierher: unveraendert oder verkleinert. */
+      function hochladen(senden, breiteJetzt, hoeheJetzt) {
+        dateiMeldung(esc(senden.name) + ' wird hochgeladen …');
+        dateiSenden('abbildung', senden, function (a) {
+          if (!a.ok) {
+            dateiMeldung('<b>' + esc(senden.name) + '</b> wurde nicht angenommen: '
+              + esc(a.meldung || a.grund || 'unbekannter Grund'), true);
+            return;
+          }
+          stand.bilder.push({id:a.id, name:a.dateiname || senden.name, groesse:senden.size,
+            breite:breiteJetzt, hoehe:hoeheJetzt, zuKlein:false, unterschrift:''});
+          dateiMeldung('<b>' + esc(a.dateiname || senden.name) + '</b> ist angekommen.');
+          dateienMalen(); sichern(); leisteMalen();
+        });
+      }
+
+      /* Zu grosse Bilder werden verkleinert, nicht abgewiesen - und diese
+         Pruefung steht zuerst: Ein Bild mit 6000 Pixeln ist nie zu schmal,
+         kaeme also hier durch und scheiterte erst am Server, nach einer
+         Minute. Hier waere eine Absage besonders teuer: Der Autor steht
+         allein da und soll nicht erst ein Programm suchen muessen. */
+      if (Math.max(breite, hoehe) > MAX_BILDKANTE) {
+        var faktor = MAX_BILDKANTE / Math.max(breite, hoehe);
+        var neuBreite = Math.round(breite * faktor);
+        var neuHoehe = Math.round(hoehe * faktor);
+        if (neuBreite < MIN_BILD) {
+          dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' x '
+            + hoehe + ' Pixeln zu groß und zugleich zu hochformatig, um es hier '
+            + 'zu verkleinern — dabei fiele die Breite unter die nötigen '
+            + MIN_BILD.toLocaleString('de-DE') + ' Pixel. Bitte legen Sie die '
+            + 'Abbildung querformatiger an.', true);
+          return;
+        }
+        dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' x '
+          + hoehe + ' Pixeln größer als nötig und wird auf ' + neuBreite
+          + ' Pixel verkleinert — WordPress würde es beim Empfang ohnehin auf '
+          + MAX_BILDKANTE + ' Pixel herunterrechnen. An Ihrer eigenen Datei ändert '
+          + 'sich nichts.');
+        bildVerkleinern(datei, bild, faktor,
+          function (kleiner) { hochladen(kleiner, neuBreite, neuHoehe); },
+          function () {
+            dateiMeldung('<b>' + esc(datei.name) + '</b> liess sich hier nicht '
+              + 'verkleinern. Bitte bringen Sie es in Ihrem Bildbearbeitungs\u00ad'
+              + 'programm auf höchstens ' + MAX_BILDKANTE + ' Pixel an der '
+              + 'längeren Kante.', true);
+          });
+        return;
+      }
+
+      /* Zu schmale Bilder gehen gar nicht erst hoch - die Wartezeit waere
+         umsonst, der Server wiese sie ohnehin ab. */
+      if (breite < MIN_BILD) {
+        stand.bilder.push({name:datei.name, groesse:datei.size, breite:breite,
+          hoehe:hoehe, zuKlein:true, unterschrift:''});
+        dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' Pixeln zu '
+          + 'schmal — nötig sind ' + MIN_BILD + '. Die Datei wurde nicht hochgeladen.',
+          true);
+        dateienMalen(); sichern(); leisteMalen();
+        return;
+      }
+
+      hochladen(datei, breite, hoehe);
     };
     bild.onerror = function () {
       URL.revokeObjectURL(url);
@@ -1787,13 +2179,34 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         '</label><input type="email" data-autor="mail" data-i="' + i + '" ' +
         'placeholder="name@einrichtung.de" value="' + esc(a.mail) + '"></div>' +
         '</div>' +
+        /* Institution und ORCID stehen seit 08.09.2026 in eigenen Feldern und
+           nicht mehr irgendwo in der Vita. Beim Kommentar bilden sie die zweite
+           Zeile ueber dem Text; die Satzautomatik soll sie nicht aus einem
+           Absatz herausklauben muessen. */
+        '<div class="reihe zwei" style="margin-bottom:11px">' +
+        '<div><label style="font-size:13px;font-weight:700">Institution' + stern +
+        '</label><input type="text" data-autor="institution" data-i="' + i + '" ' +
+        'placeholder="Einrichtung, Ort" value="' + esc(a.institution || '') + '">' +
+        '<p class="wink">So, wie sie im Heft stehen soll — ohne Abteilungskette.</p></div>' +
+        '<div><label style="font-size:13px;font-weight:700">ORCID</label>' +
+        '<input type="text" data-autor="orcid" data-i="' + i + '" ' +
+        'placeholder="0000-0002-1825-0097" value="' + esc(a.orcid || '') + '">' +
+        '<p class="wink" data-orcidwink="' + i + '">Freiwillig. Sie verbindet Ihren '
+        + 'Beitrag dauerhaft mit Ihnen, auch bei Namensgleichheit oder Namenswechsel.</p></div>' +
+        '</div>' +
         '<label style="font-size:13px;font-weight:700">Kurze Vita' + stern +
         '<span class="zeichenzahl" data-vitazahl="' + i + '"></span></label>' +
+        /* maxlength steht auf der Toleranzgrenze, nicht auf der Empfehlung.
+           Auf 380 gesetzt schnitte der Browser stumm ab, und die Meldung
+           "zu lang" waere nie zu sehen - derselbe Grund wie bei der
+           Vorzeile. */
         '<textarea rows="3" data-autor="vita" data-i="' + i + '" ' +
+        'maxlength="' + hoechstens(VITA_MAX) + '" ' +
         'placeholder="Zwei bis vier Sätze: Funktion, Einrichtung, Arbeitsschwerpunkt.">' +
         esc(a.vita) + '</textarea>' +
-        (haupt ? '<p class="wink">Mindestens 150 Zeichen — sie erscheint neben Ihrem ' +
-                 'Beitrag im Heft.</p>' : '') +
+        (haupt ? '<p class="wink">' + VITA_MIN + ' bis ' + VITA_MAX + ' Zeichen — sie ' +
+                 'erscheint neben Ihrem Beitrag im Heft, und dort ist der Platz ' +
+                 'begrenzt.</p>' : '') +
         '</div>';
     }).join('');
     vitaZaehler();
@@ -1805,19 +2218,62 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       if (!z) { return; }
       var n = (a.vita || '').length;
       z.classList.remove('knapp','gut');
-      if (n === 0) { z.textContent = i === 0 ? 'mindestens 150 Zeichen' : ''; return; }
-      if (i === 0 && n < 150) {
-        z.textContent = 'noch ' + (150 - n) + ' Zeichen'; z.classList.add('knapp'); return;
+      if (n === 0) {
+        z.textContent = i === 0 ? VITA_MIN + ' bis ' + VITA_MAX + ' Zeichen' : '';
+        return;
+      }
+      if (i === 0 && n < VITA_MIN) {
+        z.textContent = 'noch ' + (VITA_MIN - n) + ' Zeichen'; z.classList.add('knapp'); return;
+      }
+      /* Ueber der Empfehlung, aber noch in der Toleranz: die Zahl steht rot da,
+         die Einreichung haelt es nicht auf. Erst jenseits der Toleranz meldet
+         die Pruefliste "Vita kuerzen". */
+      if (n > VITA_MAX) {
+        z.textContent = n + ' Zeichen — ' + (n - VITA_MAX) + ' zu viel';
+        z.classList.add('knapp'); return;
       }
       z.textContent = n + ' Zeichen'; z.classList.add('gut');
     });
   }
 
+
+  /* Eine ORCID besteht aus 16 Ziffern; die letzte darf ein X sein (Pruefziffer
+     10). Angegeben wird sie nackt, mit Bindestrichen oder als ganze Adresse -
+     alle drei meinen dasselbe. Geprueft wird nur die Form, nicht ob es die
+     ORCID wirklich gibt: Dafuer muesste die Seite bei orcid.org nachfragen,
+     und das ginge nicht ohne den Namen des Autors dorthin zu schicken. */
+  function orcidForm(roh) {
+    var z = String(roh || '').toUpperCase().replace(/[^0-9X]/g, '');
+    if (z.length !== 16) { return null; }
+    if (z.indexOf('X') !== -1 && z.indexOf('X') !== 15) { return null; }
+    return z.slice(0,4) + '-' + z.slice(4,8) + '-' + z.slice(8,12) + '-' + z.slice(12);
+  }
+
+  function orcidWinkMalen(i, wert) {
+    var z = document.querySelector('[data-orcidwink="' + i + '"]');
+    if (!z) { return; }
+    /* Den urspruenglichen Text beim ersten Mal merken - sonst ist er weg,
+       sobald jemand etwas eintippt und wieder loescht. */
+    if (z.dataset.vorgabe === undefined) { z.dataset.vorgabe = z.textContent; }
+    var roh = String(wert || '').trim();
+    if (roh === '') { z.textContent = z.dataset.vorgabe || ''; z.style.color = ''; return; }
+    var gut = orcidForm(roh);
+    if (gut) {
+      z.textContent = 'Wird als ' + gut + ' gespeichert.';
+      z.style.color = 'var(--ok)';
+    } else {
+      z.textContent = 'Das sieht nicht nach einer ORCID aus - erwartet werden '
+        + '16 Stellen, etwa 0000-0002-1825-0097.';
+      z.style.color = 'var(--stop)';
+    }
+  }
   document.addEventListener('input', function (e) {
     var f = e.target.closest('[data-autor]');
     if (!f) { return; }
-    stand.autoren[parseInt(f.dataset.i,10)][f.dataset.autor] = f.value;
-    if (f.dataset.autor === 'vita') { vitaZaehler(); }
+    var nr = parseInt(f.dataset.i, 10);
+    stand.autoren[nr][f.dataset.autor] = f.value;
+    if (f.dataset.autor === 'vita')  { vitaZaehler(); }
+    if (f.dataset.autor === 'orcid') { orcidWinkMalen(nr, f.value); }
     sichern(); leisteMalen();
   });
   document.addEventListener('click', function (e) {
@@ -1919,6 +2375,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   }
 
   function absendbar() {
+    /* Ein bereits uebergebener Entwurf bleibt gesperrt, egal wie vollstaendig
+       er ist - sonst hebt der naechste Tastendruck die Sperre wieder auf. */
+    if (stand.eingereicht) { absendenSperren(); return; }
     var frei = (luecken().length === 0) && !!stand.erklaerung;
     $('#absenden').disabled = !frei;
   }
@@ -1926,8 +2385,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   /* ------------------------------------------------------- Übergabe */
 
   $('#absenden').addEventListener('click', function () {
-    // Genau dieses Paket geht später an den Server, der es an WordPress
-    // weiterreicht. In der Vorschau wird es nur angezeigt.
+    // Genau dieses Paket geht an den Server, der es an WordPress
+    // weiterreicht.
     var paket = {
       rubrik: stand.rubrik, vorzeile: stand.vorzeile,
       titel: stand.titel, vorspann: stand.vorspann,
@@ -1942,15 +2401,185 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       autoren: stand.autoren, manuskript: stand.manuskript,
       abbildungen: stand.bilder, tabellen: stand.tabellen
     };
-    $('#ergebnis').innerHTML =
-      '<div class="kasten gut" style="margin-top:22px">' +
-      '<p><b>So weit, so gut.</b> In der fertigen Fassung ginge Ihr Beitrag jetzt an die ' +
-      'MVF-Redaktion, und Sie bekämen eine Bestätigung per E-Mail mit Titel, Datum und ' +
-      'Uhrzeit.</p><p>Was übergeben würde:</p></div>' +
-      '<pre style="background:var(--card-2);border:1px solid var(--line);border-radius:6px;' +
-      'padding:14px;overflow:auto;font-size:12px;line-height:1.5;max-height:340px">' +
-      esc(JSON.stringify(paket, null, 2)) + '</pre>';
+
+    /* Die Gutachtervorschlaege gehen mit.
+     *
+     * Bis zum 11.09.2026 taten sie das nicht: Die Felder standen auf der
+     * Seite, der Endpunkt konnte sie lesen (`gutachtervorschlaege()`), und
+     * dazwischen fehlte diese Schleife. Der Autor fuellte also aus, was
+     * niemand je zu sehen bekam - die schlimmste Art von Fehler, weil sie
+     * keine Meldung erzeugt und niemandem auffaellt.
+     *
+     * Die Namen werden nicht abgeschrieben, sondern gebildet: Sie muessen mit
+     * `gutachtervorschlaege()` im Endpunkt uebereinstimmen, und zwei
+     * getippte Listen laufen frueher oder spaeter auseinander. */
+    ['1', '2'].forEach(function (n) {
+      ['titel', 'name', 'institution', 'mail', 'warum'].forEach(function (teil) {
+        var schluessel = 'gutachter' + n + '_' + teil;
+        paket[schluessel] = stand[schluessel] || '';
+      });
+    });
+    /* Bis heute zeigte dieser Knopf nur an, WAS uebergeben wuerde. Jetzt
+       uebergibt er. Die Dateien liegen zu diesem Zeitpunkt schon auf dem
+       Server - sie gehen beim Auswaehlen hoch -, deshalb genuegt hier ihre
+       Nummer. */
+
+    var knopf = this;
+    var ohneNummer = stand.manuskript.filter(function (d) { return !d.id; });
+    if (ohneNummer.length) {
+      $('#ergebnis').innerHTML = '<div class="kasten stop" style="margin-top:22px">'
+        + '<p><b>Eine Datei ist nicht angekommen.</b> Von <b>'
+        + esc(ohneNummer.map(function (d) { return d.name; }).join(', '))
+        + '</b> liegt beim Server nichts vor. Bitte waehlen Sie die Datei in '
+        + 'Schritt 1 noch einmal aus.</p></div>';
+      $('#ergebnis').scrollIntoView({behavior:'smooth', block:'start'});
+      return;
+    }
+
+    knopf.disabled = true;
+    var alterText = knopf.textContent;
+    knopf.textContent = 'wird übergeben …';
+    $('#ergebnis').innerHTML = '<div class="kasten" style="margin-top:22px">'
+      + '<p>Ihr Beitrag wird übergeben. Einen Moment …</p></div>';
     $('#ergebnis').scrollIntoView({behavior:'smooth', block:'start'});
+
+    ruf('einreichen', {einreichung: JSON.stringify(paket),
+                       vorgang: stand.vorgang || '',
+                       sitzung: sitzung()})
+      .then(function (a) {
+        knopf.disabled = false;
+        knopf.textContent = alterText;
+
+        if (!a.ok) {
+          var liste = (a.maengel && a.maengel.length)
+            ? '<ul>' + a.maengel.map(function (m) {
+                return '<li>' + esc(m) + '</li>'; }).join('') + '</ul>' : '';
+          $('#ergebnis').innerHTML = '<div class="kasten stop" style="margin-top:22px">'
+            + '<p><b>Noch nicht übernommen.</b> '
+            + esc(a.meldung || a.grund || 'Der Server hat den Beitrag nicht angenommen.')
+            + '</p>' + liste
+            + '<p>Ihre Eingaben sind unverändert. Ergänzen Sie das Fehlende und '
+            + 'versuchen Sie es noch einmal.</p></div>';
+          return;
+        }
+
+        stand.eingereicht = {beitrag: a.beitrag, zeit: a.zeit || ''};
+        sichern();
+        absendenSperren();
+
+        $('#ergebnis').innerHTML = '<div class="kasten gut" style="margin-top:22px">'
+          + '<p><b>'
+          + (a.schonDa ? 'Dieser Beitrag war bereits eingereicht.'
+                       : 'Sie haben den Artikel erfolgreich eingereicht.')
+          + '</b> Er liegt bei der MVF-Redaktion unter der Nummer <b>'
+          + esc(String(a.beitrag || '?')) + '</b>'
+          + (a.zeit ? ', eingegangen am ' + esc(a.zeit) : '') + '.'
+          + (a.bestaetigung
+              ? ' Eine Bestätigung mit Titel, Datum und Uhrzeit ist unterwegs.'
+              : ' Die Bestätigungsmail konnte nicht verschickt werden — bitte '
+                + 'schreiben Sie an stegmaier@m-vf.de.')
+          + '</p>'
+          + '<p>Sie können diesen Entwurf jetzt <b>löschen</b> oder ihn <b>als Datei '
+          + 'speichern</b>. <b>Eine Doppeleinreichung ist nicht möglich</b> — dieser '
+          + 'Entwurf trägt eine Vorgangsnummer, und zu ihr legt der Server keinen '
+          + 'zweiten Beitrag an.</p>'
+          /* Zurueckziehen setzt die Anmeldung per Einmal-Link voraus - nur so
+             ist belegt, dass der Beitrag zu dieser Person gehoert. Ohne
+             Anmeldung erscheint der Knopf gar nicht erst; ein Knopf, der in
+             eine Fehlermeldung fuehrt, ist schlimmer als keiner. */
+          + (sitzung()
+              ? '<p><b>Fällt Ihnen noch ein Fehler auf?</b> Solange Ihr Beitrag auf '
+                + '„Eingereicht" steht, können Sie ihn unten zurückziehen, überarbeiten '
+                + 'und neu einreichen. Sobald das Peer Review begonnen hat, geht das '
+                + 'nicht mehr — dann wenden Sie sich bitte an die Redaktion.</p>'
+              : '<p><b>Fällt Ihnen noch ein Fehler auf?</b> Schreiben Sie bitte an '
+                + '<a href="mailto:stegmaier@m-vf.de">stegmaier@m-vf.de</a>. '
+                + 'Zurückziehen können Sie einen Beitrag nur, wenn Sie über Ihren '
+                + 'Zugangslink angemeldet sind — sonst lässt sich nicht belegen, dass '
+                + 'er zu Ihnen gehört.</p>')
+          + '<p>'
+          + '<button type="button" class="knopf" id="entwurfDatei">Entwurf als Datei '
+          + 'speichern</button> '
+          + (sitzung()
+              ? '<button type="button" class="knopf" id="beitragZurueck">Beitrag '
+                + 'zurückziehen</button>' : '')
+          + '</p>'
+          + '<p class="wink" id="zurueckStand"></p></div>';
+      })
+      .catch(function () {
+        knopf.disabled = false;
+        knopf.textContent = alterText;
+        $('#ergebnis').innerHTML = '<div class="kasten stop" style="margin-top:22px">'
+          + '<p><b>Keine Verbindung zum Server.</b> Ihre Eingaben sind nicht verloren — '
+          + 'sie liegen weiter in diesem Browser. Bitte versuchen Sie es später noch '
+          + 'einmal.</p></div>';
+      });
+  });
+
+  /* Ein uebergebener Entwurf bleibt stehen, aber der Knopf nicht scharf.
+     Der eigentliche Schutz liegt beim Server (Vorgangsnummer); hier geht es
+     darum, gar nicht erst in die Lage zu kommen, es zu versuchen. */
+  function absendenSperren() {
+    var k = $('#absenden');
+    if (!k || !stand.eingereicht) { return; }
+    k.disabled = true;
+    k.textContent = 'Bereits eingereicht (Nr. ' + stand.eingereicht.beitrag + ')';
+  }
+
+  /* ---------------------------------------------------- Zurueckziehen ----
+     Moeglich, solange der Beitrag auf "Eingereicht" steht. Danach haengt
+     fremde Arbeit daran - Gutachter sind angeschrieben -, und der Server
+     weist es ab. */
+  document.addEventListener('click', function (e) {
+    if (!e.target) { return; }
+
+    if (e.target.id === 'entwurfDatei') {
+      var name = (stand.titel || 'Entwurf').replace(/[^A-Za-z0-9äöüÄÖÜß -]/g, '').trim();
+      var blob = new Blob([JSON.stringify(stand, null, 2)], {type:'application/json'});
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'MVF-Einreichung-' + (name || 'ohne-Titel').slice(0, 60) + '.json';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+      return;
+    }
+
+    if (e.target.id === 'beitragZurueck') {
+      if (!stand.eingereicht) { return; }
+      if (!window.confirm('Ihren Beitrag zurückziehen?\n\n'
+          + 'Er wird aus der Liste der Redaktion genommen und liegt danach im '
+          + 'Papierkorb. Sie können ihn hier überarbeiten und neu einreichen.')) { return; }
+
+      var stand2 = $('#zurueckStand');
+      e.target.disabled = true;
+      stand2.textContent = 'wird zurückgezogen …';
+
+      ruf('zurueckziehen', {beitrag: stand.eingereicht.beitrag,
+                            sitzung: sitzung(), grund: ''})
+        .then(function (a) {
+          if (!a.ok) {
+            e.target.disabled = false;
+            stand2.innerHTML = '<b style="color:var(--stop)">'
+              + esc(a.meldung || a.grund || 'Das hat nicht geklappt.') + '</b>';
+            return;
+          }
+          /* Neue Vorgangsnummer: Die alte zeigt auf den zurueckgezogenen
+             Beitrag, und mit ihr wuerde eine erneute Einreichung nur wieder
+             auf diesen verweisen statt einen neuen anzulegen. */
+          stand.eingereicht = null;
+          stand.vorgang = 'v' + Date.now().toString(36)
+                        + Math.random().toString(36).slice(2, 8);
+          sichern();
+          var k = $('#absenden');
+          if (k) { k.textContent = 'Beitrag einreichen'; }
+          absendbar();
+          $('#ergebnis').innerHTML = '<div class="kasten" style="margin-top:22px">'
+            + '<p><b>Zurückgezogen.</b> Ihr Beitrag ist aus der Liste der Redaktion '
+            + 'genommen; sie wurde benachrichtigt. Ihre Eingaben stehen unverändert in '
+            + 'dieser Seite — überarbeiten Sie sie und reichen Sie neu ein.</p></div>';
+        });
+      return;
+    }
   });
 
   /* ------------------------------------------------------- Aufbau */
@@ -2083,9 +2712,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var r = $('#rubrik');
     if (r) { r.dispatchEvent(new Event('change')); }
   }
+  var pruefKnopf = $('#pruefStart');
+  if (pruefKnopf) { pruefKnopf.addEventListener('click', pruefStarten); }
+
   $('#autorNeu').addEventListener('click', function () {
     if (stand.autoren.length >= 10) { return; }
-    stand.autoren.push({name:'', mail:'', vita:'', bild:null});
+    stand.autoren.push({name:'', mail:'', institution:'', orcid:'', vita:'', bild:null});
     autorenMalen(); sichern();
   });
 
@@ -2108,6 +2740,162 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   function sitzung()      { try { return localStorage.getItem(SITZUNG) || ''; } catch (e) { return ''; } }
   function sitzungSetzen(w) {
     try { w ? localStorage.setItem(SITZUNG, w) : localStorage.removeItem(SITZUNG); } catch (e) {}
+  }
+
+  /* ==================================================== Text prüfen lassen ===
+     Freiwillig, vor dem Einreichen, an der hochgeladenen Datei.
+
+     Der Gedanke dahinter: Ein Text, der sauber hereinkommt, muss nicht sauber
+     gemacht werden. Wer hier etwas findet, behebt es im eigenen Word-Dokument
+     und lädt neu hoch.
+
+     Der Ton ist ein anderer als in der Redaktion. Die kennt unsere Regeln,
+     eine Autorin nicht. Deshalb heissen die Befunde hier Vorschläge, und
+     nirgends steht, dass etwas abgelehnt würde — die Prüfung ändert nichts und
+     entscheidet nichts. */
+
+  var pruefLauf = {liste: [], kopf: ''};
+
+  /* Vorschlaege zur Laenge stehen nicht in der Liste, sondern darueber.
+
+     Sie sind etwas anderes als die uebrigen Hinweise: Die anderen sagen, wo
+     etwas nicht stimmt, und Sie aendern es in Word. Dieser hier bringt eine
+     fertige Fassung mit und braucht nur einen Klick - er gehoert deshalb
+     nicht in eine Aufzaehlung, sondern in einen eigenen Kasten mit den zwei
+     Knoepfen daneben.
+
+     Und er ist ein Angebot. Ablehnen kostet nichts: Die Laengen sind
+     Richtwerte, kein Hindernis fuer das Einreichen. */
+  var kuerzLager = {};
+
+  function kuerzKasten(nr, x) {
+    return '<div class="vorschlag" data-kuerzung="' + nr + '">'
+      + '<p class="klein"><b>' + esc(x.was) + '</b></p>'
+      + '<p style="margin:0 0 8px">' + esc(x.neu) + '</p>'
+      + '<p style="margin:0;display:flex;gap:10px;flex-wrap:wrap">'
+      + '<button type="button" class="knopf klein" data-kuerzja="' + nr + '">'
+      + 'Vorschlag übernehmen</button>'
+      + '<button type="button" class="knopf klein leise" data-kuerznein="' + nr + '">'
+      + 'Danke, ich bleibe beim Original</button>'
+      + '</p></div>';
+  }
+
+  function kuerzUebernehmen(nr) {
+    var x = kuerzLager[nr];
+    if (!x) { return; }
+    stand[x.feld] = x.neu;
+    var el = $('[data-feld="' + x.feld + '"]');
+    if (el) { el.value = x.neu; }
+    zaehlerMalen(x.feld);
+    sichern();
+    leisteMalen();
+    var kasten = $('[data-kuerzung="' + nr + '"]');
+    if (kasten) {
+      kasten.innerHTML = '<p class="klein" style="margin:0"><b>Übernommen.</b> '
+        + 'Der Text steht jetzt im Feld — Sie können ihn dort weiter ändern.</p>';
+    }
+  }
+
+  function pruefMalen() {
+    var n = $('#pruefBefunde');
+    if (!n) { return; }
+
+    var kuerzungen = [], andere = [];
+    pruefLauf.liste.forEach(function (x) {
+      if (x.feld && x.neu) { kuerzungen.push(x); } else { andere.push(x); }
+    });
+
+    kuerzLager = {};
+    n.innerHTML = '<p class="anleitung" style="margin:0 0 8px">'
+      + esc(pruefLauf.kopf) + '</p>'
+      + kuerzungen.map(function (x, i) {
+          kuerzLager[i] = x;
+          return kuerzKasten(i, x);
+        }).join('')
+      + (andere.length
+          ? '<ul style="margin:0;padding-left:20px">'
+            + andere.map(function (x) {
+                return '<li style="margin-bottom:6px">' + esc(x.was)
+                  + (x.stelle ? '<br><i class="anleitung">' + esc(x.stelle) + '</i>' : '')
+                  + '</li>';
+              }).join('')
+            + '</ul>'
+          : '');
+  }
+
+  document.addEventListener('click', function (e) {
+    var ja = e.target.closest('[data-kuerzja]');
+    if (ja) { kuerzUebernehmen(ja.dataset.kuerzja); return; }
+
+    var nein = e.target.closest('[data-kuerznein]');
+    if (nein) {
+      var kasten = $('[data-kuerzung="' + nein.dataset.kuerznein + '"]');
+      if (kasten) { kasten.remove(); }
+    }
+  });
+
+  function pruefStarten() {
+    var m = (stand.manuskript || [])[0];
+    if (!m || !m.id) {
+      pruefLauf = {liste: [], kopf: 'Dafür muss Ihr Manuskript erst hochgeladen '
+        + 'sein — geprüft wird die Datei, nicht die Felder auf dieser Seite.'};
+      pruefMalen();
+      return;
+    }
+
+    pruefLauf = {liste: [], kopf: 'Der Text wird gelesen …'};
+    pruefMalen();
+
+    /* Die Felder gehen mit.
+
+       Geprueft wird die hochgeladene Datei - aber zu lang sind Ueberschrift,
+       Vorspann und Abstract, und die stehen hier auf der Seite. Ohne sie kann
+       der Server keinen Kuerzungsvorschlag machen. */
+    var mit = {};
+    ['rubrik', 'titel', 'vorzeile', 'vorspann', 'abstractDe', 'abstractEn',
+     'ausgabe', 'zitation'].forEach(function (k) {
+      if (stand[k]) { mit[k] = stand[k]; }
+    });
+
+    ruf('textpruefung', {tun:'starten', datei:m.id,
+                         felder:JSON.stringify(mit)}).then(function (s) {
+      if (!s.ok) {
+        pruefLauf.kopf = s.meldung || 'Die Prüfung lief nicht an. Das ist kein '
+          + 'Hindernis — Sie können trotzdem einreichen.';
+        pruefMalen();
+        return;
+      }
+      pruefLauf.kopf = 'Die Prüfung läuft — ' + s.anzahl + ' Abschnitte. '
+        + 'Das dauert eine halbe bis zwei Minuten.';
+      pruefMalen();
+      pruefNachfragen(s.nummer);
+    });
+  }
+
+  function pruefNachfragen(nummer) {
+    return ruf('textpruefung', {tun:'stand', nummer:nummer}).then(function (z) {
+      if (!z.ok) {
+        pruefLauf.kopf = 'Die Prüfung ist nicht mehr auffindbar. Sie können '
+          + 'trotzdem einreichen.';
+        pruefMalen();
+        return;
+      }
+      pruefLauf.liste = z.befunde || [];
+
+      if (z.laeuft) {
+        pruefLauf.kopf = 'Die Prüfung läuft — ' + z.fertig + ' von ' + z.anzahl
+          + ' Abschnitten. Sie können hier weiterarbeiten.';
+        pruefMalen();
+        return new Promise(function (w) { setTimeout(w, 3000); })
+          .then(function () { return pruefNachfragen(nummer); });
+      }
+
+      pruefLauf.kopf = pruefLauf.liste.length
+        ? pruefLauf.liste.length + ' Stelle' + (pruefLauf.liste.length === 1 ? '' : 'n')
+          + ', die einen Blick lohnen. Nichts davon hindert Sie am Einreichen.'
+        : 'Nichts gefunden — was diese Prüfung sehen kann, passt.';
+      pruefMalen();
+    });
   }
 
   function ruf(aktion, daten) {
