@@ -148,6 +148,13 @@ header.top{background:var(--card);border-bottom:1px solid var(--line)}
 /* ------------------------------------------------------------- Blätter */
 .blatt{background:var(--card);border:1px solid var(--line);border-radius:8px;
   padding:26px 28px 24px;box-shadow:var(--schatten)}
+/* Das hidden-Attribut blendet nur ueber eine Regel des Browsers aus, und die
+   verliert gegen jede eigene display-Regel. `.fusszeile{display:flex}` hat
+   genau das getan: Die Blaetterknoepfe blieben stehen, obwohl das Element auf
+   hidden stand. Zwei Einzelfaelle waren schon von Hand nachgebessert
+   (.blatt und .angemeldet) - besser einmal fuer alle, sonst faellt der
+   naechste wieder darauf herein (Peter Stegmaier, 19.09.2026). */
+[hidden]{display:none !important}
 .blatt[hidden]{display:none}
 .blatt h2{margin:0 0 6px;font-size:clamp(21px,3vw,26px);line-height:1.2;font-weight:700;letter-spacing:-.01em}
 .blatt .vor{margin:0 0 22px;color:var(--ink-soft);max-width:66ch;font-size:15.5px}
@@ -470,6 +477,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
       <!-- ================================================== 1 Beitrag -->
       <section class="blatt" data-blatt="0">
+        <!-- Der Weg aus der Mail mit der Rueckmeldung endet hier: die
+             Begutachtung ist durch, der Autor soll eine neue Fassung
+             hochladen. Alles andere auf diesem Blatt wird dabei
+             ausgeblendet - er reicht nichts Neues ein, er bessert nach. -->
+        <div id="ueberarbeitenTafel" hidden></div>
         <p class="zaehler">Schritt 1 von 6</p>
         <h2>Ihr Beitrag</h2>
         <!-- Von drei Saetzen blieb einer (Mariann Stegmaier, 18.09.2026). Der
@@ -1780,7 +1792,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   function zeige(i) {
     jetzt = Math.max(0, Math.min(SCHRITTE.length - 1, i));
     $$('.blatt').forEach(function (b, k) { b.hidden = (k !== jetzt); });
-    $('#navZeile').hidden = (jetzt === SCHRITTE.length - 1);
+    /* `tafelAn`: Wer aus einer Mail kommt, blaettert nicht. Ohne diese
+       Bedingung holt ein spaeteres zeige() die Leiste wieder hervor - und
+       zwar genau dann, wenn ein anderer Teil der Seite noch etwas nachlaedt. */
+    $('#navZeile').hidden = (jetzt === SCHRITTE.length - 1) || tafelAn;
     if (jetzt === SCHRITTE.length - 1) { pruefenMalen(); }
     leisteMalen();
     window.scrollTo({top:0, behavior:'smooth'});
@@ -2762,6 +2777,193 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     wahl.click();
   });
 
+  /* Ein Blatt fuer eine Tafel freiraeumen.
+
+     Wer ueber einen Link aus einer Mail hierherkommt, reicht nichts ein: Sein
+     Beitrag ist angenommen oder begutachtet. Alles, was vom Einreichen
+     spricht, ist dann falsch - die Schrittzaehlung, der Auftragskasten, die
+     Blaetterleiste, der Kasten zum Sichern des Zwischenstands und die Fahne
+     oben. Bliebe es stehen, koennte er sich durch ein Formular arbeiten, das
+     mit seinem Beitrag nichts mehr zu tun hat.
+
+     NACH zeige() aufrufen: Das setzt #navZeile selbst wieder sichtbar. */
+  var tafelAn = false;
+
+  function nurTafel(blattNr, tafelId) {
+    tafelAn = true;
+    var blatt = document.querySelector('.blatt[data-blatt="' + blattNr + '"]');
+    if (blatt) {
+      Array.prototype.forEach.call(blatt.children, function (k) {
+        if (k.id !== tafelId) { k.hidden = true; }
+      });
+    }
+    ['#navZeile', '#leiste', '#anmeldeKasten', '.fahne'].forEach(function (w) {
+      var e = document.querySelector(w);
+      if (e) { e.hidden = true; }
+    });
+  }
+
+  /* ------------------------------------------- Die ueberarbeitete Fassung
+
+     Nach der Begutachtung schickt der Herausgeber eine Rueckmeldung. Die Mail
+     bringt den Autor angemeldet hierher, auf Schritt 1, wo sein Manuskript
+     ohnehin liegt.
+
+     Er tippt nichts neu ab und arbeitet auch nicht in einem fremden
+     Schreibwerkzeug: Er laedt dieselbe Datei eine Fassung weiter hoch, mit
+     Aenderungsverfolgung, und schreibt dazu, was er geaendert hat. Seine
+     vorige Fassung bleibt liegen (Peter Stegmaier, 19.09.2026). */
+  var ueberModus = false, ueberBeitrag = 0, ueberDatei = null;
+
+  function ueberarbeitenTafelAn(beitrag) {
+    ueberModus = true;
+    ueberBeitrag = parseInt(beitrag, 10) || 0;
+    var t = $('#ueberarbeitenTafel');
+    if (t) { t.hidden = false; }
+    zeige(0);
+    nurTafel(0, 'ueberarbeitenTafel');
+    ueberTafelMalen();
+  }
+
+  function ueberTafelMalen() {
+    var t = $('#ueberarbeitenTafel');
+    if (!t) { return; }
+    if (!ueberBeitrag) {
+      t.innerHTML = '<div class="kasten stop"><p><b>Zu welchem Beitrag?</b> Der Link '
+        + 'hat die Beitragsnummer nicht mitgebracht. Bitte rufen Sie ihn noch einmal '
+        + 'aus der Mail auf, oder schreiben Sie an stegmaier@m-vf.de.</p></div>';
+      return;
+    }
+    t.innerHTML = '<div class="kasten"><p>Wird geladen \u2026</p></div>';
+    ruf('ueberarbeitung', {beitrag: ueberBeitrag, tun: 'lesen'})
+      .then(function (a) {
+        if (!a || !a.ok) {
+          t.innerHTML = '<div class="kasten stop"><p><b>'
+            + esc((a && (a.meldung || a.grund)) || 'Die Angaben kamen nicht.')
+            + '</b></p></div>';
+          return;
+        }
+        t.innerHTML = ueberTafelHtml(a);
+      })
+      .catch(function () {
+        t.innerHTML = '<div class="kasten stop"><p><b>Keine Verbindung zum Server.</b> '
+          + 'Bitte versuchen Sie es sp\u00e4ter noch einmal.</p></div>';
+      });
+  }
+
+  function ueberTafelHtml(a) {
+    var h = '<h2>Ihre \u00fcberarbeitete Fassung</h2>'
+      + '<div class="kasten acht"><p><b>Die Begutachtung ist abgeschlossen.</b> '
+      + 'Unten steht die R\u00fcckmeldung der Redaktion. Bitte laden Sie Ihre '
+      + '\u00fcberarbeitete Fassung hoch und schreiben Sie dazu, was Sie '
+      + 'ge\u00e4ndert haben.</p>'
+      + '<p><b>Als Word-Datei, mit eingeschalteter \u00c4nderungsverfolgung.</b> '
+      + 'Dann sieht die Redaktion auf einen Blick, was neu ist. Ihre vorige '
+      + 'Fassung bleibt erhalten.</p></div>';
+
+    if (a.rueckmeldung) {
+      h += '<div class="stueck"><div class="stueck-kopf">'
+        + '<span class="marke-pill ok">R\u00fcckmeldung der Redaktion</span>'
+        + (a.wann ? '<span class="marke-pill">' + esc(a.wann.substring(0, 10)) + '</span>' : '')
+        + '</div><div style="white-space:pre-wrap;font-size:14px;line-height:1.55">'
+        + esc(a.rueckmeldung) + '</div></div>';
+    } else {
+      h += '<div class="kasten stop"><p><b>Hier steht noch keine R\u00fcckmeldung.</b> '
+        + 'Vermutlich ist die Begutachtung noch nicht abgeschlossen. Bitte rufen Sie '
+        + 'den Link aus der Mail der Redaktion auf.</p></div>';
+    }
+
+    if (a.fassungen && a.fassungen.length) {
+      h += '<div class="stueck"><div class="stueck-kopf">'
+        + '<span class="marke-pill ok">Bereits eingereichte Fassungen</span></div>';
+      a.fassungen.forEach(function (f, i) {
+        h += '<p style="margin:0 0 8px;font-size:13px"><b>Fassung ' + (i + 1) + '</b> \u2013 '
+          + esc(f.name) + ', ' + esc((f.wann || '').substring(0, 16)) + '<br>'
+          + esc(f.was) + '</p>';
+      });
+      h += '</div>';
+    }
+
+    h += '<div class="stueck"><div class="stueck-kopf">'
+      + '<span class="marke-pill ok">Neue Fassung</span></div>'
+      + '<p style="margin:0 0 10px"><button type="button" class="knopf rand klein" '
+      + 'id="ueberWahl">Datei w\u00e4hlen</button> '
+      + '<span id="ueberDateiname" style="font-size:13px"></span></p>'
+      + '<div><label style="font-size:13px;font-weight:700" for="ueberWas">'
+      + 'Was haben Sie ge\u00e4ndert?</label>'
+      + '<textarea id="ueberWas" rows="6" placeholder="Punkt f\u00fcr Punkt, in '
+      + 'der Reihenfolge der R\u00fcckmeldung."></textarea></div>'
+      + '<p style="margin:10px 0 0"><button type="button" class="knopf" '
+      + 'id="ueberSenden">Fassung einreichen</button></p>'
+      + '<div class="wink" id="ueberStand"></div></div>';
+    return h;
+  }
+
+  function ueberStand(html, schlimm) {
+    var n = $('#ueberStand');
+    if (n) { n.innerHTML = (schlimm ? '<b style="color:var(--stop)">' : '<b>')
+                          + html + '</b>'; }
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!ueberModus || !e.target || !e.target.closest) { return; }
+
+    if (e.target.closest('#ueberWahl')) {
+      var wahl = document.createElement('input');
+      wahl.type = 'file';
+      wahl.accept = '.doc,.docx,.rtf,.odt';
+      wahl.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+          ueberDatei = null;
+          var d = this.files[0];
+          $('#ueberDateiname').textContent = d.name + ' \u2013 wird hochgeladen \u2026';
+          dateiSenden('manuskript', d, function (a) {
+            if (!a || !a.ok) {
+              $('#ueberDateiname').textContent = '';
+              ueberStand(esc((a && (a.meldung || a.grund))
+                || 'Die Datei wurde nicht angenommen.'), true);
+              return;
+            }
+            ueberDatei = a.id;
+            $('#ueberDateiname').textContent = d.name + ' \u2013 hochgeladen';
+            ueberStand('Datei liegt bereit. Jetzt noch, was Sie ge\u00e4ndert haben.',
+                       false);
+          });
+        }
+      });
+      wahl.click();
+      return;
+    }
+
+    if (e.target.closest('#ueberSenden')) {
+      if (!ueberDatei) {
+        ueberStand('Bitte zuerst die \u00fcberarbeitete Datei w\u00e4hlen.', true);
+        return;
+      }
+      var was = ($('#ueberWas') || {}).value || '';
+      if (was.trim().length < 20) {
+        ueberStand('Bitte schreiben Sie in zwei, drei S\u00e4tzen dazu, was Sie '
+          + 'ge\u00e4ndert haben. Ohne das muss die Redaktion raten.', true);
+        return;
+      }
+      ueberStand('Wird eingereicht \u2026', false);
+      ruf('ueberarbeitung', {beitrag: ueberBeitrag, tun: 'senden',
+                             anhang: ueberDatei, was: was})
+        .then(function (a) {
+          if (!a || !a.ok) {
+            ueberStand(esc((a && (a.meldung || a.grund))
+              || 'Das hat nicht geklappt.'), true);
+            return;
+          }
+          ueberDatei = null;
+          ueberTafelMalen();
+        })
+        .catch(function () {
+          ueberStand('Keine Verbindung zum Server. Bitte sp\u00e4ter noch einmal.', true);
+        });
+    }
+  });
+
   /* ------------------------------------------------- Bilder der Autor:innen
 
      Portraets werden erst gebraucht, wenn ein Beitrag angenommen ist. Dann
@@ -2785,24 +2987,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     bilderBeitrag = parseInt(beitrag, 10) || 0;
     var t = $('#bilderTafel');
     if (t) { t.hidden = false; }
-    // Der Entwurf darunter waere hier nur verwirrend: zwei Listen derselben
-    // Personen, von denen nur die obere wirkt.
-    var l = $('#autorListe'), n = $('#autorNeu');
-    if (l) { l.hidden = true; }
-    if (n) { n.hidden = true; }
     zeige(3);
-    /* NACH zeige(): Das setzt #navZeile selbst wieder sichtbar.
-       Weg muss auch der Rahmen des Einreichens - der Auftragskasten, die
-       Schrittzaehlung und die Blaetterleiste. Wer hierherkommt, reicht nichts
-       mehr ein; sein Beitrag ist angenommen. Bliebe die Leiste stehen, koennte
-       er sich durch sechs Schritte eines Entwurfs blaettern, der mit dem
-       angenommenen Beitrag nichts mehr zu tun hat. */
-    var weg = ['#navZeile', '#leiste', '.blatt[data-blatt="3"] .auftrag',
-               '.blatt[data-blatt="3"] .zaehler'];
-    weg.forEach(function (w) {
-      var e = document.querySelector(w);
-      if (e) { e.hidden = true; }
-    });
+    nurTafel(3, 'bilderTafel');
     bilderTafelMalen();
   }
 
@@ -2838,7 +3024,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         + 'Autorenprofil angelegt.</b> Das macht die Redaktion beim Bearbeiten. '
         + 'Bitte versuchen Sie es in ein paar Tagen noch einmal.</p></div>';
     }
-    var kopf = '<div class="kasten acht"><p><b>Ihr Beitrag ist angenommen.</b> '
+    var kopf = '<h2>Bilder der Autor:innen</h2>'
+      + '<div class="kasten acht"><p><b>Ihr Beitrag ist angenommen.</b> '
       + 'Hier fehlen noch die Bilder \u2014 Ihres und die Ihrer Mitautor:innen. '
       + 'Mindestens <b>' + MIN_PORTRAIT + ' Pixel breit</b>, das sind 30 mm bei '
       + '300 dpi, als jpg oder png.</p>'
@@ -3768,6 +3955,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var f = new FormData();
     f.append('action', aktion);
     Object.keys(daten || {}).forEach(function (k) { f.append(k, daten[k]); });
+    /* Die Anmeldung gehoert an JEDE Anfrage, nicht nur an die, bei denen
+       jemand daran gedacht hat.
+
+       Bis zum 19.09.2026 musste jeder Aufrufer `sitzung` selbst mitgeben.
+       Drei taten es, die uebrigen nicht - und es fiel nicht auf, weil die
+       betroffenen Aufrufe neu waren und nur ueber Testskripte geprueft
+       wurden, die die Sitzung von Hand mitschickten. Im Browser haette die
+       Bildertafel jedem Autor „nicht angemeldet" gemeldet.
+
+       dateiSenden() macht es seit jeher so. Hier fehlte es, nicht dort. */
+    if (!f.has('sitzung') && sitzung()) { f.append('sitzung', sitzung()); }
     return fetch(ZIEL, {method:'POST', body:f})
       .then(function (a) { return a.json().catch(function () { return {ok:false, grund:'keine-antwort'}; }); });
   }
@@ -3844,13 +4042,19 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       kopfMalen();
       anmeldeMeldung('Angemeldet als ' + a.mail + '. Ihr Zwischenstand liegt ab jetzt '
         + 'auch bei uns.', '');
+      /* „Sie arbeiten unten in den sechs Schritten weiter" stimmt nur, wenn
+         es wirklich weitergeht. Wer aus einer Mail kommt, hat genau eine
+         Sache zu tun, und die steht in der Tafel darunter. */
+      var sechs = (tun === 'bilder' || tun === 'ueberarbeiten')
+        ? '' : ' Sie arbeiten unten in den sechs Schritten weiter.';
       zugangOben('<p><b>Angemeldet als ' + esc(a.mail) + '.</b> Ihr Zwischenstand liegt '
-        + 'ab jetzt auch bei uns. Sie arbeiten unten in den sechs Schritten weiter.</p>',
-        false);
+        + 'ab jetzt auch bei uns.' + sechs + '</p>', false);
       /* Vor dem ersten Wort auf dem Server steht die Frage, welcher Stand gilt. */
       standAbgleichen(a.stand);
       /* Kommt der Link aus der Annahme-Mail, geht es direkt zu den Bildern. */
       if (tun === 'bilder') { bilderTafelAn(beitrag); }
+      /* Kommt er aus der Rueckmeldung der Begutachtung, zur neuen Fassung. */
+      if (tun === 'ueberarbeiten') { ueberarbeitenTafelAn(beitrag); }
     }).catch(function () {
       anmeldeMeldung('Keine Verbindung zum Server. Bitte versuchen Sie es später.', 'fehler');
     });
