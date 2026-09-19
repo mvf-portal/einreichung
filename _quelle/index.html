@@ -917,8 +917,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             Reihenfolge, in der sie im Heft stehen sollen.</li>
           </ol>
           <p><b>Als Korrespondenzautor:in sind Sie die Person, an die sich die Redaktion bei
-          Rückfragen wendet.</b> Nur für Sie sind die Angaben Pflicht; bei Mitautor:innen genügt
-          zunächst der Name.</p>
+          Rückfragen wendet.</b> <span id="autorenPflicht">Nur für Sie sind die Angaben
+          Pflicht; bei Mitautor:innen genügt zunächst der Name.</span></p>
         </div>
 
         <div id="autorListe"></div>
@@ -1665,6 +1665,18 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     return (r.teile && r.teile[teil]) || 'frei';
   }
 
+  /* Beim wissenschaftlichen Beitrag braucht JEDE Autorin und JEDER Autor eine
+     Vita (Peter Stegmaier, 19.09.2026). Bei allen anderen Rubriken genuegt
+     zunaechst der Name der Mitautor:innen, und die Redaktion fordert nach.
+
+     Der Endpunkt erzwingt das NICHT - er prueft weiterhin nur die erste
+     Person. Das ist Absicht: Die Seite ist hier strenger als der Server, und
+     diese Richtung ist ungefaehrlich. Umgekehrt waere es der Fehler, vor dem
+     die Rubriktabellen gewarnt sind - die Seite laesst etwas durch, das der
+     Server abweist. Ausserdem darf die Redaktion ueber ihre eigene Ansicht
+     weiterhin ohne Mitautoren-Vita einreichen und sie spaeter nachtragen. */
+  function alleVitae() { return stand.rubrik === 'wissenschaft'; }
+
   /* Wieviel Vorlauf welche Rubrik braucht, in Wochen. Sechs fuer das Peer
      Review, vier fuer alles andere - Satz, Korrektur und Druck brauchen die
      ohnehin. */
@@ -1804,6 +1816,18 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
        return (a.vita || '').trim().length > hoechstens(VITA_MAX);
      },
      text:'Vita kürzen (höchstens ' + VITA_MAX + ' Zeichen)'},
+    /* Die Mitautoren-Vita steht als eigene Regel, nicht in der Regel oben:
+       Dort geht es um die erste Person, hier um alle uebrigen. Eine gemeinsame
+       Meldung hiesse "Vita fehlt", und der Autor sucht bei sich selbst. */
+    {s:3, auchFrei:true,
+     pruef:function(){ return ohneVita().length > 0; },
+     text:function(){
+       var f = ohneVita();
+       return 'Vita fehlt bei ' + (f.length === 1
+           ? f[0]
+           : f.length + ' Mitautor:innen (' + f.join(', ') + ')')
+         + ' — beim wissenschaftlichen Beitrag braucht jede Person eine';
+     }},
     {s:4, teil:'zitation', feld:'zitation',  text:'Zitation', min:20},
     {s:4, teil:'konflikte', feld:'konflikte', text:'Autorenerklärung', min:10}
   ];
@@ -1862,6 +1886,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       if (teile.length < r.komma) { return true; }
     }
     return false;
+  }
+
+  /* Wer von den Mitautor:innen noch keine Vita hat. Gibt Namen zurueck, nicht
+     Nummern: "Vita fehlt bei Mitautor:in 3" laesst suchen, ein Name nicht. */
+  function ohneVita() {
+    if (!alleVitae()) { return []; }
+    return stand.autoren.map(function (a, i) {
+      if (i === 0) { return null; }
+      if ((a.vita || '').trim().length >= VITA_MIN) { return null; }
+      return (a.name || '').trim() || ('Mitautor:in ' + (i + 1));
+    }).filter(Boolean);
   }
 
   function luecken(schritt) {
@@ -1993,6 +2028,18 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           + 'einfach weiter \u2014 hier fehlt Ihnen nichts.';
       }
     }
+
+    // Wer eine Vita braucht, haengt ebenfalls an der Rubrik. Die Autorenfelder
+    // werden dabei neu gezeichnet, damit die Sterne stimmen.
+    var ap = $('#autorenPflicht');
+    if (ap) {
+      ap.textContent = alleVitae()
+        ? 'Beim wissenschaftlichen Beitrag braucht jede Autorin und jeder Autor eine '
+          + 'Vita. Name und E-Mail-Adresse sind nur bei Ihnen Pflicht.'
+        : 'Nur f\u00fcr Sie sind die Angaben Pflicht; bei Mitautor:innen gen\u00fcgt '
+          + 'zun\u00e4chst der Name.';
+    }
+    if ($('#autorListe')) { autorenMalen(); }
 
     // Vorzeile: Grenze, Erklaerung und Beispiel haengen an der Rubrik.
     var vz = $('#vorzeile');
@@ -2572,14 +2619,21 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       var weg = haupt ? '' :
         '<button type="button" class="weg" data-autorweg="' + i + '" aria-label="Entfernen">&times;</button>';
       var stern = haupt ? ' <span class="pflicht">*</span>' : '';
+      // Die Vita ist bei Wissenschaft auch fuer Mitautor:innen Pflicht,
+      // Name und E-Mail bleiben es nur beim Korrespondenzautor.
+      var vitaStern = (haupt || alleVitae()) ? ' <span class="pflicht">*</span>' : '';
 
       var anleitung = haupt
         ? '<p class="anleitung">Hier legen Sie sich selbst als <b>Haupt- und ' +
           'Korrespondenzautor:in</b> an. An diese Adresse schreibt die Redaktion bei ' +
           'Rückfragen, und unter diesem Namen steht Ihr Beitrag an erster Stelle.</p>'
         : '<p class="anleitung">Tragen Sie hier bitte die nächste Mitautor:in ein, in der ' +
-          'Reihenfolge, in der sie im Heft stehen soll. Name genügt; E-Mail und Vita kann ' +
-          'die Redaktion später nachfordern.</p>';
+          'Reihenfolge, in der sie im Heft stehen soll. ' + (alleVitae()
+            ? '<b>Die Vita wird gebraucht</b> — beim wissenschaftlichen Beitrag steht sie ' +
+              'zu jeder Person im Heft. Die E-Mail-Adresse kann die Redaktion später ' +
+              'nachfordern.'
+            : 'Name genügt; E-Mail und Vita kann die Redaktion später nachfordern.') +
+          '</p>';
 
       return '<div class="stueck"><div class="stueck-kopf">' + kopf + weg + '</div>' +
         anleitung +
@@ -2606,7 +2660,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         '<p class="wink" data-orcidwink="' + i + '">Freiwillig. Sie verbindet Ihren '
         + 'Beitrag dauerhaft mit Ihnen, auch bei Namensgleichheit oder Namenswechsel.</p></div>' +
         '</div>' +
-        '<label style="font-size:13px;font-weight:700">Kurze Vita' + stern +
+        '<label style="font-size:13px;font-weight:700">Kurze Vita' + vitaStern +
         '<span class="zeichenzahl" data-vitazahl="' + i + '"></span></label>' +
         /* maxlength steht auf der Toleranzgrenze, nicht auf der Empfehlung.
            Auf 380 gesetzt schnitte der Browser stumm ab, und die Meldung
