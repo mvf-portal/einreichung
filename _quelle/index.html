@@ -923,9 +923,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
         <div id="autorListe"></div>
         <button type="button" class="knopf rand klein" id="autorNeu">Weitere:n Autor:in hinzufügen</button>
-        <p class="wink">Bis zu zehn Personen. Das Porträtfoto — mindestens 354 Pixel breit,
-        das sind 30 mm bei 300 dpi — fordert die Redaktion nach der Annahme an; hier brauchen
-        Sie es noch nicht.</p>
+        <!-- Der Satz stand bis zum 19.09.2026 pauschal da. Portraet und Vita
+             erscheinen im Heft aber nur beim wissenschaftlichen Beitrag; bei
+             allen anderen Rubriken tragen sie das Online-Autorenprofil (Peter
+             Stegmaier). Der Ort wechselt darum mit der Rubrik. -->
+        <p class="wink">Bis zu zehn Personen. <span id="portraetWink"></span></p>
       </section>
 
       <!-- ================================================== 5 Formales -->
@@ -1522,7 +1524,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       wink:'Bericht über ein Thema, ein Haus oder eine Veranstaltung. Vorzeile und '
         + 'Vorspann tragen den Einstieg, ein Abstract gibt es nicht.',
       vorzeileMax:90, vorzeileZweck:'die Unterzeile zur Überschrift',
-      vorzeileText:'Die Unterzeile, die im Heft die Überschrift erklärt — sie darf '
+      vorzeileText:'Die Unterzeile, die im Heft die Überschrift erklärt. Sie darf '
         + 'ein halber Satz sein. <span class="mass">höchstens 90 Zeichen</span>.',
       vorzeileBeispiel:BEISPIEL('Neue Rechercheportale',
         '1.009 Fachquellen und jeden Morgen sechs neue Studien je Themenfeld'),
@@ -1531,10 +1533,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     },
     interview: {
       name:'Interview', peer:false, intern:true,
-      wink:'Gespräch, redigiert und autorisiert. Kein Abstract, keine Schlüsselwörter — '
+      wink:'Gespräch, redigiert und autorisiert. Kein Abstract, keine Schlüsselwörter, '
         + 'dafür Vorzeile, Vorspann, Porträt und Vita des Gesprächspartners.',
       vorzeileMax:200, vorzeileZweck:'wer spricht: Name, Funktion, Haus',
-      vorzeileText:'Hier steht, <b>wer</b> spricht: Name mit Titel, Funktion, Haus — im '
+      vorzeileText:'Hier steht, <b>wer</b> spricht: Name mit Titel, Funktion, Haus. Im '
         + 'Heft steht die Zeile klein neben oder unter dem Porträt. '
         + '<span class="mass">höchstens 200 Zeichen</span>. Sie darf ein ganzer Satz sein.',
       vorzeileBeispiel:BEISPIEL('Im Interview: Vorname Nachname',
@@ -1548,7 +1550,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       wink:'Teil einer laufenden Reihe. Die Vorzeile nennt Reihe und Folge, damit die '
         + 'Leserin den Anschluss findet.',
       vorzeileMax:90, vorzeileZweck:'Reihe und Folge',
-      vorzeileText:'Reihe und Folge — genau so, wie es in den vorigen Teilen stand. '
+      vorzeileText:'Reihe und Folge, genau so, wie es in den vorigen Teilen stand. '
         + '<span class="mass">höchstens 90 Zeichen</span>.',
       vorzeileBeispiel:BEISPIEL('Serie, Fortsetzung', 'Serie Pflegereform, Teil 3'),
       teile:{vorzeile:'pflicht', vorspann:'pflicht', zusammenfassung:'nie',
@@ -1560,13 +1562,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         + 'Die Vorzeile nennt die Veranstaltung, jede Abbildung nennt den Vortrag, aus '
         + 'dem sie stammt.',
       vorzeileMax:90, vorzeileZweck:'der Name der Veranstaltung',
-      vorzeileText:'Der volle Name der Veranstaltung, mit Nummer und Untertitel — er '
+      vorzeileText:'Der volle Name der Veranstaltung, mit Nummer und Untertitel. Er '
         + 'steht im Heft klein über der Überschrift. '
         + '<span class="mass">höchstens 90 Zeichen</span>.',
       vorzeileBeispiel:BEISPIEL('MVF-Fachkongress 2026',
         'MVF-Fachkongress „Impfstatus 2026 – Status und Ökonomie des Impfens“'),
       bildwink:'Bei einem Kongressnachbericht gehört in jede Bildunterschrift, aus '
-        + 'welchem Vortrag die Abbildung stammt — Referent, Haus, Vortragstitel, '
+        + 'welchem Vortrag die Abbildung stammt: Referent, Haus, Vortragstitel, '
         + 'Veranstaltung und Datum. Muster: „Aus Vortrag von Dr. Maike Schmitt, WifOR '
         + 'Institut: ›Impfen als Investition‹, MVF-Fachkongress ›Impfstatus 2026‹ am '
         + '17.06.2026“. Bei Porträts und fremden Folien zusätzlich den Bildnachweis.',
@@ -1785,7 +1787,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   var REGELN = [
     {s:0, feld:'rubrik',    text:'Rubrik wählen'},
     {s:0, teil:'vorzeile', feld:'vorzeile',
-     text:function(){ return 'Vorzeile eintragen — ' + vorzeileZweck(); }},
+     text:function(){ return 'Vorzeile eintragen: ' + vorzeileZweck(); }},
     {s:0, teil:'vorzeile', auchFrei:true,
      pruef:function(){ return (stand.vorzeile || '').length > hoechstens(vorzeileGrenze()); },
      text:function(){ return 'Vorzeile kürzen (höchstens ' + vorzeileGrenze() + ' Zeichen)'; }},
@@ -1826,7 +1828,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
        return 'Vita fehlt bei ' + (f.length === 1
            ? f[0]
            : f.length + ' Mitautor:innen (' + f.join(', ') + ')')
-         + ' — beim wissenschaftlichen Beitrag braucht jede Person eine';
+         + ', denn beim wissenschaftlichen Beitrag braucht jede Person eine';
      }},
     {s:4, teil:'zitation', feld:'zitation',  text:'Zitation', min:20},
     {s:4, teil:'konflikte', feld:'konflikte', text:'Autorenerklärung', min:10}
@@ -1844,7 +1846,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     if (r.max && r.feld) {
       var n = (stand[r.feld] || '').toString().trim().length;
       if (n > hoechstens(r.max)) {
-        t += ' — ' + zahl(n - hoechstens(r.max)) + ' Zeichen zu viel';
+        t += ', ' + zahl(n - hoechstens(r.max)) + ' Zeichen zu viel';
       }
     }
     return t;
@@ -2039,6 +2041,15 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         : 'Nur f\u00fcr Sie sind die Angaben Pflicht; bei Mitautor:innen gen\u00fcgt '
           + 'zun\u00e4chst der Name.';
     }
+    var pw = $('#portraetWink');
+    if (pw) {
+      pw.innerHTML = 'Das Portr\u00e4tfoto (mindestens ' + MIN_PORTRAIT + ' Pixel breit, '
+        + 'das sind 30 mm bei 300 dpi) fordert die Redaktion nach der Annahme an, hier '
+        + 'brauchen Sie es noch nicht. Es erscheint '
+        + (alleVitae() ? 'im Heft und im Online-Autorenprofil.'
+                       : 'im Online-Autorenprofil; im Heft steht ein Portr\u00e4t nur beim '
+                         + 'wissenschaftlichen Beitrag.');
+    }
     if ($('#autorListe')) { autorenMalen(); }
 
     // Vorzeile: Grenze, Erklaerung und Beispiel haengen an der Rubrik.
@@ -2169,9 +2180,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       o.value = heft;
       // Das Datum steht mit dabei: "MVF 01/27" allein sagt niemandem, wie
       // viel Zeit noch bleibt.
-      o.textContent = heft + ' — erscheint am '
+      o.textContent = heft + ', erscheint am '
         + d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', year:'numeric'})
-        + (frei ? '' : ' — Vorlauf zu kurz');
+        + (frei ? '' : ' (Vorlauf zu kurz)');
       o.disabled = !frei;
       s.appendChild(o);
     });
@@ -2190,7 +2201,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         ? 'Ihre Rubrik geht ins Peer Review: mindestens ' + wochen + ' Wochen Vorlauf.'
         : (stand.rubrik
             ? 'Für Ihre Rubrik genügen ' + wochen + ' Wochen Vorlauf.'
-            : 'Wählen Sie zuerst in Schritt 1 die Rubrik — davon hängt ab, welche Hefte '
+            : 'Wählen Sie zuerst in Schritt 1 die Rubrik. Davon hängt ab, welche Hefte '
               + 'noch in Frage kommen.');
     }
   }
@@ -2218,7 +2229,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         z.classList.add('knapp'); return;
       }
       if (kmax && teile.length > kmax) {
-        z.textContent = teile.length + ' Begriffe — ' + (teile.length - kmax) + ' zu viel';
+        z.textContent = teile.length + ' Begriffe, ' + (teile.length - kmax) + ' zu viel';
         z.classList.add('zuviel'); return;
       }
       z.textContent = teile.length + ' Begriffe'; z.classList.add('gut'); return;
@@ -2237,7 +2248,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       /* Genannt wird, was WEG muss - nicht der Abstand zur Empfehlung. Wer
          "244 Zeichen über der Grenze" liest, streicht 244 und ist unnoetig
          weit unten; anzunehmen ist der Text schon 19 Zeichen frueher. */
-      z.textContent = zahl(n) + ' Zeichen — ' + zahl(n - hoechstens(max))
+      z.textContent = zahl(n) + ' Zeichen, ' + zahl(n - hoechstens(max))
         + ' zu viel, bitte kürzen';
       z.classList.add('zuviel'); return;
     }
@@ -2245,7 +2256,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       // Zwischen Grenze und Toleranz: geht durch, aber der Autor soll wissen,
       // dass er darüber ist.
       z.textContent = zahl(n - max) + ' Zeichen über der '
-        + 'Empfehlung — noch in Ordnung';
+        + 'Empfehlung, noch in Ordnung';
       z.classList.add('knapp'); return;
     }
     if (max) {
@@ -2351,7 +2362,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       + 'Länge von rund ' + tausend(normal) + ' Zeichen weit hinaus.</b></p>'
       + '<p>Bitte wenden Sie sich an die Chefredaktion und holen Sie die Zustimmung '
       + 'ein, bevor Sie einreichen. Über Ausnahmen entscheidet die Redaktion, nicht '
-      + 'die Zeichenzahl — es gibt gute Gründe für einen langen Beitrag.</p>'
+      + 'die Zeichenzahl. Es gibt gute Gründe für einen langen Beitrag.</p>'
       + '<p><b>Zwischenspeichern müssen Sie nichts:</b> Ihre Eingaben werden laufend '
       + 'in diesem Browser gesichert, und die hochgeladene Datei liegt bereits bei '
       + 'uns. Sie können die Seite schließen und später weitermachen.</p>'
@@ -2359,7 +2370,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       + '?subject=' + encodeURIComponent(betreff)
       + '&body=' + encodeURIComponent(leib) + '">Fertige E-Mail öffnen</a></p>'
       + '<p class="wink">Die Mail ist vorausgefüllt mit Titel, Autor:in, Rubrik, Ausgabe '
-      + 'und Zeichenzahl — Sie müssen nur noch absenden.</p>';
+      + 'und Zeichenzahl. Sie müssen nur noch absenden.</p>';
   }
 
   function dateiMeldung(text, schlimm) {
@@ -2479,14 +2490,14 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         if (neuBreite < MIN_BILD) {
           dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' x '
             + hoehe + ' Pixeln zu groß und zugleich zu hochformatig, um es hier '
-            + 'zu verkleinern — dabei fiele die Breite unter die nötigen '
+            + 'zu verkleinern: Dabei fiele die Breite unter die nötigen '
             + MIN_BILD.toLocaleString('de-DE') + ' Pixel. Bitte legen Sie die '
             + 'Abbildung querformatiger an.', true);
           return;
         }
         dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' x '
           + hoehe + ' Pixeln größer als nötig und wird auf ' + neuBreite
-          + ' Pixel verkleinert — WordPress würde es beim Empfang ohnehin auf '
+          + ' Pixel verkleinert. WordPress würde es beim Empfang ohnehin auf '
           + MAX_BILDKANTE + ' Pixel herunterrechnen. An Ihrer eigenen Datei ändert '
           + 'sich nichts.');
         bildVerkleinern(datei, bild, faktor,
@@ -2506,7 +2517,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         stand.bilder.push({name:datei.name, groesse:datei.size, breite:breite,
           hoehe:hoehe, zuKlein:true, unterschrift:''});
         dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' Pixeln zu '
-          + 'schmal — nötig sind ' + MIN_BILD + '. Die Datei wurde nicht hochgeladen.',
+          + 'schmal, nötig sind ' + MIN_BILD + '. Die Datei wurde nicht hochgeladen.',
           true);
         dateienMalen(); sichern(); leisteMalen();
         return;
@@ -2541,11 +2552,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     $('#bildListe').innerHTML = stand.bilder.length
       ? stand.bilder.map(function (d, i) {
           var pill = d.kaputt ? '<span class="marke-pill warn">nicht lesbar</span>'
-            : d.zuKlein ? '<span class="marke-pill warn">' + d.breite + ' px — zu schmal</span>'
+            : d.zuKlein ? '<span class="marke-pill warn">' + d.breite + ' px, zu schmal</span>'
             : '<span class="marke-pill ok">' + d.breite + ' × ' + d.hoehe + ' px</span>';
           var warn = d.zuKlein ? '<p class="wink" style="color:var(--warn)">Gebraucht werden ' +
             MIN_BILD.toLocaleString('de-DE') + ' Pixel Breite. Bitte die Fassung in ' +
-            'Originalgröße hochladen — ein vergrößertes Bild wird dadurch nicht schärfer.</p>'
+            'Originalgröße hochladen. Ein vergrößertes Bild wird dadurch nicht schärfer.</p>'
             + nachreichHaken() : '';
           var fehlt = !d.unterschrift.trim();
           return '<div class="stueck"><div class="stueck-kopf">' +
@@ -2629,7 +2640,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           'Rückfragen, und unter diesem Namen steht Ihr Beitrag an erster Stelle.</p>'
         : '<p class="anleitung">Tragen Sie hier bitte die nächste Mitautor:in ein, in der ' +
           'Reihenfolge, in der sie im Heft stehen soll. ' + (alleVitae()
-            ? '<b>Die Vita wird gebraucht</b> — beim wissenschaftlichen Beitrag steht sie ' +
+            ? '<b>Die Vita wird gebraucht</b>: Beim wissenschaftlichen Beitrag steht sie ' +
               'zu jeder Person im Heft. Die E-Mail-Adresse kann die Redaktion später ' +
               'nachfordern.'
             : 'Name genügt; E-Mail und Vita kann die Redaktion später nachfordern.') +
@@ -2670,9 +2681,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         'maxlength="' + hoechstens(VITA_MAX) + '" ' +
         'placeholder="Zwei bis vier Sätze: Funktion, Einrichtung, Arbeitsschwerpunkt.">' +
         esc(a.vita) + '</textarea>' +
-        (haupt ? '<p class="wink">' + VITA_MIN + ' bis ' + VITA_MAX + ' Zeichen. Sie ' +
-                 'erscheint unter Ihrem Beitrag im Heft, und dort ist der Platz ' +
-                 'begrenzt.</p>' : '') +
+        '<p class="wink">' + VITA_MIN + ' bis ' + VITA_MAX + ' Zeichen. ' +
+        (alleVitae()
+          ? 'Sie erscheint unter dem Beitrag im Heft, und dort ist der Platz begrenzt.'
+          : 'Sie erscheint im Online-Autorenprofil. Im Heft steht eine Vita nur beim ' +
+            'wissenschaftlichen Beitrag.') + '</p>' +
         (haupt ? '' :
           '<p style="margin:10px 0 0"><label style="font-weight:400;font-size:13.5px">' +
           '<input type="checkbox" data-autor="erstautor" data-i="' + i + '"' +
@@ -2718,7 +2731,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var angemeldet = !!sitzung();
     return '<div class="kasten acht" style="margin-top:14px">'
       + '<p><b>Sie haben zugesagt, eine Abbildung in Druckgröße nachzureichen.</b> '
-      + 'Sie können das hier tun, sobald Sie die Datei haben — der Beitrag '
+      + 'Sie können das hier tun, sobald Sie die Datei haben. Der Beitrag '
       + '(Nr. ' + esc(String(stand.eingereicht.beitrag)) + ') wartet darauf.</p>'
       + (angemeldet
           ? '<p style="margin:10px 0 0">'
@@ -2726,7 +2739,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             + 'Abbildung nachreichen</button></p>'
             + '<div id="nachliefernStand" class="wink" style="margin-top:8px"></div>'
           : '<p style="margin:10px 0 0">Dafür müssen Sie angemeldet sein. Lassen Sie '
-            + 'sich unten auf dieser Seite einen <b>Zugangslink</b> schicken — an die '
+            + 'sich unten auf dieser Seite einen <b>Zugangslink</b> schicken, an die '
             + 'Adresse, unter der Sie eingereicht haben.</p>')
       + '</div>';
   }
@@ -2742,6 +2755,129 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     });
     wahl.click();
   });
+
+  /* ----------------------------------------------------- Portraets
+     Das Portraet gehoert der PERSON, nicht dem Beitrag - es landet am
+     `autoren`-Profil (Feld `author_image_id`), nicht am Artikel. Wer alle zwei
+     Jahre einreicht, laedt es einmal hoch.
+
+     Der Hauptautor darf auch fuer seine Mitautor:innen hochladen (Peter
+     Stegmaier, 19.09.2026): Sie haben keinen eigenen Zugang, und die Redaktion
+     muesste sonst zehn Mails schreiben. Die Grenze zieht der Server - nur
+     Profile, die an DIESEM Beitrag haengen.
+
+     Angezeigt wird der Kasten erst nach dem Einreichen. Vorher gibt es keine
+     Beitragsnummer, an der die Berechtigung haengen koennte. */
+  function portraetBlock() {
+    if (!stand.eingereicht || !stand.eingereicht.beitrag) { return ''; }
+    var angemeldet = !!sitzung();
+    return '<div class="kasten acht" style="margin-top:14px">'
+      + '<p><b>Portr\u00e4ts nachreichen.</b> Die Redaktion fordert sie nach der Annahme '
+      + 'an. Sobald Sie die Dateien haben, k\u00f6nnen Sie sie hier hochladen, f\u00fcr sich '
+      + 'und f\u00fcr Ihre Mitautor:innen. Mindestens <b>' + MIN_PORTRAIT + ' Pixel breit</b>, '
+      + 'das sind 30 mm bei 300 dpi.</p>'
+      + (angemeldet
+          ? '<p style="margin:10px 0 0">'
+            + '<button type="button" class="knopf rand klein" id="portraetLaden">'
+            + 'Personen anzeigen</button></p>'
+            + '<div id="portraetListe" style="margin-top:10px"></div>'
+          : '<p style="margin:10px 0 0">Daf\u00fcr m\u00fcssen Sie angemeldet sein. Lassen Sie '
+            + 'sich unten auf dieser Seite einen <b>Zugangslink</b> schicken, an die '
+            + 'Adresse, unter der Sie eingereicht haben.</p>')
+      + '</div>';
+  }
+
+  function portraetListeMalen(liste) {
+    var n = $('#portraetListe');
+    if (!n) { return; }
+    if (!liste || !liste.length) {
+      n.innerHTML = '<p class="wink">Zu diesem Beitrag ist noch kein Autorenprofil '
+        + 'angelegt. Die Redaktion legt sie beim Bearbeiten an; versuchen Sie es '
+        + 'sp\u00e4ter noch einmal.</p>';
+      return;
+    }
+    n.innerHTML = liste.map(function (a) {
+      /* Auch ein vorhandenes Bild wird genannt, mit seiner Breite. Sonst laedt
+         jemand ein zweites hoch, weil er nicht sieht, dass schon eines da ist -
+         und weiss hinterher nicht, welches gilt. */
+      /* NICHT `stand` nennen - das ist der globale Zustand der Seite. */
+      var marke = a.bild
+        ? '<span class="marke-pill ' + (a.breite >= MIN_PORTRAIT ? 'ok' : 'warn') + '">'
+          + (a.breite ? a.breite + ' px' : 'Bild vorhanden') + '</span>'
+        : '<span class="marke-pill warn">kein Bild</span>';
+      return '<div class="zeile" style="align-items:center;margin-bottom:8px">'
+        + '<span style="flex:1 1 auto">' + esc(a.name) + ' ' + marke + '</span>'
+        + '<button type="button" class="knopf rand klein" data-portraet="'
+        + a.profil + '">' + (a.bild ? 'Ersetzen' : 'Bild w\u00e4hlen') + '</button>'
+        + '</div>'
+        + '<div class="wink" data-portraetstand="' + a.profil + '"></div>';
+    }).join('');
+  }
+
+  function portraetStand(profil, html, schlimm) {
+    var n = document.querySelector('[data-portraetstand="' + profil + '"]');
+    if (n) { n.innerHTML = (schlimm ? '<b style="color:var(--stop)">' : '<b>')
+                          + html + '</b>'; }
+  }
+
+  function portraetHolen() {
+    var n = $('#portraetListe');
+    if (n) { n.innerHTML = '<p class="wink">Wird geladen \u2026</p>'; }
+    ruf('portraet', {beitrag: stand.eingereicht.beitrag, tun: 'liste'})
+      .then(function (a) {
+        if (!a || !a.ok) {
+          if (n) { n.innerHTML = '<p class="wink"><b style="color:var(--stop)">'
+            + esc((a && (a.meldung || a.grund)) || 'Die Liste kam nicht.')
+            + '</b></p>'; }
+          return;
+        }
+        portraetListeMalen(a.autoren);
+      })
+      .catch(function () {
+        if (n) { n.innerHTML = '<p class="wink"><b style="color:var(--stop)">Keine '
+          + 'Verbindung zum Server.</b></p>'; }
+      });
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'portraetLaden') { portraetHolen(); return; }
+    var k = e.target && e.target.closest ? e.target.closest('[data-portraet]') : null;
+    if (!k) { return; }
+    var profil = parseInt(k.dataset.portraet, 10);
+    var wahl = document.createElement('input');
+    wahl.type = 'file';
+    wahl.accept = '.jpg,.jpeg,.png';
+    wahl.addEventListener('change', function () {
+      if (this.files && this.files[0]) { portraetSenden(profil, this.files[0]); }
+    });
+    wahl.click();
+  });
+
+  function portraetSenden(profil, datei) {
+    portraetStand(profil, 'Wird hochgeladen \u2026', false);
+    dateiSenden('portrait', datei, function (a) {
+      if (!a || !a.ok) {
+        portraetStand(profil, esc((a && (a.meldung || a.grund))
+          || 'Die Datei wurde nicht angenommen.'), true);
+        return;
+      }
+      ruf('portraet', {beitrag: stand.eingereicht.beitrag, tun: 'setzen',
+                       profil: profil, anhang: a.id})
+        .then(function (b) {
+          if (!b || !b.ok) {
+            portraetStand(profil, esc((b && (b.meldung || b.grund))
+              || 'Das Nachreichen hat nicht geklappt.'), true);
+            return;
+          }
+          portraetStand(profil, 'Angekommen. Das Portr\u00e4t h\u00e4ngt jetzt am Profil.', false);
+          portraetHolen();
+        })
+        .catch(function () {
+          portraetStand(profil, 'Keine Verbindung zum Server. Bitte sp\u00e4ter noch einmal.',
+            true);
+        });
+    });
+  }
 
   function nachliefernStand(html, schlimm) {
     var n = $('#nachliefernStand');
@@ -2843,7 +2979,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
          die Einreichung haelt es nicht auf. Erst jenseits der Toleranz meldet
          die Pruefliste "Vita kuerzen". */
       if (n > VITA_MAX) {
-        z.textContent = n + ' Zeichen — ' + (n - VITA_MAX) + ' zu viel';
+        z.textContent = n + ' Zeichen, ' + (n - VITA_MAX) + ' zu viel';
         z.classList.add('knapp'); return;
       }
       z.textContent = n + ' Zeichen'; z.classList.add('gut');
@@ -2952,7 +3088,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         '</span><button type="button" class="springen" data-spring="2">zu Schritt 3</button></li>');
     });
     $('#pruefListe').innerHTML = zeilen.join('');
-    $('#pruefNachreichen').innerHTML = nachreichBlock;
+    $('#pruefNachreichen').innerHTML = nachreichBlock + portraetBlock();
 
     $('#uebersicht').innerHTML = uebersicht();
     absendbar();
@@ -3010,7 +3146,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       zeile('Ausgabe', 'trägt der Herausgeber ein') +
       zeile('Einsatz von KI', stand.kiEinsatz || 'keine Angabe') +
       zeile('eFirst beantragt', stand.efirst === 'ja'
-        ? 'Ja — Antrag geht an Herausgeber und Chefredaktion' : 'Nein') +
+        ? 'Ja, Antrag geht an Herausgeber und Chefredaktion' : 'Nein') +
       zeile('Lizenz', stand.lizenz === 'cc_by' ? 'CC BY 4.0' : 'CC BY-NC-ND 4.0') +
       wenn('konflikte', zeile('Autorenerklärung', stand.konflikte)) +
       '</dl></div>';
@@ -3120,11 +3256,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           + (a.zeit ? ', eingegangen am ' + esc(a.zeit) : '') + '.'
           + (a.bestaetigung
               ? ' Eine Bestätigung mit Titel, Datum und Uhrzeit ist unterwegs.'
-              : ' Die Bestätigungsmail konnte nicht verschickt werden — bitte '
+              : ' Die Bestätigungsmail konnte nicht verschickt werden. Bitte '
                 + 'schreiben Sie an stegmaier@m-vf.de.')
           + '</p>'
           + '<p>Sie können diesen Entwurf jetzt <b>löschen</b> oder ihn <b>als Datei '
-          + 'speichern</b>. <b>Eine Doppeleinreichung ist nicht möglich</b> — dieser '
+          + 'speichern</b>. <b>Eine Doppeleinreichung ist nicht möglich</b>: Dieser '
           + 'Entwurf trägt eine Vorgangsnummer, und zu ihr legt der Server keinen '
           + 'zweiten Beitrag an.</p>'
           /* Zurueckziehen setzt die Anmeldung per Einmal-Link voraus - nur so
@@ -3135,11 +3271,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
               ? '<p><b>Fällt Ihnen noch ein Fehler auf?</b> Solange Ihr Beitrag auf '
                 + '„Eingereicht" steht, können Sie ihn unten zurückziehen, überarbeiten '
                 + 'und neu einreichen. Sobald das Peer Review begonnen hat, geht das '
-                + 'nicht mehr — dann wenden Sie sich bitte an die Redaktion.</p>'
+                + 'nicht mehr. Dann wenden Sie sich bitte an die Redaktion.</p>'
               : '<p><b>Fällt Ihnen noch ein Fehler auf?</b> Schreiben Sie bitte an '
                 + '<a href="mailto:stegmaier@m-vf.de">stegmaier@m-vf.de</a>. '
                 + 'Zurückziehen können Sie einen Beitrag nur, wenn Sie über Ihren '
-                + 'Zugangslink angemeldet sind — sonst lässt sich nicht belegen, dass '
+                + 'Zugangslink angemeldet sind, sonst lässt sich nicht belegen, dass '
                 + 'er zu Ihnen gehört.</p>')
           + '<p>'
           + '<button type="button" class="knopf" id="entwurfDatei">Entwurf als Datei '
@@ -3154,7 +3290,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         knopf.disabled = false;
         knopf.textContent = alterText;
         $('#ergebnis').innerHTML = '<div class="kasten stop" style="margin-top:22px">'
-          + '<p><b>Keine Verbindung zum Server.</b> Ihre Eingaben sind nicht verloren — '
+          + '<p><b>Keine Verbindung zum Server.</b> Ihre Eingaben sind nicht verloren, '
           + 'sie liegen weiter in diesem Browser. Bitte versuchen Sie es später noch '
           + 'einmal.</p></div>';
       });
@@ -3220,7 +3356,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           $('#ergebnis').innerHTML = '<div class="kasten" style="margin-top:22px">'
             + '<p><b>Zurückgezogen.</b> Ihr Beitrag ist aus der Liste der Redaktion '
             + 'genommen; sie wurde benachrichtigt. Ihre Eingaben stehen unverändert in '
-            + 'dieser Seite — überarbeiten Sie sie und reichen Sie neu ein.</p></div>';
+            + 'dieser Seite. Überarbeiten Sie sie und reichen Sie neu ein.</p></div>';
         });
       return;
     }
@@ -3289,7 +3425,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       a.click();
       a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-      meldung('Gespeichert als ' + a.download + ' — dort, wo Ihr Browser Downloads ablegt.');
+      meldung('Gespeichert als ' + a.download + ' (dort, wo Ihr Browser Downloads ablegt).');
     } catch (e) {
       meldung('Das Sichern hat nicht geklappt. Bitte prüfen, ob der Browser Downloads '
             + 'zulässt.', true);
@@ -3333,7 +3469,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       }
       standUebernehmen(inhalt);
       meldung('Stand geladen' + (neu && neu._gesichert_am
-        ? ' — gesichert am ' + new Date(neu._gesichert_am).toLocaleString('de-DE') : ''));
+        ? ', gesichert am ' + new Date(neu._gesichert_am).toLocaleString('de-DE') : ''));
     };
     leser.readAsText(d);
   });
@@ -3451,7 +3587,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var kasten = $('[data-kuerzung="' + nr + '"]');
     if (kasten) {
       kasten.innerHTML = '<p class="klein" style="margin:0"><b>Übernommen.</b> '
-        + 'Der Text steht jetzt im Feld — Sie können ihn dort weiter ändern.</p>';
+        + 'Der Text steht jetzt im Feld. Sie können ihn dort weiter ändern.</p>';
     }
   }
 
@@ -3501,7 +3637,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var m = (stand.manuskript || [])[0];
     if (!m || !m.id) {
       pruefLauf = {liste: [], kopf: 'Dafür muss Ihr Manuskript erst hochgeladen '
-        + 'sein — geprüft wird die Datei, nicht die Felder auf dieser Seite.'};
+        + 'sein: Geprüft wird die Datei, nicht die Felder auf dieser Seite.'};
       pruefMalen();
       return;
     }
@@ -3524,11 +3660,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
                          felder:JSON.stringify(mit)}).then(function (s) {
       if (!s.ok) {
         pruefLauf.kopf = s.meldung || 'Die Prüfung lief nicht an. Das ist kein '
-          + 'Hindernis — Sie können trotzdem einreichen.';
+          + 'Hindernis. Sie können trotzdem einreichen.';
         pruefMalen();
         return;
       }
-      pruefLauf.kopf = 'Die Prüfung läuft — ' + s.anzahl + ' Abschnitte. '
+      pruefLauf.kopf = 'Die Prüfung läuft: ' + s.anzahl + ' Abschnitte. '
         + 'Das dauert eine halbe bis zwei Minuten.';
       pruefMalen();
       pruefNachfragen(s.nummer);
@@ -3546,7 +3682,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       pruefLauf.liste = z.befunde || [];
 
       if (z.laeuft) {
-        pruefLauf.kopf = 'Die Prüfung läuft — ' + z.fertig + ' von ' + z.anzahl
+        pruefLauf.kopf = 'Die Prüfung läuft: ' + z.fertig + ' von ' + z.anzahl
           + ' Abschnitten. Sie können hier weiterarbeiten.';
         pruefMalen();
         return new Promise(function (w) { setTimeout(w, 3000); })
@@ -3556,7 +3692,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       pruefLauf.kopf = pruefLauf.liste.length
         ? pruefLauf.liste.length + ' Stelle' + (pruefLauf.liste.length === 1 ? '' : 'n')
           + ', die einen Blick lohnen. Nichts davon hindert Sie am Einreichen.'
-        : 'Nichts gefunden — was diese Prüfung sehen kann, passt.';
+        : 'Nichts gefunden. Was diese Prüfung sehen kann, passt.';
       pruefMalen();
     });
   }
@@ -3599,7 +3735,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
            zu oft angefragt wurde: Eine Seite, die verraet, welche Adressen sie
            kennt, ist ein Verzeichnis. */
         anmeldeMeldung('Wenn zu dieser Adresse etwas zu schicken war, ist die Nachricht '
-          + 'unterwegs. Bitte sehen Sie in Ihrem Postfach nach — auch im Spam-Ordner. '
+          + 'unterwegs. Bitte sehen Sie in Ihrem Postfach nach, auch im Spam-Ordner. '
           + 'Der Link gilt sieben Tage.', '');
       } else {
         anmeldeMeldung('Das hat gerade nicht geklappt. Bitte versuchen Sie es später '
@@ -3607,7 +3743,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       }
     }).catch(function () {
       b.disabled = false;
-      anmeldeMeldung('Keine Verbindung zum Server. Ihre Eingaben sind nicht verloren — '
+      anmeldeMeldung('Keine Verbindung zum Server. Ihre Eingaben sind nicht verloren, '
         + 'sie liegen weiter in diesem Browser.', 'fehler');
     });
   });
@@ -3631,7 +3767,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           + 'unten einen neuen an.', 'fehler');
         zugangOben('<p><b>Dieser Zugangslink gilt nicht mehr.</b> '
           + esc((a && a.meldung) || '') + '</p>'
-          + '<p>Er lässt sich nur einmal verwenden — manche Mailprogramme rufen Links '
+          + '<p>Er lässt sich nur einmal verwenden. Manche Mailprogramme rufen Links '
           + 'beim Empfang bereits auf und verbrauchen ihn dadurch. Fordern Sie bitte '
           + 'unten auf dieser Seite einen neuen an; das dauert einen Augenblick.</p>', true);
         return;
@@ -3678,7 +3814,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     kasten.innerHTML =
       '<div class="wahl"><h4>Es gibt zwei Stände. Welcher gilt?</h4>' +
       '<p>Bei uns liegt ein Zwischenstand vom <b>' + esc(wann) + '</b>. In diesem Browser ' +
-      'steht ebenfalls etwas. Wir überschreiben nichts von selbst — bitte entscheiden Sie:</p>' +
+      'steht ebenfalls etwas. Wir überschreiben nichts von selbst. Bitte entscheiden Sie:</p>' +
       '<div class="zeile">' +
       '<button type="button" class="knopf haupt klein" id="wahlHier">Was hier steht, gilt</button>' +
       '<button type="button" class="knopf rand klein" id="wahlDort">Den gespeicherten Stand laden</button>' +
@@ -3719,7 +3855,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           if (a && a.ok) { return; }
           if (a && (a.grund === 'nicht-angemeldet' || a.grund === 'anmeldung-abgelaufen')) {
             sitzungSetzen(''); delete stand._angemeldet_als; kopfMalen();
-            anmeldeMeldung('Ihre Anmeldung gilt nicht mehr. Ihre Arbeit ist nicht verloren — '
+            anmeldeMeldung('Ihre Anmeldung gilt nicht mehr. Ihre Arbeit ist nicht verloren, '
               + 'sie liegt weiter in diesem Browser. Fordern Sie bei Gelegenheit einen neuen '
               + 'Zugangslink an.', 'fehler');
           }
