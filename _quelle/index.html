@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<meta name="description" content="Entwurf der Einreichungsseite von Monitor Versorgungsforschung: Autorinnen und Autoren stellen ihren Beitrag Schritt fuer Schritt selbst ein.">
+<meta name="description" content="Entwurf der Einreichungsseite von Monitor Versorgungsforschung: Autor:innen stellen ihren Beitrag Schritt fuer Schritt selbst ein.">
 <!--
   MVF Einreichung - Entwurf zur Ansicht
   =====================================
@@ -20,8 +20,9 @@
 -->
 <title>MVF Beitrag einreichen</title>
 <link rel="canonical" href="https://www.monitor-versorgungsforschung.de/einreichung/">
-<link rel="icon" href="logo/hub-icon.svg" type="image/svg+xml">
-<link rel="icon" href="logo/hub-icon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/wp-content/uploads/fbrfg/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/wp-content/uploads/fbrfg/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="/wp-content/uploads/fbrfg/apple-touch-icon.png">
 <link rel="apple-touch-icon" href="logo/hub-icon-180.png">
 <meta name="theme-color" content="#0051A1">
 <style>
@@ -88,7 +89,10 @@ header.top{background:var(--card);border-bottom:1px solid var(--line)}
 .kopf{max-width:1180px;margin:0 auto;padding:18px 22px;display:flex;
   align-items:center;justify-content:space-between;gap:20px}
 .marke{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit}
-.zeichen{width:38px;height:38px;flex:0 0 auto}
+.marke-logo{height:34px;width:auto;flex:0 0 auto;display:block}
+/* Auf schmalen Geraeten haette die Wortmarke in voller Hoehe die halbe
+   Kopfzeile fuer sich - sie bleibt lesbar, wenn sie mitschrumpft. */
+@media (max-width:520px){ .marke-logo{height:26px} }
 .marke-text strong{display:block;font-size:16px;line-height:1.15;font-weight:700;letter-spacing:-.01em}
 .marke-text span{display:block;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);margin-top:2px}
 .kopf-rechts{display:flex;align-items:center;gap:16px;font-size:13.5px;color:var(--ink-faint)}
@@ -102,7 +106,13 @@ header.top{background:var(--card);border-bottom:1px solid var(--line)}
 @media (min-width:980px){.spalten{grid-template-columns:250px 1fr;align-items:start}}
 
 /* ------------------------------------------------------- Schrittleiste */
-.leiste{position:sticky;top:18px;background:var(--card);border:1px solid var(--line);
+/* Die linke Spalte ist ein einziges Rasterfeld: Leiste plus die beiden
+   Hinweise darunter. Sie klebt als Ganzes - haenge das `sticky` an die
+   Leiste allein, waehrend sie in einem Wrapper sitzt, bleibt sie stehen,
+   weil der Wrapper genauso hoch ist wie sein Inhalt. */
+.seitenspalte{}
+@media (min-width:980px){.seitenspalte{position:sticky;top:18px}}
+.leiste{background:var(--card);border:1px solid var(--line);
   border-radius:8px;padding:8px;box-shadow:var(--schatten)}
 /* Unter 980px wird aus der Spalte eine waagerechte Leiste. Wichtig dabei:
    .schritt traegt oben width:100% - in einer Flex-Zeile nimmt damit JEDER
@@ -190,6 +200,17 @@ input:disabled,textarea:disabled{opacity:.55}
   .knopf.klein{min-height:44px;padding:9px 16px}
   input[type=text],input[type=email],select,textarea{min-height:44px}
   .schritt{min-height:44px}
+}
+.rubriktafel{width:100%;border-collapse:collapse;font-size:13.5px}
+.rubriktafel th,.rubriktafel td{border:1px solid var(--line-soft);padding:5px 8px;
+  text-align:center;vertical-align:top}
+.rubriktafel thead th{background:var(--card-3);font-size:12.5px;line-height:1.3}
+.rubriktafel td:first-child,.rubriktafel th:first-child{text-align:left}
+@media (max-width:620px){
+  /* Lieber schieben als quetschen: Sechs Spalten passen auf einem Telefon
+     nicht nebeneinander, und umgebrochene Kopfzeilen liest niemand. */
+  #rubrikTafel{overflow-x:auto}
+  .rubriktafel{min-width:520px}
 }
 .fusszeile{display:flex;flex-wrap:wrap;gap:12px;align-items:center;
   margin-top:26px;padding-top:20px;border-top:1px solid var(--line-soft)}
@@ -407,16 +428,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 <header class="top">
   <div class="kopf">
     <a class="marke" href="#">
-      <svg class="zeichen" viewBox="0 0 64 64" aria-hidden="true">
-        <rect x="4" y="8" width="56" height="11" rx="1.5" fill="#BE9E53"/>
-        <rect x="4" y="25" width="25" height="14" rx="1.5" fill="#0051A1"/>
-        <rect x="35" y="25" width="25" height="14" rx="1.5" fill="#0051A1"/>
-        <rect x="4" y="45" width="25" height="14" rx="1.5" fill="#0051A1"/>
-        <rect x="35" y="45" width="25" height="14" rx="1.5" fill="#0051A1"/>
-      </svg>
+      <img class="marke-logo" src="logo/mvf-logo.png" width="1257" height="316"
+           alt="Monitor Versorgungsforschung">
       <span class="marke-text">
-        <strong>Monitor Versorgungsforschung</strong>
-        <span>Beitrag einreichen</span>
+        <span>Einreichungsmodul</span>
       </span>
     </a>
     <div class="kopf-rechts">
@@ -430,28 +445,45 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 <div class="buehne">
 
   <!-- Dieser Kasten sagte bis zum 09.09.2026, die Übergabe sei „noch nicht angeschlossen“. Das stimmte, solange der Knopf nur anzeigte, was übergeben würde. Seit die Einreichung wirklich läuft, wäre es eine Falschaussage an genau der Stelle, an der Vertrauen entsteht — deshalb neu geschrieben. -->
-  <p class="fahne">Ihre Eingaben bleiben <b>in Ihrem eigenen Browser</b> gespeichert, während Sie arbeiten; wer sich unten mit einem Zugangslink anmeldet, hat seinen Zwischenstand zusätzlich bei uns liegen. Hochgeladene Dateien gehen sofort an die Redaktion — der übrige Beitrag erst, wenn Sie am Ende auf <b>„Beitrag einreichen“</b> klicken. Danach erhalten Sie eine Bestätigung per E-Mail, die den Eingang mit Datum und Uhrzeit quittiert, und können Ihren Beitrag zurückziehen, solange die Begutachtung noch nicht begonnen hat. Fragen und Anmerkungen an <a href="mailto:stegmaier@m-vf.de" style="color:#f0c65a">stegmaier@m-vf.de</a>.</p>
+  <p class="fahne">Ihre Eingaben werden <b>laufend in Ihrem eigenen Browser gespeichert</b>. Wie Sie Ihren Zwischenstand darüber hinaus sichern, steht unten unter <b>„Ihren Zwischenstand sichern“</b>. Hochgeladene Dateien liegen sofort bei der Redaktion, der übrige Beitrag erst, wenn Sie am Ende auf <b>„Beitrag einreichen“</b> klicken. Danach bekommen Sie eine Bestätigung per E-Mail und können den Beitrag zurückziehen, solange die Begutachtung nicht begonnen hat. Zwischen den Schritten wechseln Sie über die Leiste links, <b>nicht über den Zurück-Knopf des Browsers</b>: Der führt aus dem Formular heraus. Fragen an <a href="mailto:stegmaier@m-vf.de" style="color:#f0c65a">stegmaier@m-vf.de</a>.</p>
 
   <div class="spalten">
 
-    <nav class="leiste" id="leiste" aria-label="Schritte"></nav>
+    <!-- Am 18.09.2026 standen hier unter der Leiste noch zwei Absaetze in
+         Kleinschrift. Sie sind in den schwarzen Kasten gezogen und dabei auf
+         einen Satz zusammengeschmolzen (Mariann Stegmaier): Die erste Haelfte
+         erklaerte, dass man die Schrittleiste anklicken kann - das sieht man.
+         Der zweite Absatz war die Umkehrung der Warnung davor und sagte zum
+         dritten Mal, dass laufend gespeichert wird.
+
+         Der Wrapper bleibt trotzdem stehen: Ohne ihn waeren Leiste und alles
+         Weitere wieder eigene Rasterkinder, und genau das hatte <main> in die
+         zweite Rasterzeile geschoben - der grosse leere Abstand ueber
+         "Schritt 1 von 6". -->
+    <div class="seitenspalte">
+      <nav class="leiste" id="leiste" aria-label="Schritte"></nav>
+    </div>
 
     <main>
       <div class="fortschritt"><i id="balken"></i></div>
+      <div class="kasten" id="zugangMeldung" hidden style="margin-bottom:14px"></div>
 
       <!-- ================================================== 1 Beitrag -->
       <section class="blatt" data-blatt="0">
         <p class="zaehler">Schritt 1 von 6</p>
         <h2>Ihr Beitrag</h2>
-        <p class="vor">Wir gehen das Einreichungs-Procedere gemeinsam durch. Bei jedem Feld
-        steht, welcher Teil Ihres Beitrags wo hineingehört und wie lang der jeweilige Teil
-        sein darf. Sie können jederzeit aufhören, denn Ihre Arbeit wird auf Ihrem eigenen
-        Browser laufend gespeichert.</p>
+        <!-- Von drei Saetzen blieb einer (Mariann Stegmaier, 18.09.2026). Der
+             erste behauptete eine Begleitung, die es nicht gibt; der dritte
+             sagte zum vierten Mal auf derselben Bildschirmhoehe, dass laufend
+             gespeichert wird. Dieser hier bleibt, weil er ausserhalb des
+             Formulars zaehlt: Die Autorenunterlagen muessen nicht danebenliegen. -->
+        <p class="vor">Bei jedem Feld steht, welcher Teil Ihres Beitrags dort hineingehört
+        und wie lang er sein darf.</p>
 
         <div class="auftrag">
           <p class="was">In diesem Schritt legen Sie den Beitrag an.</p>
           <ol>
-            <li>Rubrik wählen — sie bestimmt, wie Ihr Beitrag gesetzt und begutachtet wird.</li>
+            <li>Rubrik wählen. Davon hängt ab, wie Ihr Beitrag gesetzt und begutachtet wird.</li>
             <li>Überschrift und Vorspann eintragen.</li>
             <li>Das Manuskript als Dokument hochladen.</li>
           </ol>
@@ -459,16 +491,29 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
         <div class="gruppe">
           <label for="rubrik">Rubrik <span class="pflicht">*</span></label>
+          <!-- Die Aussage ueber den Herausgeber stand bis zum 18.09.2026 an DREI
+               Stellen: hier oben, im "Achtung"-Absatz und noch einmal in einem
+               eigenen Kasten unter der Tafel. Sie steht jetzt einmal, am Ende
+               (Mariann Stegmaier: "vor der Tabelle, nach der Tabelle, man weiss
+               gar nicht, wo man anfangen soll"). -->
           <p class="anleitung">Wählen Sie hier bitte <b>eine</b> Rubrik aus der Liste.
-          Wenn Sie unsicher sind, nehmen Sie die, die dem Charakter Ihres Textes am nächsten
-          kommt — die Redaktion korrigiert das notfalls.<br>
-          <b>Wissenschaft und Wissen gehen ins Peer&nbsp;Review.</b> Planen Sie für das Peer Review mindestens <b>sechs Wochen</b> zwischen Einreichung und möglicher Publikation ein. Für alle anderen Rubriken rechnen Sie mit ungefähr <b>vier Wochen</b>.<br>
-          <b>Achtung:</b> Über Aufnahme, Reihenfolge und Erreichbarkeit der kommenden Ausgaben entscheiden der Herausgeber und die Chefredaktion.</p>
+          In der Tabelle sind die Unterschiede dargestellt. Wenn Sie unsicher sind, nehmen
+          Sie die Rubrik, die dem Charakter Ihres Textes am nächsten kommt, und die
+          Redaktion korrigiert das notfalls.</p>
+          <p class="anleitung"><b>Wissenschaft und Wissen gehen ins Peer&nbsp;Review.</b>
+          Planen Sie dafür mindestens <b>sechs Wochen</b> zwischen Einreichung und
+          möglicher Publikation ein. Für alle anderen Rubriken rechnen Sie mit
+          mindestens <b>vier Wochen</b>.</p>
+          <p class="anleitung"><b>Hinweis:</b> Ihre Einordnung ist ein Vorschlag an den
+          Herausgeber. Er entscheidet über Annahme, Reihenfolge und Ausgabe und bemüht
+          sich um das nächste Heft, das zu Ihrem Thema passt und erreichbar ist. Wie
+          schnell das geht, hängt am Peer Review und an den Beiträgen, die bereits
+          angenommen sind.</p>
           <select id="rubrik" data-feld="rubrik">
             <option value="">Bitte wählen</option>
-            <option value="wissenschaft">Wissenschaft (Achtung: Peer Review)</option>
-            <option value="wissen">Wissen (Achtung: Peer Review)</option>
-            <option value="wissenstransfer">Wissenstransfer</option>
+            <option value="wissenschaft">Wissenschaftl. Beitrag (Achtung: Peer Review)</option>
+            <option value="wissen">Rubrik Wissen (Achtung: Peer Review)</option>
+            <option value="wissenstransfer">Rubrik Wissenstransfer</option>
             <option value="kommentar">Kommentar</option>
             <!-- Report, Interview, Serie, Kongressnachbericht, Sonderdruck und
                  Editorial stehen hier NICHT: Das sind die Rubriken, die das
@@ -481,6 +526,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           </select>
           <p class="wink" id="rubrikWink">Sobald Sie gewählt haben, steht hier, was die Rubrik
           bedeutet.</p>
+          <div id="rubrikTafel" style="margin-top:12px"></div>
           <div class="kasten" id="rubrikBedarf" hidden></div>
         </div>
 
@@ -489,7 +535,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <span class="zeichenzahl" data-zaehlt="vorzeile"></span></label>
           <p class="anleitung" id="vorzeileAnleitung">Tragen Sie hier bitte die kleine Zeile
           ein, die im Heft <b>über</b> der Überschrift steht und das Thema einordnet.
-          Wählen Sie zuerst die Rubrik — was hier hineingehört und wie lang es sein darf,
+          Wählen Sie zuerst die Rubrik. Was hier hineingehört und wie lang es sein darf,
           hängt von ihr ab.</p>
           <input type="text" id="vorzeile" data-feld="vorzeile"
                  data-max="60" placeholder="Ambulante Notfallversorgung">
@@ -516,7 +562,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <p class="anleitung">Schreiben Sie hier bitte den nicht-eingerückten Absatz, der im Heft
           <b>vor</b> dem Beitrag steht und zum Weiterlesen bringt.
           <span class="mass">600 bis 900 Zeichen</span>. Er nennt die Frage und deutet die
-          Antwort an — abgehandelt wird sie erst im Beitrag.</p>
+          Antwort an. Abgehandelt wird sie erst im Beitrag.</p>
           <textarea id="vorspann" data-feld="vorspann" rows="5" data-min="600" data-max="900"></textarea>
           <p class="wink">Kein Abstract in Kurzform. Das Abstract kommt in Schritt 2 und ist
           etwas anderes: sachlich, gegliedert, für die Fachdatenbanken.</p>
@@ -524,17 +570,45 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
         <div class="gruppe">
           <span class="beschriftung">Manuskript <span class="pflicht">*</span></span>
+          <!-- Fassung Mariann Stegmaier, 18.09.2026, woertlich uebernommen. Der
+               Gewinn ist die Zuordnung: Hinter jedem Bestandteil, der aus dem
+               Dokument heraussoll, steht jetzt der Schritt, in dem er hingehoert.
+               Vorher erfuhr der Autor nur, was er loeschen soll, nicht wohin es
+               kommt - und genau das laesst zoegern. -->
           <p class="anleitung">Laden Sie hier bitte Ihren fertigen Text als
-          <b>Dokument</b> hoch — <span class="mass">.docx, .doc oder .rtf</span>, eine Datei.
-          Bitte <b>ohne Layout</b>: keine Textrahmen, keine Spalten, und Bilder nicht in die
-          Datei einbetten — die laden Sie in Schritt 3 einzeln hoch.</p>
-          <p class="anleitung">Zum <b>Dateinamen</b>: ohne Leerzeichen, Kommas, Umlaute und
-          Sonderzeichen, Wörter mit Unterstrich verbunden. Nötig ist das nicht — wir benennen
-          jede Datei beim Empfang ohnehin einheitlich um. Aber solange sie zwischen Ihnen und
-          uns hin und her geht, erspart ein einfacher Name allen Verwechslungen.</p>
-          <p class="beispiel"><span class="nein">Nicht so:</span> <i>Titel, Zusammenfassung,
-          Abstract – neue Fassung (2).docx</i><br>
-          <span class="ja">Besser:</span> <i>Name-Vorname_Modell_Manuskript.docx</i></p>
+          <b>Dokument</b> hoch: <span class="mass">.docx, .doc oder .rtf</span>.
+          Bitte nur eine Textdatei <b>ohne Layout</b>: keine Textrahmen und keine Spalten.</p>
+          <!-- Die Zahl stand bisher nur in den Autorenunterlagen ab 01/27, nicht
+               im Formular - wer sich daran hielt, war im Nachteil gegenueber dem,
+               der sie nicht gelesen hatte (Mariann Stegmaier, 18.09.2026).
+               Bewusst OHNE Pruefung: Die Seite kann nur .docx lesen, bei .doc und
+               .rtf bliebe die Grenze stumm - und 30.000 ist die Schwelle fuer
+               "ohne Rueckfrage", keine Ablehnungsgrenze. -->
+          <p class="anleitung"><b>Zum Umfang:</b> Rechnen Sie mit etwa
+          <span class="mass">30.000 Zeichen</span> einschließlich Leerzeichen. Mehr ist
+          möglich, macht aber eine Rückfrage nötig. In Word finden Sie die Zahl unter
+          <i>Überprüfen → Wörter zählen</i>.</p>
+          <p class="anleitung"><b>Hier bitte ausschließlich den Grund- und Basistext
+          hochladen.</b> Alle weiteren Bestandteile entfernen Sie bitte aus dem Dokument und
+          laden sie hier nicht mit hoch: Überschrift und Vorspann (Schritt 1, bereits
+          passiert), Literaturverzeichnis (Schritt 1, unten), Abstracts und Schlüsselwörter
+          (Schritt 2), Abbildungen und Tabellen (Schritt 3), Namen der Autor:innen und Vitae
+          (Schritt 4), Zitationsvorschlag und Danksagung etc. (Schritt 5).</p>
+          <p class="anleitung"><b>Verweisen Sie im Text auf Ihre Abbildungen und
+          Tabellen</b>, etwa „Abbildung 1 zeigt …" oder „(s. Abb. 1)". Nur so wissen wir
+          beim Satz, wo sie hingehören. Die Dateien selbst bitte nicht in das Dokument
+          einbetten, sondern in Schritt 3 hochladen.</p>
+          <p class="anleitung">Wir zitieren nach <b>Vancouver</b>, d. h. Ihre Quellen im
+          Text bitte als Ziffern in Klammern – (1), (1–3) – angeben. Das
+          Literaturverzeichnis selbst bitte aus diesem Dokument entfernen und separat weiter
+          unten auf dieser Seite eintragen. Bitte entfernen Sie auch etwaige <b>Fußnoten</b>.
+          Dort angegebene Quellen gehören in das Literaturverzeichnis.</p>
+          <!-- Der Dateiname-Absatz ist am 18.09.2026 ersatzlos entfallen (Mariann
+               Stegmaier, Entscheidung Peter Stegmaier). Er bat um etwas und nahm
+               die Bitte im naechsten Satz selbst zurueck ("Noetig ist das nicht -
+               wir benennen jede Datei beim Empfang ohnehin einheitlich um"). Wer
+               das liest, tut es nicht, und zwar zu Recht. Umbenannt wird beim
+               Empfang ohnehin, der Hinweis kostete also nur Platz. -->
           <div class="ablage" data-ablage="manuskript" tabindex="0" role="button">
             <p><b>Datei wählen</b> oder hierher ziehen</p>
           </div>
@@ -543,19 +617,109 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <label>Text prüfen lassen <span class="freiwillig">freiwillig</span></label>
           <p class="anleitung">Mit unserem KI-Lektorat helfen wir Ihnen, ein
           möglichst fehlerfreies Dokument einzureichen. Die KI macht mögliche
-          Fehlerstellen sichtbar — Sprache, Widersprüche, uneinheitliche
+          Fehlerstellen sichtbar: Sprache, Widersprüche, uneinheitliche
           Schreibweisen.</p>
           <p class="anleitung">Lesen lässt sich nur <b>.docx</b>. Bei
           <b>.doc</b> und <b>.rtf</b> nehmen wir Ihre Datei an, aber der Text
           bleibt für die Prüfung verschlossen.</p>
-          <p class="anleitung">Sie ändern <b>oder auch nicht</b> und laden Ihr
-          Dokument erst dann final hoch. So kommt der bereinigte Text zu MVF.
-          <b>Wir ändern nichts</b>, und nichts davon hindert Sie am
-          Einreichen.</p>
+          <!-- Der Satz "Sie aendern oder auch nicht und laden Ihr Dokument erst dann
+               final hoch" liess das Wichtigste offen: dass die Datei ERNEUT
+               hochgeladen werden muss. Wer das nicht weiss, arbeitet die
+               Vorschlaege in sein Word-Dokument ein und reicht die alte Fassung
+               ein (Mariann Stegmaier, 18.09.2026). "Wir uebernehmen keine
+               Rechtschreibpruefung" aus ihrem Entwurf steht bewusst NICHT hier:
+               MVF lektoriert sehr wohl, nur spaeter, im Korrekturlauf vor dem
+               Satz. Stattdessen der Schlusssatz zur Verantwortung. -->
+          <p class="anleitung"><b>Ob Sie die Vorschläge übernehmen, ist Ihnen
+          überlassen</b>. Die KI ändert nichts an Ihrer Datei. Wenn Sie etwas ändern,
+          arbeiten Sie es von Hand in Ihr Dokument ein und laden es danach
+          <b>noch einmal hoch</b>; nur so kommt der bereinigte Text zu uns. Nichts davon
+          hindert Sie am Einreichen. Die Verantwortung für den Text bleibt bei Ihnen:
+          Was hier stehen bleibt, geht so in den Satz.</p>
           <p style="margin:10px 0 0">
             <button type="button" class="knopf" id="pruefStart">Text prüfen</button>
           </p>
+          <!-- Stand bis zum 18.09.2026 als Aufforderung da ("Nun fuegen Sie bitte
+               ... ein"), drei Zeilen unter dem Satz, dass die Uebernahme dem Autor
+               ueberlassen ist - zwei Saetze, die einander widersprachen. Ausserdem
+               unterstellte er, das Textprogramm sei offen, und trug vier Verben in
+               einem Satz (Mariann Stegmaier, 18.09.2026). -->
+          <p class="anleitung" id="pruefAnleitung" hidden><b>Sie können die Vorschläge
+          jetzt in Ihr Dokument einarbeiten.</b> Speichern Sie es danach und laden Sie es
+          hier noch einmal hoch.</p>
+          <p id="pruefNachladen" hidden style="margin:8px 0 0">
+            <button type="button" class="knopf" data-mehr="manuskript">Hier hochladen</button>
+          </p>
           <div id="pruefBefunde" style="margin-top:10px"></div>
+        </div>
+
+        <!-- Die Literatur steht seit dem 17.09.2026 hier und nicht mehr unter
+             „Formales": Sie gehoert inhaltlich zum Text, und seit es keine
+             Fussnoten mehr geben soll, ist sie der Ort, an dem die Quellen
+             landen. Wer beides in einem Zug erledigt, vergisst es nicht. -->
+        <div class="gruppe" data-teil="literatur">
+          <label for="literatur">Literatur <span class="pflicht">*</span>
+            <span class="zeichenzahl" data-zaehlt="literatur"></span></label>
+          <!-- Zwei Korrekturen vom 18.09.2026 (Mariann Stegmaier).
+
+               Erstens stand "und fuegen das Verzeichnis neu ein" hier als
+               Arbeitsanweisung - falsch: Das Verzeichnis aktualisiert sich selbst,
+               wenn man den Stil umstellt. Sie hat es ausprobiert. Wer dem alten
+               Text folgte und das Verzeichnis loeschte und neu einfuegte, konnte
+               sich die Zuordnung zu den Ziffern im Text zerschiessen.
+
+               Zweitens gehoert Vancouver in den ERSTEN Satz: Es ist die Regel, nach
+               der das Feld auszufuellen ist, keine Zusatzinformation danach.
+               "(numerisch, deutsche Fassung)" ist weg - in Zotero, EndNote und
+               Citavi heisst der Stil schlicht "Vancouver", und wer nach einer
+               deutschen Fassung sucht, findet keine. -->
+          <p class="anleitung">Tragen Sie hier bitte Ihr Literaturverzeichnis ein,
+          <b>eine Quelle je Zeile</b>, in der Reihenfolge, in der sie im Text vorkommen
+          (<b>nach Vancouver</b>). Im Text verweisen Sie mit Ziffern in Klammern:
+          (1), (1–3) (s. Manuskript). Bitte <b>mit DOI</b>, wo vorhanden.</p>
+          <p class="anleitung">Wenn Sie mit einem Literaturprogramm arbeiten
+          (z. B. Zotero, EndNote, Citavi), stellen Sie den Stil dort auf
+          <i>Vancouver</i> um; das ist ein Klick und macht alle Angaben auf einen Schlag
+          einheitlich. So sieht eine Stelle bei uns aus:</p>
+          <!-- Das Beispiel, das bis zum 18.09.2026 hier stand, gibt es nicht:
+               "Gesundheitskompetenz der Bevoelkerung in Baden-Wuerttemberg,
+               Gesundheitswesen 2024;86(3):180-8" findet weder Crossref noch PubMed.
+               Es sah aus wie die echte Arbeit derselben Gruppe, nur mit einem
+               Bundesland darin und einem vierten Autor. Im Muster fuer richtiges
+               Zitieren ist das die unangenehmste Stelle fuer eine erfundene Quelle
+               (Mariann Stegmaier, 18.09.2026: "wenn du DOI willst, dann hier DOI
+               auch im Beispiel").
+
+               Die Ersatzquelle ist gegengeprueft: PubMed 37813347, DREI Autoren,
+               Gesundheitswesen 2024;86(1):59-66, doi 10.1055/a-2148-5221. Wer sie
+               aendert, prueft sie bitte wieder nach. -->
+          <p class="beispiel"><i>Schaeffer D, Griese L, Klinger J. Navigationale
+          Gesundheitskompetenz der Bevölkerung in Deutschland. Gesundheitswesen.
+          2024;86(1):59–66. doi:10.1055/a-2148-5221</i><br>
+          <!-- Zweite Zeile: ein Beitrag aus dem eigenen Haus. Sie zeigt, dass auch
+               MVF selbst so zitiert wird, und nimmt den Autoren die Frage ab, wie
+               sie uns zitieren. Jahrgang 19 fuer 2026 (Peter Stegmaier,
+               18.09.2026); Crossref fuehrt bei MVF das Jahr als Band, der
+               Zitationshinweis im Heft nennt gar keinen Jahrgang. -->
+          <i>Penske M. Der ökonomische Impact innovativer Arzneimittel. Monitor
+          Versorgungsforschung. 2026;19(4):66–74.
+          doi:10.24945/mvf.04.26.1866-0533.2851</i></p>
+          <!-- Hier stand bis zum 18.09.2026: "Falls Sie Ihre Literaturstellen bisher
+               nicht durchnummeriert haben, ist das kein Problem - das uebernimmt
+               unser System fuer Sie." Doch, es waere eines (Mariann Stegmaier):
+               Durchzaehlen kann die Maschine, pruefen, ob die Reihenfolge die des
+               Textes ist, nicht. Und wer nie nummeriert hat, hat im Text auch keine
+               Ziffern in Klammern - dann zeigt die Nummer im Verzeichnis auf keine
+               Stelle. Der Absatz beruhigte also genau die Autoren, die das Problem
+               hatten. Ersatzlos gestrichen: Der erste Absatz sagt bereits "in der
+               Reihenfolge, in der sie im Text vorkommen (nach Vancouver)". -->
+          <!-- Sechs Zeilen waren zu wenig: Eine Vancouver-Stelle braucht in
+               diesem Feld drei bis vier Zeilen, sechs Zeilen fassten also
+               knapp zwei Quellen. Ein Verzeichnis ist dort nicht zu
+               ueberblicken (Mariann Stegmaier, 18.09.2026, nachgemessen). -->
+          <textarea id="literatur" data-feld="literatur" rows="16" data-min="20"
+            style="min-height:280px"></textarea>
+          <p class="wink" id="literaturWink"></p>
         </div>
 
         </div>
@@ -564,9 +728,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       <!-- =============================================== 2 Zusammenfassung -->
       <section class="blatt" data-blatt="1" hidden>
         <p class="zaehler">Schritt 2 von 6</p>
-        <h2>Zusammenfassung und Schlagwörter</h2>
-        <p class="vor">Diese fünf Angaben entscheiden darüber, ob Ihr Beitrag gefunden wird —
-        deutsch bei uns, englisch international.</p>
+        <h2>Zusammenfassung und Schlüsselwörter</h2>
+        <p class="vor">Diese fünf Angaben entscheiden darüber, ob Ihr Beitrag gefunden wird:
+        auf Deutsch im deutschsprachigen Raum, auf Englisch international.</p>
 
         <p class="kasten" id="ohneZusammenfassung" hidden></p>
 
@@ -575,7 +739,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <p class="was">In diesem Schritt schreiben Sie zwei Zusammenfassungen.</p>
           <ol>
             <li>Das deutsche Abstract und drei bis sieben deutsche Schlüsselwörter.</li>
-            <li>Dasselbe auf Englisch — Titel, Abstract, Keywords.</li>
+            <li>Dasselbe auf Englisch: Titel, Abstract, Keywords.</li>
           </ol>
           <p>Beides ist Pflicht. Das englische Abstract ist das, was international von Ihrem
           Beitrag ankommt.</p>
@@ -588,8 +752,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
               <span class="zeichenzahl" data-zaehlt="abstractDe"></span></label>
             <p class="anleitung">Fassen Sie hier bitte Ihren Beitrag zusammen.
             <span class="mass">1.000 bis 1.500 Zeichen</span>, in dieser Reihenfolge:
-            <b>Hintergrund, Methode, Ergebnis, Schlussfolgerung</b>. Ohne Zwischentitel und
-            ohne Literaturverweise.</p>
+            <b>Hintergrund, Methode(n), Ergebnis(se), Diskussion</b>. Ohne Zwischentitel und
+            ohne Literaturverweise. Eine <b>Schlussfolgerung</b> dürfen Sie anschließen, wenn
+            sie über die Diskussion hinausgeht. Pflicht ist sie nicht.</p>
             <textarea id="abstractDe" data-feld="abstractDe" rows="7" data-min="1000" data-max="1500"></textarea>
           </div>
           <div class="gruppe">
@@ -597,7 +762,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
               <span class="zeichenzahl" data-zaehlt="schlagDe"></span></label>
             <p class="anleitung">Tragen Sie hier bitte <span class="mass">3 bis 7 Begriffe</span>
             ein, <b>mit Komma getrennt</b>. Bitte keine Wörter, die schon in der Überschrift
-            stehen — die helfen beim Finden nicht weiter.</p>
+            stehen. Die helfen beim Finden nicht weiter.</p>
             <input type="text" id="schlagDe" data-feld="schlagDe" data-komma="3" data-kommamax="7"
                    placeholder="Triage, Versorgungssteuerung, Notaufnahme, Primärversorgung">
           </div>
@@ -609,29 +774,29 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <label for="titelEn">Titel englisch <span class="pflicht">*</span>
               <span class="zeichenzahl" data-zaehlt="titelEn"></span></label>
             <p class="anleitung">Tragen Sie hier bitte die englische Überschrift ein.
-            <span class="mass">höchstens 100 Zeichen</span>. Keine wörtliche Übersetzung nötig —
-            im Englischen darf sie anders klingen, solange sie dasselbe sagt.</p>
+            <span class="mass">höchstens 100 Zeichen</span>. Keine wörtliche Übersetzung nötig.
+            Im Englischen darf sie anders klingen, solange sie dasselbe sagt.</p>
             <input type="text" id="titelEn" data-feld="titelEn" data-min="10" data-max="100" maxlength="100">
           </div>
           <div class="gruppe">
             <label for="abstractEn">Abstract englisch <span class="pflicht">*</span>
               <span class="zeichenzahl" data-zaehlt="abstractEn"></span></label>
             <p class="anleitung">Schreiben Sie hier bitte das englische Abstract.
-            <span class="mass">1.000 bis 1.500 Zeichen</span>, gleicher Aufbau wie oben.
-            Bitte <b>keine ungeprüfte Maschinenübersetzung</b> — dieser Text steht mit Ihrem
-            Namen darunter.</p>
+            <span class="mass">1.000 bis 1.500 Zeichen</span>, gleicher Aufbau wie oben:
+            Introduction, Methods, Results, Discussion, optional Conclusion.
+            Bitte <b>keine ungeprüfte Maschinenübersetzung</b>.</p>
             <textarea id="abstractEn" data-feld="abstractEn" rows="7" data-min="1000" data-max="1500"></textarea>
           </div>
           <div class="gruppe">
             <label for="schlagEn">Keywords englisch <span class="pflicht">*</span>
               <span class="zeichenzahl" data-zaehlt="schlagEn"></span></label>
             <p class="anleitung">Tragen Sie hier bitte <span class="mass">3 bis 7 Begriffe</span>
-            ein, mit Komma getrennt. Nach Möglichkeit <b>MeSH-Begriffe</b> — dann wird Ihr
+            ein, mit Komma getrennt. Nach Möglichkeit <b>MeSH-Begriffe</b>, dann wird Ihr
             Beitrag in der internationalen Suche gefunden.</p>
             <input type="text" id="schlagEn" data-feld="schlagEn" data-komma="3" data-kommamax="7"
-                   placeholder="Triage, Patient Navigation, Emergency Care">
+                   placeholder="triage, patient navigation, emergency care">
             <p class="wink"><a href="https://www.ncbi.nlm.nih.gov/mesh/" target="_blank"
-               rel="noopener">MeSH-Begriffe nachschlagen</a> — die Fachwortliste der
+               rel="noopener">MeSH-Begriffe nachschlagen</a>, die Fachwortliste der
             US-amerikanischen National Library of Medicine.</p>
           </div>
         </fieldset>
@@ -642,14 +807,20 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       <section class="blatt" data-blatt="2" hidden>
         <p class="zaehler">Schritt 3 von 6</p>
         <h2>Abbildungen und Tabellen</h2>
-        <p class="vor">Beides ist freiwillig. Wenn Sie etwas mitschicken, prüfen wir es hier
-        sofort — damit es nicht erst im Satz auffällt.</p>
+        <!-- "pruefen wir es hier sofort" hatte das falsche Subjekt: Es pruefe
+             niemand, die Seite MISST die Bildbreite im Browser, noch bevor die
+             Datei den Server erreicht. "Wir" klang nach Redaktion, und dann fragt
+             man zu Recht nach Werktagen (Mariann Stegmaier, 18.09.2026: "was ist
+             denn sofort??"). -->
+        <p class="vor">Beides ist freiwillig. Was Sie hochladen, misst die Seite gleich
+        beim Hochladen nach. Ist ein Bild zu schmal für den Druck, erfahren Sie es hier
+        und nicht erst im Satz.</p>
 
         <div class="auftrag">
           <p class="was">In diesem Schritt laden Sie Ihr Bildmaterial hoch.</p>
           <ol>
-            <li>Abbildungen einzeln hochladen — <b>jede braucht eine Unterschrift</b>.</li>
-            <li>Tabellen als Datei hochladen, nicht als Bild — auch je mit Unterschrift.</li>
+            <li>Abbildungen einzeln hochladen. <b>Jede braucht eine Unterschrift</b>.</li>
+            <li>Tabellen als Datei hochladen, nicht als Bild. Auch je mit Unterschrift.</li>
           </ol>
           <p>Haben Sie weder Abbildungen noch Tabellen, gehen Sie einfach weiter.</p>
         </div>
@@ -659,41 +830,67 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           Bilddatei nur als Notiz und lässt sich in jedem Programm umschreiben, ohne dass sich
           ein einziger Bildpunkt ändert. Ein Bild mit 800 Pixeln Breite kann „300 dpi“
           behaupten und bleibt im Druck unscharf.</p>
-          <p><b>So finden Sie die Breite:</b> Rechtsklick auf die Datei, <i>Eigenschaften</i>,
-          Reiter <i>Details</i>. Dort steht die Breite in Pixeln.</p>
+          <p><b>So finden Sie die Breite:</b> Unter Windows Rechtsklick auf die Datei,
+          <i>Eigenschaften</i>, Reiter <i>Details</i>. Auf dem Mac die Datei anklicken und
+          <i>Befehl + I</i> drücken; die Pixelmaße stehen unter <i>Weitere Informationen</i>.</p>
         </div>
 
         <div class="gruppe" style="max-width:none">
           <span class="beschriftung">Abbildungen</span>
-          <p class="anleitung">Laden Sie hier bitte Ihre Abbildungen hoch —
+          <p class="anleitung">Laden Sie hier bitte Ihre Abbildungen hoch:
           <span class="mass">.jpg oder .png, mindestens 2.126 Pixel breit</span>. Das
           entspricht 180 mm Satzbreite bei 300 dpi. Die Breite wird sofort gemessen; zu
           schmale Bilder sagen es Ihnen gleich. Beim Dateinamen hilft die Nummer der
-          Abbildung: <i>Nachname_Abb1.jpg</i>, <i>Nachname_Abb2.jpg</i> — ohne Leerzeichen
+          Abbildung: <i>Nachname_Abb1.jpg</i>, <i>Nachname_Abb2.jpg</i>, ohne Leerzeichen
           und Sonderzeichen.</p>
+          <p class="anleitung"><b>Höchstens vier Abbildungen.</b> Mehr trägt eine
+          Heftstrecke nicht.</p>
+          <!-- Rueckmeldung zum Hochladen. Sie stand bis zum 17.09.2026 unter
+               „Tabellen" - wer eine Abbildung hochlud, sah „ist angekommen"
+               einen Abschnitt weiter unten und suchte. Jetzt steht sie vor
+               beiden Ablagen, sie gilt ja fuer beide. -->
+          <div class="kasten" id="dateiMeldung" hidden style="margin-bottom:14px"></div>
           <div class="ablage" data-ablage="bild" tabindex="0" role="button">
             <p><b>Bilder wählen</b> oder hierher ziehen</p>
           </div>
           <p class="wink" id="bildWink" hidden></p>
           <div id="bildListe"></div>
           <button type="button" class="knopf rand klein" data-mehr="bild">Weitere Abbildung hinzufügen</button>
-          <p class="wink">Zu jeder Abbildung tragen Sie bitte eine <b>Unterschrift</b> ein —
-          keine Wiederholung des Titels, sondern: was ist zu sehen, und woher stammen die
-          Daten? Stammt eine Abbildung aus einer anderen Veröffentlichung, brauchen wir die
+          <p class="wink">Zu jeder Abbildung tragen Sie bitte eine <b>Unterschrift</b> ein.
+          Nicht die Überschrift des Beitrags wiederholen, sondern: was ist zu sehen, und woher
+          stammen die Daten? <b>Ein bis drei Sätze</b> genügen; eine feste Grenze gibt es
+          nicht, im Heft steht die Unterschrift aber klein unter der Abbildung. Stammt eine Abbildung aus einer anderen Veröffentlichung, brauchen wir die
           Rechte daran; bitte hier vermerken.</p>
         </div>
 
         <div class="gruppe" style="max-width:none">
           <span class="beschriftung">Tabellen</span>
-          <p class="anleitung">Laden Sie Tabellen hier bitte als <b>Datei</b> hoch —
-          <span class="mass">.docx, .xlsx oder .csv</span>. Bitte <b>nicht als Bild</b> und
-          nicht abgetippt: Nur eine echte Tabelle lässt sich im Satz umbrechen und online
-          lesbar darstellen. Beim Dateinamen wie bei den Abbildungen:
-          <i>Nachname_Tab1.xlsx</i>.</p>
-          <!-- Rueckmeldung zum Hochladen. Die Dateien gehen sofort zum Server,
-               nicht erst beim Absenden - also muss hier stehen, ob es geklappt
-               hat. -->
-          <div class="kasten" id="dateiMeldung" hidden style="margin-bottom:14px"></div>
+          <!-- Aus zwei langen Absaetzen wurde einer (Mariann Stegmaier, 18.09.2026:
+               "sagen wieder das gleiche in viel Text"). Zwei Stellen waren dabei
+               nicht nur lang, sondern falsch:
+
+               "nicht abgetippt" sagte das GEGENTEIL des Gemeinten. Gemeint war:
+               nicht als Fliesstext mit Leerzeichen abtippen. Dastand: nicht
+               abtippen - also genau das, was jemand tun soll, der seine Tabelle nur
+               als Bild hat. Die Aussage ist darum umgedreht.
+
+               "Es muss eine gespeicherte Datei sein" war Werkstattsprache fuer den
+               Unterschied zwischen Zwischenablage und Datei. Der laesst sich
+               benennen, ohne ein neues Wort einzufuehren.
+
+               Die Schritt-fuer-Schritt-Anleitung zum Herausloesen aus Word ist
+               entfallen (Entscheidung Peter Stegmaier). -->
+          <p class="anleitung">Laden Sie Tabellen hier bitte als <b>Datei</b> hoch:
+          <span class="mass">.docx, .xlsx oder .csv</span>, <b>je Tabelle eine</b>.
+          Bitte <b>nicht als Bild</b>: Nur eine echte Tabelle lässt sich im Satz umbrechen
+          und online lesbar darstellen. Haben Sie Ihre Tabelle nur als Bild, tippen Sie sie
+          bitte in Word oder Excel ab. <b>Kopieren genügt nicht</b>: Dieses Feld nimmt
+          Dateien entgegen, keinen Inhalt aus der Zwischenablage. Beim Dateinamen wie bei
+          den Abbildungen: <i>Nachname_Tab1.xlsx</i>.</p>
+          <p class="anleitung">Zu jeder Tabelle tragen Sie bitte eine <b>Unterschrift</b>
+          ein, wie bei den Abbildungen: was ist zu sehen, und woher stammen die Daten?
+          Stammt eine Tabelle aus einer anderen Veröffentlichung, brauchen wir die Rechte
+          daran; bitte hier vermerken.</p>
           <!-- Hinweis auf Überlänge. Sperrt nichts - über Ausnahmen entscheidet
                die Chefredaktion, nicht ein Zähler. -->
           <div class="kasten acht" id="laengeHinweis" hidden style="margin-bottom:14px"></div>
@@ -708,24 +905,24 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       <!-- ================================================== 4 Autoren -->
       <section class="blatt" data-blatt="3" hidden>
         <p class="zaehler">Schritt 4 von 6</p>
-        <h2>Autorinnen und Autoren</h2>
+        <h2>Autor:innen</h2>
         <p class="vor">Die Reihenfolge hier ist die Reihenfolge im Heft.</p>
 
         <div class="auftrag">
-          <p class="was">In diesem Schritt legen Sie zuerst den Haupt- und Korrespondenzautor
-          an — das sind Sie selbst.</p>
+          <p class="was">In diesem Schritt legen Sie zuerst sich selbst als Haupt- und
+          Korrespondenzautor:in an.</p>
           <ol>
             <li>Ihre Angaben in das erste Feld: Name mit Titel, E-Mail, kurze Vita.</li>
-            <li>Danach über <i>Weiteren Autor hinzufügen</i> die Mitautoren ergänzen, in der
+            <li>Danach über <i>Weitere:n Autor:in hinzufügen</i> die Mitautor:innen ergänzen, in der
             Reihenfolge, in der sie im Heft stehen sollen.</li>
           </ol>
-          <p><b>Als Korrespondenzautor sind Sie die Person, an die sich die Redaktion bei
-          Rückfragen wendet.</b> Nur für Sie sind die Angaben Pflicht; bei Mitautoren genügt
+          <p><b>Als Korrespondenzautor:in sind Sie die Person, an die sich die Redaktion bei
+          Rückfragen wendet.</b> Nur für Sie sind die Angaben Pflicht; bei Mitautor:innen genügt
           zunächst der Name.</p>
         </div>
 
         <div id="autorListe"></div>
-        <button type="button" class="knopf rand klein" id="autorNeu">Weiteren Autor hinzufügen</button>
+        <button type="button" class="knopf rand klein" id="autorNeu">Weitere:n Autor:in hinzufügen</button>
         <p class="wink">Bis zu zehn Personen. Das Porträtfoto — mindestens 354 Pixel breit,
         das sind 30 mm bei 300 dpi — fordert die Redaktion nach der Annahme an; hier brauchen
         Sie es noch nicht.</p>
@@ -734,67 +931,119 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       <!-- ================================================== 5 Formales -->
       <section class="blatt" data-blatt="4" hidden>
         <p class="zaehler">Schritt 5 von 6</p>
-        <h2>Literatur, Ausgabe, Lizenz</h2>
-        <p class="vor">Der letzte Teil vor der Freigabe.</p>
+        <!-- Ueberschrift und Liste standen bis zum 18.09.2026 noch auf dem
+             Stand vor dem 17.09.: Die Literatur ist seither in Schritt 1, und
+             die Ausgabe waehlt kein Autor mehr (sie traegt die Redaktion
+             ein). Beides stand hier trotzdem noch
+             (Mariann Stegmaier, 18.09.2026). -->
+        <h2>Formales</h2>
 
         <div class="auftrag">
           <p class="was">In diesem Schritt tragen Sie die Formalien ein.</p>
           <ol>
-            <li>Literaturverzeichnis und Zitationsvorschlag.</li>
-            <li>Für welche Ausgabe der Beitrag gedacht ist.</li>
-            <li>Unter welcher Lizenz er erscheinen soll.</li>
-            <li>Interessenkonflikte und Förderung.</li>
+            <li>Zitationsvorschlag.</li>
+            <li>Einsatz von KI, Autorenerklärung, Danksagung.</li>
+            <li>eFirst und Lizenz.</li>
+            <li>Vorschlag von Gutachter:innen.</li>
           </ol>
-        </div>
-
-        <div class="gruppe" data-teil="literatur">
-          <label for="literatur">Literatur <span class="pflicht">*</span>
-            <span class="zeichenzahl" data-zaehlt="literatur"></span></label>
-          <p class="anleitung">Tragen Sie hier bitte Ihr Literaturverzeichnis ein,
-          <b>eine Quelle je Zeile</b>, in der Reihenfolge, in der sie im Text vorkommen.
-          Im Text verweisen Sie mit Ziffern in Klammern — (1), (1–3). Bitte
-          <b>mit DOI</b>, wo vorhanden.</p>
-          <textarea id="literatur" data-feld="literatur" rows="6" data-min="20"></textarea>
         </div>
 
         <div class="gruppe" data-teil="zitation">
           <label for="zitation">Zitationsvorschlag <span class="pflicht">*</span>
             <span class="zeichenzahl" data-zaehlt="zitation"></span></label>
-          <p class="anleitung">Tragen Sie hier bitte ein, <b>wie Ihr Beitrag zitiert werden
-          soll</b>. Seitenzahl und DOI ergänzt die Redaktion nach dem Satz — Sie geben
-          Autoren, Titel und Ausgabe vor.</p>
+          <!-- "Das ist der Grund, warum Sie es ueberhaupt zu sehen bekommen:" baute
+               eine Erwartung auf, um sie erst im naechsten Halbsatz einzuloesen.
+               Jetzt in der natuerlichen Reihenfolge: erst was man tun kann, dann
+               warum (Mariann Stegmaier, 18.09.2026). "Und bei Bedarf berichtigen"
+               ist dabei weggefallen - der naechste Satz sagt genau das. -->
+          <p class="anleitung">Wir setzen die Zitation nach einem <b>festen Muster</b>. Es
+          steht unten schon im Feld, gebildet aus Ihren Angaben. Bitte nur noch prüfen.
+          <b>Ändern können Sie es</b>, weil Sie bei mehrteiligen Namen, Adelspräfixen oder
+          Doppelnamen besser als jede Automatik wissen, wie Ihr Name getrennt gehört.</p>
+          <p class="anleitung">Ausgabe, Seitenzahl und DOI ergänzt die Redaktion nach dem
+          Satz, sie stehen beim Einreichen noch nicht fest.</p>
+          <p style="margin:0 0 8px">
+            <button type="button" class="knopf rand klein" id="zitationNeu">Aus meinen
+            Angaben neu bilden</button></p>
           <textarea id="zitation" data-feld="zitation" rows="3" data-min="20"
-            placeholder="Nachname, V., Nachname, V.: „Titel des Beitrags“, in „Monitor Versorgungsforschung“ (05/26)"></textarea>
-          <p class="beispiel"><span class="nein">Nicht so:</span> <i>Nachname u.a.,
-          Versorgungsforschung gelingt nur gemeinsam, MVF 2026</i><br>
-          <span class="ja">Besser:</span> <i>Nachname, V., Nachname, V., Nachname, V.:
-          „Versorgungsforschung gelingt wirklich nur gemeinsam“, in „Monitor
-          Versorgungsforschung“ (04/26), S. 6–10.</i></p>
+            placeholder="Nachname, V., Nachname, V.: „Titel des Beitrags“, in „Monitor Versorgungsforschung“"></textarea>
+          <!-- Das Beispielpaar "Nicht so / Besser" ist am 18.09.2026 entfallen
+               (Mariann Stegmaier: "Das ist doch jetzt ueberfluessig"). Es stammte
+               aus der Zeit, als der Autor die Zitation selbst tippte. Seit sie
+               vorausgefuellt im Feld steht, erfindet er nichts mehr - er prueft nur,
+               ob sein Name richtig getrennt ist. An Vorzeile und Ueberschrift
+               bleiben die Beispiele stehen, dort wird wirklich geschrieben. -->
+        </div>
+
+        <div class="gruppe">
+          <label for="kiEinsatz">Einsatz von KI
+            <span class="freiwillig">wenn zutreffend</span>
+            <span class="zeichenzahl" data-zaehlt="kiEinsatz"></span></label>
+          <!-- Fassung Mariann Stegmaier, 18.09.2026, mit zwei Aenderungen von uns:
+               "Dann bitten wir Sie, diese transparent zu machen" ist zu "Dann tragen
+               Sie es bitte hier ein" geworden (transparent machen sagt nicht, WO),
+               und das "usw." am Ende der Aufzaehlung ist gestrichen - bei einer
+               Offenlegungspflicht ist "und so weiter" die falsche Kante.
+
+               Der wichtigste Zugewinn steht mitten in der Liste: TRANSKRIPTION.
+               Bei einer Zeitschrift mit Interviews ist das der haeufigste
+               KI-Einsatz ueberhaupt, und er fehlte. -->
+          <p class="anleitung">Haben Sie beim Erstellen dieses Beitrags <b>KI-Werkzeuge</b>
+          eingesetzt? Dann tragen Sie es bitte hier ein. Das ist keine Fangfrage und kein
+          Nachteil: Wir fragen, weil uns bewusst ist, dass KI in vielen Bereichen intensiv
+          genutzt wird, und wir der Überzeugung sind, dass die Offenlegung zum guten
+          wissenschaftlichen Arbeiten gehört. Außerdem möchten wir, dass unsere Leser:innen
+          die KI-Nutzung einordnen können.</p>
+          <p class="anleitung">Gemeint ist <b>jeder</b> Einsatz, nicht nur sprachliche
+          Überarbeitung (z. B. Textoptimierung und -korrektur), sondern auch KI-Werkzeuge
+          für Recherche, Transkription, Auswertung, Programmcode, Übersetzung, Erstellen
+          oder Bearbeiten von Abbildungen. Unser eigenes KI-Lektorat aus Schritt 1 geben
+          Sie bitte als „leichte sprachliche Überarbeitung durch Claude“ an.</p>
+          <!-- Platzhalter und Beispielpaar endeten beide auf eine Negativangabe
+               ("... ohne KI", "... stammt vollstaendig von den Autor:innen"). Das lud
+               dazu ein, eine Unschuldserklaerung mitzuliefern, und erzeugte die
+               Frage, die niemand beantworten kann: Muss ich jeden Teil aufzaehlen,
+               den ich selbst geschrieben habe? (Mariann Stegmaier, 18.09.2026:
+               "faende ich sinnvoller, nur zu sagen, wo es angewendet wurde".)
+
+               Ihr Satz steht jetzt als Platzhalter im Feld und nennt zwei Werkzeuge
+               fuer zwei Zwecke. Das Beispielpaar darunter ist entfallen: Es sagte
+               nach dem Tausch dasselbe zweimal. Nebeneffekt - der Platzhalter
+               beginnt mit "leichte sprachliche Ueberarbeitung" und erfuellt damit
+               gleich die Regel, die der Absatz darueber fuer unser eigenes
+               KI-Lektorat verlangt. -->
+          <textarea id="kiEinsatz" data-feld="kiEinsatz" rows="3"
+            placeholder="Claude wurde für leichte sprachliche Überarbeitung sowie die Übersetzung des Abstracts ins Englische genutzt. ChatGPT wurde für die statistische Analyse verwendet."></textarea>
+        </div>
+
+        <!-- Heisst seit dem 17.09.2026 „Autorenerklaerung" und steht ueber der
+             Danksagung: Es ist eine Erklaerung, keine Hoeflichkeit, und
+             Pflicht ist sie auch. -->
+        <div class="gruppe" data-teil="konflikte">
+          <label for="konflikte">Autorenerklärung <span class="pflicht">*</span>
+            <span class="zeichenzahl" data-zaehlt="konflikte"></span></label>
+          <p class="anleitung">Tragen Sie hier bitte ein, ob Interessenkonflikte bestehen und
+          ob der Beitrag gefördert wurde. <b>Bestehen keine, schreiben Sie das ausdrücklich
+          hin</b>: Ein leeres Feld lässt sich nicht von einem vergessenen unterscheiden.</p>
+          <textarea id="konflikte" data-feld="konflikte" rows="3" data-min="10"
+            placeholder="Es bestehen keine Interessenkonflikte. Der Beitrag wurde nicht gefördert."></textarea>
+          <p class="beispiel"><span class="nein">Nicht so:</span> <i>keine</i><br>
+          <span class="ja">Besser:</span> <i>Es bestehen keine Interessenkonflikte. Der Beitrag
+          wurde nicht gefördert.</i></p>
         </div>
 
         <div class="gruppe">
           <label for="danksagung">Danksagung
             <span class="zeichenzahl" data-zaehlt="danksagung"></span></label>
           <p class="anleitung">Tragen Sie hier bitte ein, wem zu danken ist. <b>Fördermittel
-          gehören hierher</b>, mit Geldgeber und Kennzeichen. Dieses Feld ist freiwillig —
-          eine Förderung anzugeben ist es allerdings nicht.</p>
+          gehören hierher</b>, mit Geldgeber und Kennzeichen. Dieses Feld ist freiwillig.
+          Eine Förderung anzugeben ist es allerdings nicht.</p>
           <textarea id="danksagung" data-feld="danksagung" rows="3"></textarea>
         </div>
 
-        <div class="gruppe">
-          <label for="ausgabe">Vorgesehene Ausgabe <span class="pflicht">*</span></label>
-          <p class="anleitung" id="ausgabeAnleitung">Wählen Sie hier bitte die Ausgabe, in
-          der Ihr Beitrag erscheinen soll. Hefte mit zu kurzem Vorlauf stehen nicht zur
-          Wahl — wie viel Vorlauf nötig ist, hängt von Ihrer Rubrik ab.<br>
-          <b>Achtung:</b> Über die Aufnahme und Publikation sowie die letztlich
-          erreichbare Ausgabe Ihres Artikels entscheiden Herausgeber bzw. Chefredakteur.</p>
-          <select id="ausgabe" data-feld="ausgabe"></select>
-          <p class="wink" id="ausgabeWink"></p>
-        </div>
-
         <div class="kasten acht" style="max-width:none">
-          <p><b>Ist Ihr Thema zeitkritisch?</b> Manche Themen hängen an einem engen Zeitpunkt —
-          meist, weil eine politische Entscheidung ansteht oder eben gefallen ist. Für solche
+          <p><b>Ist Ihr Thema zeitkritisch?</b> Manche Themen hängen an einem engen Zeitpunkt,
+          meist weil eine politische Entscheidung ansteht oder eben gefallen ist. Für solche
           Fälle können Sie beim Herausgeber eine <b>eFirst-Veröffentlichung</b> beantragen:
           Ihr Beitrag erscheint dann online, bevor das Heft gedruckt ist.</p>
           <p>Für Mitglieder des
@@ -802,7 +1051,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           kostenfrei. Für alle anderen kostet eine eFirst-Veröffentlichung derzeit
           <b>1.500 Euro</b> (Stand 2026).</p>
           <p>Über die Aufnahme entscheidet der Herausgeber. <b>Mit dem Antrag entstehen Ihnen
-          noch keine Kosten</b> — die Redaktion meldet sich bei Ihnen.</p>
+          noch keine Kosten</b>. Die Redaktion meldet sich bei Ihnen.</p>
         </div>
 
         <div class="gruppe" style="max-width:none">
@@ -834,7 +1083,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
               <input type="radio" name="lizenz" value="cc_by" data-feld="lizenz" checked>
               <span class="w-name">CC BY 4.0</span>
               <span class="w-text">Andere dürfen Ihren Beitrag weiterverwenden, bearbeiten und
-              auch kommerziell nutzen — solange Sie als Urheber genannt werden. Das gibt Ihrem
+              auch kommerziell nutzen, solange Sie als Urheber genannt werden. Das gibt Ihrem
               Beitrag die weiteste Verbreitung.</span>
             </label>
             <label>
@@ -847,25 +1096,15 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           </div>
         </div>
 
-        <div class="gruppe" data-teil="konflikte">
-          <label for="konflikte">Interessenkonflikte und Förderung <span class="pflicht">*</span>
-            <span class="zeichenzahl" data-zaehlt="konflikte"></span></label>
-          <p class="anleitung">Tragen Sie hier bitte ein, ob Interessenkonflikte bestehen und
-          ob der Beitrag gefördert wurde. <b>Bestehen keine, schreiben Sie das ausdrücklich
-          hin</b> — ein leeres Feld lässt sich nicht von einem vergessenen unterscheiden.</p>
-          <textarea id="konflikte" data-feld="konflikte" rows="3" data-min="10"
-            placeholder="Es bestehen keine Interessenkonflikte. Der Beitrag wurde nicht gefördert."></textarea>
-          <p class="beispiel"><span class="nein">Nicht so:</span> <i>keine</i><br>
-          <span class="ja">Besser:</span> <i>Es bestehen keine Interessenkonflikte. Der Beitrag
-          wurde nicht gefördert.</i></p>
-        </div>
-
         <div class="gruppe" data-teil="gutachtervorschlag">
-          <label>Gutachterinnen und Gutachter vorschlagen
+          <label>Gutachter:innen vorschlagen
             <span class="freiwillig">freiwillig</span></label>
+          <!-- "Begutachtung" kann alles heißen. Das Wort, das im ganzen Formular
+               fuer dieses Verfahren steht, ist "Peer Review" - in der Tafel, in der
+               Auswahlliste und in den Fristen (Mariann Stegmaier, 18.09.2026). -->
           <p class="anleitung">Sie kennen Ihr Fachgebiet. Wir laden Sie hiermit
-          ein, bis zu zwei Personen zur Begutachtung Ihres Beitrags vorzuschlagen.
-          <b>Ihr Vorschlag ist unverbindlich</b> — er geht an den Herausgeber,
+          ein, bis zu zwei Personen für das Peer&nbsp;Review Ihres Beitrags vorzuschlagen.
+          <b>Ihr Vorschlag ist unverbindlich</b>: Er geht an den Herausgeber,
           der über die Begutachtung entscheidet. Sie erfahren
           nicht, wer Ihren Beitrag am Ende begutachtet hat; das Peer Review bei
           <i>Monitor Versorgungsforschung</i> ist anonym.</p>
@@ -873,7 +1112,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           Interessenkonflikt bestünde: aus derselben Einrichtung, gemeinsame
           Veröffentlichungen oder Projekte in den letzten drei Jahren, oder eine
           persönliche Nähe, die eine unabhängige Beurteilung erschwert. Solche
-          Vorschläge müssten wir übergehen — dann ist das Feld besser leer.</p>
+          <!-- "dann ist das Feld besser leer" ist am 18.09.2026 entfallen (Mariann
+               Stegmaier). Der Halbsatz riet vom Ausfuellen eines Feldes ab, zu dem
+               wir zwei Zeilen vorher ausdruecklich einladen. Wer unsicher ist, las
+               daraus die bequemere Antwort - und uns entging ein Name. -->
+          Vorschläge müssten wir übergehen.</p>
 
           <div class="vorschlag">
             <p class="klein"><b>Erster Vorschlag</b></p>
@@ -892,7 +1135,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <label for="gutachter1_warum">Warum ist Ihr Vorschlag Ihrer Ansicht nach
               für ein Peer Review geeignet?</label>
             <p class="anleitung">Ein, zwei Sätze genügen. Wichtig ist die fachliche
-            Nähe zum Gegenstand Ihres Beitrags — nicht die Bekanntheit der Person.</p>
+            Nähe zum Gegenstand Ihres Beitrags, nicht die Bekanntheit der Person.</p>
             <textarea id="gutachter1_warum" data-feld="gutachter1_warum" rows="3"
               placeholder="Arbeitet seit Jahren zur Versorgung von … und hat die hier verwendete Methode selbst mitentwickelt."></textarea>
           </div>
@@ -900,13 +1143,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <div class="vorschlag">
             <p class="klein"><b>Zweiter Vorschlag</b></p>
             <label for="gutachter2_titel">Titel</label>
-            <input type="text" id="gutachter2_titel" data-feld="gutachter2_titel">
+            <input type="text" id="gutachter2_titel" data-feld="gutachter2_titel"
+              placeholder="Prof. Dr. med.">
             <label for="gutachter2_name">Name</label>
-            <input type="text" id="gutachter2_name" data-feld="gutachter2_name">
+            <input type="text" id="gutachter2_name" data-feld="gutachter2_name"
+              placeholder="Vorname Nachname">
             <label for="gutachter2_institution">Institution</label>
-            <input type="text" id="gutachter2_institution" data-feld="gutachter2_institution">
+            <input type="text" id="gutachter2_institution" data-feld="gutachter2_institution"
+              placeholder="Institut, Universität oder Einrichtung">
             <label for="gutachter2_mail">E-Mail</label>
-            <input type="email" id="gutachter2_mail" data-feld="gutachter2_mail">
+            <input type="email" id="gutachter2_mail" data-feld="gutachter2_mail"
+              placeholder="vorname.nachname@einrichtung.de">
             <label for="gutachter2_warum">Warum ist Ihr Vorschlag Ihrer Ansicht nach
               für ein Peer Review geeignet?</label>
             <textarea id="gutachter2_warum" data-feld="gutachter2_warum" rows="3"></textarea>
@@ -918,27 +1165,31 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       <section class="blatt" data-blatt="5" hidden>
         <p class="zaehler">Schritt 6 von 6</p>
         <h2>Prüfen und freigeben</h2>
-        <p class="vor">Hier steht alles beisammen, was an die Redaktion geht.</p>
+        <!-- "Hier steht alles beisammen, was an die Redaktion geht." ist am
+             18.09.2026 entfallen (Mariann Stegmaier: "Das ist ja offensichtlich").
+             Der Satz beschrieb, was man sieht, und verzoegerte die einzige
+             Auskunft, die auf dieser Seite zaehlt: was noch fehlt. -->
 
         <div class="auftrag">
           <p class="was">In diesem Schritt geben Sie Ihren Beitrag frei.</p>
           <ol>
-            <li>Die Liste unten durchgehen — was noch fehlt, steht dort mit einem Sprung
+            <li>Die Liste unten durchgehen: Was noch fehlt, steht dort mit einem Sprung
             zur richtigen Stelle.</li>
             <li>Die Übersicht prüfen: Steht alles so da, wie es erscheinen soll?</li>
-            <li>Die Autorenerklärung ankreuzen und einreichen.</li>
+            <li>Die Autorenerklärung ankreuzen.</li>
           </ol>
-          <p><b>Erst Ihr Klick am Ende gibt den Beitrag weiter.</b> Bis dahin ändert sich
+          <p><b>Erst Ihr Klick am Ende reicht den Beitrag ein.</b> Bis dahin ändert sich
           nichts, und Sie können jederzeit zurückgehen.</p>
         </div>
 
         <ul class="pruef-liste" id="pruefListe"></ul>
+        <div id="pruefNachreichen"></div>
         <div id="uebersicht"></div>
 
         <div class="freigabe">
           <p style="margin:0 0 10px;font-weight:700">Autorenerklärung</p>
           <p style="margin:0 0 10px;font-size:14.5px">Lesen Sie bitte die sieben Punkte und
-          kreuzen Sie darunter an. Ich bestätige für alle Autorinnen und Autoren dieses
+          kreuzen Sie darunter an. Ich bestätige für alle Autor:innen dieses
           Beitrags:</p>
           <ol class="punkte">
             <li>Der Beitrag ist von uns selbst verfasst, bisher unveröffentlicht und nicht
@@ -946,13 +1197,14 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <li>Alle genannten Personen haben wesentlich beigetragen, kennen die eingereichte
             Fassung und sind mit der Einreichung einverstanden. Niemand mit wesentlichem
             Beitrag ist ungenannt geblieben.</li>
-            <li>Für alle Abbildungen, Tabellen und längeren Zitate, die nicht von uns stammen,
-            liegen die Nutzungsrechte vor; die Quellen sind angegeben.</li>
+            <li>Für alle Abbildungen, Tabellen und längeren Zitate (ab etwa drei Sätzen
+            oder einem ganzen Absatz), die nicht von uns stammen, liegen die Nutzungsrechte
+            vor; die Quellen sind angegeben.</li>
             <li>Waren Menschen einbezogen, wurden Einwilligung und — soweit erforderlich — ein
             Ethikvotum eingeholt; die Angaben stehen im Beitrag.</li>
             <li>Ein Einsatz KI-gestützter Werkzeuge über Sprachprüfung hinaus ist im Beitrag
             offengelegt. Die Verantwortung für den Inhalt liegt bei uns.</li>
-            <li>Als einreichender Erstautor bin ich zugleich Korrespondenzautor und für die
+            <li>Als einreichende:r Erstautor:in bin ich zugleich Korrespondenzautor:in und für die
             Kommunikation mit der Redaktion zuständig.</li>
             <li>Wir stimmen der Veröffentlichung unter der gewählten Lizenz zu und räumen
             „Monitor Versorgungsforschung“ das Recht ein, den Beitrag in Print und online zu
@@ -981,18 +1233,50 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         <button type="button" class="knopf haupt weit" data-weiter>Weiter</button>
       </div>
 
-      <!-- ============================================== Anmeldung -->
+      <!-- ===================================== Zwischenstand sichern
+
+           Bis zum 17.09.2026 standen hier zwei Kaesten nebeneinander: einer
+           zur Anmeldung, einer zur Datei. Beide beantworteten dieselbe Frage
+           - "wie behalte ich meine Arbeit?" -, keiner sagte das im Titel.
+           Mariann Stegmaier beim Testlauf: "Es wirkt wie zwei komplett
+           unterschiedliche Schritte, aber das Ziel ist ja eigentlich das
+           gleiche."
+
+           Jetzt ein Block, drei nummerierte Wege, vom bequemsten zum
+           sichersten. Verdrahtet wurde nichts, nur geordnet: Es sind
+           dieselben Knoepfe mit denselben Kennungen wie vorher. -->
       <div class="anmeldung" id="anmeldeKasten">
-        <h3>Auf mehreren Geräten arbeiten</h3>
-        <p>Wenn Sie Ihren Beitrag an mehr als einem Gerät bearbeiten möchten — im Büro
-        anfangen, zu Hause weiterschreiben —, lassen Sie sich einen <b>Zugangslink</b>
-        schicken. Ihr Zwischenstand liegt dann bei uns statt nur in diesem Browser, und
-        Sie kommen an jedem Gerät an denselben Stand. <b>Ein Passwort brauchen Sie
-        nicht.</b> Sie geben Ihre E-Mail-Adresse ein, bekommen einen Link zugeschickt und
-        klicken ihn an — das ist alles. Der Link gilt sieben Tage und lässt sich einmal
-        verwenden; danach bleiben Sie auf diesem Gerät angemeldet.</p>
-        <p>Nötig ist das nicht. Wer an einem Gerät bleibt, kann die Anmeldung
-        überspringen und einfach weiterarbeiten.</p>
+        <h3>Ihren Zwischenstand sichern</h3>
+        <p>Sie sind noch nicht fertig und wollen später weiterarbeiten? Dafür gibt es
+        drei Wege. Sie schließen einander nicht aus. Wer auf Nummer sicher gehen will,
+        nimmt zwei davon.</p>
+
+        <!-- An allen drei Ueberschriften hing ein gleich gebauter Halbsatz nach
+             einem Gedankenstrich. Drei davon untereinander lesen sich als Muster,
+             nicht als Aussage (Mariann Stegmaier, 18.09.2026: "das ist soooo KI").
+             Was sie sagten, steht jetzt dort, wo es gebraucht wird - "Ihr
+             Zwischenstand liegt dann bei uns" im Absatz zum Zugangslink. -->
+        <p style="margin-top:14px"><b>1. In diesem Browser</b></p>
+        <p>Ihre Arbeit wird bei jeder Eingabe gespeichert und übersteht das Schließen des
+        Fensters und einen Neustart des Rechners. Sie geht verloren, wenn Sie das Gerät
+        wechseln, ein privates Fenster benutzen oder die Browserdaten löschen; auf iPhone
+        und iPad räumt Safari solche Daten zudem nach sieben Tagen ohne Besuch von selbst
+        weg.</p>
+        <div class="knopfzeile">
+          <button type="button" class="knopf rand klein" id="jetztSichernUnten">Jetzt im
+          Browser sichern</button>
+        </div>
+
+        <p style="margin-top:16px"><b>2. Mit einem Zugangslink</b></p>
+        <!-- "danach bleiben Sie auf diesem Geraet angemeldet" beantwortete eine
+             Frage, die niemand stellt, und liess die offene stehen: Was, wenn ich
+             den Link ein zweites Mal brauche? Antwort: gar nicht. -->
+        <p>Sie geben Ihre E-Mail-Adresse ein, bekommen einen Link zugeschickt und klicken
+        ihn an; <b>ein Passwort brauchen Sie nicht</b>. <b>Ihr Zwischenstand liegt dann
+        bei uns</b>, und Sie kommen an jedem Gerät an denselben Stand: im Büro anfangen,
+        zu Hause weiterschreiben. Der Link gilt sieben Tage und lässt sich einmal
+        verwenden. Danach bleibt dieses Gerät angemeldet, einen neuen Link brauchen Sie
+        nicht.</p>
         <div class="zeile">
           <input type="email" id="anmeldeMail" placeholder="ihre.adresse@einrichtung.de"
                  autocomplete="email" spellcheck="false" aria-label="E-Mail-Adresse für den Zugangslink">
@@ -1000,26 +1284,21 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <span id="anmeldeMeldung" class="anmelde-meldung" role="status"></span>
         </div>
         <div id="standWahl"></div>
-      </div>
 
-      <div class="sicherung">
-        <p><b>Ihre Arbeit liegt in diesem Browser.</b> Das genügt für den Regelfall — sie
-        übersteht das Schließen des Fensters und einen Neustart des Rechners. Sie geht aber
-        verloren, wenn Sie das Gerät wechseln, ein privates Fenster benutzen oder die
-        Browserdaten löschen; auf iPhone und iPad räumt Safari solche Daten zudem nach sieben
-        Tagen ohne Besuch von selbst weg. Dagegen helfen zwei Dinge: die <b>Anmeldung</b>
-        weiter oben — dann liegt Ihr Stand bei uns — und eine Kopie in Ihrer eigenen Hand.
-        <b>Legen Sie deshalb von Zeit zu Zeit einen Stand als Datei ab.</b> Der Knopf <b>„Zwischenstand speichern“</b> erzeugt sie. Wohin sie
-        kommt, bestimmt Ihr Browser: in den Ordner, in dem er Downloads ablegt — meist
-        <b>Downloads</b>. Wo genau, steht in seinen Einstellungen; manche Browser fragen
-        bei jedem Mal nach. Von dort können Sie die Datei mitnehmen und an einem anderen
-        Gerät weiterarbeiten, sofern Sie dort Zugriff darauf haben.</p>
+        <p style="margin-top:16px"><b>3. Als Datei</b></p>
+        <!-- Die Erklaerung, wo der Downloads-Ordner liegt, ist entfallen: Das
+             Publikum laedt taeglich Dateien herunter (Mariann Stegmaier). -->
+        <p>Legen Sie von Zeit zu Zeit einen Stand als Datei <b>lokal bei sich</b> ab. Sie
+        können sie mitnehmen, an einem anderen Gerät wieder laden und weiterarbeiten.</p>
         <div class="knopfzeile">
-          <button type="button" class="knopf rand klein" id="standSichern">Zwischenstand speichern</button>
+          <button type="button" class="knopf rand klein" id="standSichern">Zwischenstand als Datei speichern</button>
           <button type="button" class="knopf rand klein" id="standLaden">Gesicherten Stand laden</button>
           <span id="sicherungMeldung" class="sicherung-meldung" role="status"></span>
         </div>
       </div>
+
+
+
 
     </main>
   </div>
@@ -1039,6 +1318,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     rubrik:'', vorzeile:'', titel:'', vorspann:'',
     abstractDe:'', schlagDe:'', titelEn:'', abstractEn:'', schlagEn:'',
     literatur:'', zitation:'', danksagung:'', ausgabe:'', lizenz:'cc_by',
+    /* `ausgabe` bleibt im Stand, aber leer: Sie traegt seit dem 17.09.2026
+       der Herausgeber ein, nicht der Autor. */
+    bildNachreichen:false, kiEinsatz:'',
     konflikte:'', erklaerung:false, efirst:'nein',
     manuskript:[], bilder:[], tabellen:[],
     autoren:[{name:'', mail:'', institution:'', orcid:'', vita:'', bild:null}],
@@ -1054,13 +1336,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   // Ein Stand aus einer frueheren Fassung kennt das eFirst-Feld noch nicht.
   if (stand.efirst !== 'ja') { stand.efirst = 'nein'; }
 
+  /* Die Unterzeilen sind am 18.09.2026 entfallen (Mariann Stegmaier). Drei
+     der sechs wiederholten nur die Ueberschrift ("Bilder und Tabellen" unter
+     "Abbildungen"), und "und freigeben" war ein zerschnittener Satz. Sechs
+     Zeilen Kleinschrift fuer zwei nuetzliche Angaben lohnten nicht. */
   var SCHRITTE = [
-    {name:'Ihr Beitrag',        unter:'Rubrik, Überschrift, Manuskript'},
-    {name:'Zusammenfassung',    unter:'Abstract und Schlagwörter'},
-    {name:'Abbildungen',        unter:'Bilder und Tabellen'},
-    {name:'Autoren',            unter:'Wer beteiligt ist'},
-    {name:'Formales',           unter:'Literatur, Ausgabe, Lizenz'},
-    {name:'Prüfen',             unter:'und freigeben'}
+    {name:'Ihr Beitrag'},
+    {name:'Zusammenfassung'},
+    {name:'Abbildungen'},
+    {name:'Autor:innen'},
+    {name:'Formales'},
+    {name:'Prüfen'}
   ];
   var MIN_BILD = 2126, MIN_PORTRAIT = 354;
   /* Obergrenze: WordPress rechnet beim Empfang alles ueber 2560 px auf 2560
@@ -1070,6 +1356,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
      Dieselbe Zahl steht als MAX_BILDKANTE im Endpunkt und in der
      Redaktionsansicht. Wer eine aendert, muss alle drei aendern. */
   var MAX_BILDKANTE = 2560;
+  /* Mehr als vier Abbildungen traegt eine Heftstrecke nicht. Die Grenze
+     steht hier und nicht nur im Text daneben - ein Hinweis, den man
+     ueberlesen kann, ist keine Grenze. */
+  var MAX_BILDER = 4;
 
   /* Laenge der Vita des Korrespondenzautors. Die Untergrenze gab es schon:
      Unter 150 Zeichen steht neben dem Beitrag ein Satzfragment. Die
@@ -1174,20 +1464,32 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   var VORZEILE_BEISPIEL_STANDARD =
     BEISPIEL('Ein Beitrag zur Notfallversorgung', 'Ambulante Notfallversorgung');
 
+  /* `kurz` ist die Definitionsspalte der Tafel und traegt die Frage, die VOR
+     dem Auswahlfeld steht: welche Rubrik bin ich? Sie muss in eine Zelle
+     passen, also eine Zeile, kein Punkt am Ende. `wink` bleibt daneben der
+     ausfuehrliche Text, der erst NACH der Wahl erscheint.
+
+     Bis zum 18.09.2026 zeigte die Tafel sieben Spalten ueber Bestandteile und
+     keine Definition - sie beantwortete damit die Frage, die erst nach der
+     Wahl kommt, und die Box darunter sagte dasselbe noch einmal in Worten
+     (Mariann Stegmaier: "Das wichtigste ist halt nicht in der Tabelle"). */
   var RUBRIKEN = {
     wissenschaft: {
-      name:'Wissenschaft', peer:true, intern:false,
-      wink:'Originalarbeit mit eigener Empirie. Geht ins Peer Review — rechnen Sie '
-        + 'mit sechs Wochen zwischen Einreichung und Erscheinen.',
+      name:'Wissenschaftl. Beitrag', peer:true, intern:false,
+      kurz:'Originalarbeit mit eigener Empirie',
+      wink:'Originalarbeit mit eigener Empirie. Geht ins Peer Review. Rechnen Sie '
+        + 'mit mindestens sechs Wochen zwischen Einreichung und Erscheinen.',
       teile:{vorzeile:'nie', vorspann:'pflicht', zusammenfassung:'pflicht',
              literatur:'pflicht', zitation:'pflicht', konflikte:'pflicht'}
     },
     wissen: {
-      name:'Wissen', peer:true, intern:false,
-      wink:'Gesichertes Fachwissen, aufbereitet. Geht ebenfalls ins Peer Review — '
-        + 'rechnen Sie mit sechs Wochen zwischen Einreichung und Erscheinen.',
+      name:'Rubrik Wissen', peer:true, intern:false,
+      kurz:'Überblick über eine Versorgungs-/Studienlage zu einem Thema',
+      wink:'Überblick über eine Versorgungs-/Studienlage zu einem Thema. Geht ins '
+        + 'Peer Review. Rechnen Sie mit mindestens sechs Wochen zwischen Einreichung '
+        + 'und Erscheinen.',
       vorzeileMax:60, vorzeileZweck:'ein Stichwort, das den Beitrag einordnet',
-      vorzeileText:'Ein Stichwort, das den Beitrag einordnet — im Heft steht es klein '
+      vorzeileText:'Ein Stichwort, das den Beitrag einordnet. Im Heft steht es klein '
         + 'über der Überschrift. <span class="mass">höchstens 60 Zeichen</span>, '
         + 'kein ganzer Satz, kein Punkt am Ende.',
       vorzeileBeispiel:BEISPIEL('Was die neue EU-HTA-Verordnung für die Onkologie in '
@@ -1196,9 +1498,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
              literatur:'pflicht', zitation:'pflicht', konflikte:'pflicht'}
     },
     wissenstransfer: {
-      name:'Wissenstransfer', peer:false, intern:false,
-      wink:'Der Weg von der Erkenntnis in die Praxis — mit Zusammenfassung und '
-        + 'Literatur wie in der Wissenschaftsstrecke, aber ohne Peer Review.',
+      name:'Rubrik Wissenstransfer', peer:false, intern:false,
+      kurz:'Bericht über ein Projekt in der Versorgung',
+      wink:'Bericht über ein Projekt in der Versorgung. Zusammenfassung und Literatur '
+        + 'wie im Wissenschaftsteil, aber ohne Peer Review.',
       vorzeileMax:60,
       vorzeileBeispiel:BEISPIEL('Wie Erkenntnisse aus der Versorgungsforschung in die '
         + 'Praxis kommen', 'Transfermodell'),
@@ -1207,7 +1510,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     },
     kommentar: {
       name:'Kommentar', peer:false, intern:false,
-      wink:'Standpunkt, gezeichnet. Der Kommentar fängt sofort an — keine Vorzeile, '
+      kurz:'Standpunkt, gezeichnet',
+      wink:'Standpunkt, gezeichnet. Der Kommentar fängt sofort an: keine Vorzeile, '
         + 'kein Vorspann, kein Abstract. Über dem Text stehen zwei Zeilen: der Name, '
         + 'darunter Institution und ORCID.',
       teile:{vorzeile:'nie', vorspann:'nie', zusammenfassung:'nie',
@@ -1227,7 +1531,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     },
     interview: {
       name:'Interview', peer:false, intern:true,
-      wink:'Gespräch, redigiert und autorisiert. Kein Abstract, keine Schlagwörter — '
+      wink:'Gespräch, redigiert und autorisiert. Kein Abstract, keine Schlüsselwörter — '
         + 'dafür Vorzeile, Vorspann, Porträt und Vita des Gesprächspartners.',
       vorzeileMax:200, vorzeileZweck:'wer spricht: Name, Funktion, Haus',
       vorzeileText:'Hier steht, <b>wer</b> spricht: Name mit Titel, Funktion, Haus — im '
@@ -1288,6 +1592,61 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   /** Die Beschreibung der gewaehlten Rubrik, oder null. */
   function rubrik() { return RUBRIKEN[stand.rubrik] || null; }
 
+  /* Die vier Rubriken auf einen Blick.
+
+     Vorher stand hier nur ein Auswahlfeld: Wer wissen wollte, was eine
+     Rubrik verlangt, musste sie erst waehlen - und dann die naechste, und
+     die naechste. Mariann Stegmaier beim Testlauf am 17.09.2026: "Man muss
+     erst jede Drop-Down-Option anklicken, um zu verstehen, was welche Option
+     ist."
+
+     Die Tafel wird aus RUBRIKEN gebaut und nicht von Hand geschrieben -
+     sonst steht sie nach der naechsten Aenderung daneben. */
+  function rubrikTafelMalen() {
+    var n = $('#rubrikTafel');
+    if (!n) { return; }
+
+    var wahl = ['wissenschaft', 'wissen', 'wissenstransfer', 'kommentar'];
+    var teile = [['literatur', 'Literatur']];
+
+    var kopf = '<tr><th style="text-align:left">Rubrik</th>'
+             + '<th style="text-align:left;font-weight:700">Definition</th>'
+             + teile.map(function (x) {
+                 return '<th style="font-weight:700">' + x[1] + '</th>'; }).join('')
+             + '<th>Peer&nbsp;Review</th><th>Vorlauf</th></tr>';
+
+    var zeilen = wahl.map(function (k) {
+      var r = RUBRIKEN[k];
+      if (!r) { return ''; }
+      var jetzt = (stand.rubrik === k);
+      return '<tr' + (jetzt ? ' style="background:var(--card-3)"' : '') + '>'
+        /* In der Tafel heisst die Spalte schon "Rubrik" - eine Zeile "Rubrik
+           Wissen" darunter liest sich, als sei "Rubrik" Teil des Namens.
+           Im Auswahlfeld bleibt der volle Name stehen, dort traegt er die
+           Unterscheidung (Mariann Stegmaier, 18.09.2026). */
+        + '<td style="text-align:left"><b>' + esc(r.name.replace(/^Rubrik /, '')) + '</b></td>'
+        + '<td style="text-align:left">' + esc(r.kurz || '') + '</td>'
+        + teile.map(function (x) {
+            var z = (r.teile && r.teile[x[0]]) || 'frei';
+            return '<td>' + (z === 'pflicht' ? 'Pflicht'
+                           : z === 'nie' ? '<span style="opacity:.45">–</span>'
+                           : 'freiwillig') + '</td>';
+          }).join('')
+        + '<td>' + (r.peer ? '<b>ja</b>' : 'nein') + '</td>'
+        /* "mindestens", nicht die blosse Zahl: Der Vorlauf ist eine Untergrenze,
+           keine Zusage (Peter Stegmaier, 18.09.2026). */
+        + '<td>mindestens ' + (r.peer ? VORLAUF_PEER : VORLAUF_SONST) + ' Wochen</td>'
+        + '</tr>';
+    }).join('');
+
+    n.innerHTML = '<table class="rubriktafel"><thead>' + kopf + '</thead>'
+      + '<tbody>' + zeilen + '</tbody></table>'
+      /* Die Legende zu "-" ist mit den Bestandteilsspalten entfallen: In den
+         vier Autorenrubriken kommt das Zeichen nicht mehr vor. */
+      + '<p class="wink" style="margin:6px 0 0">Der Vorlauf ist die Mindestzeit '
+      + 'zwischen Einreichung und möglicher Publikation.</p>';
+  }
+
   /**
    * Was ein Bestandteil bei der gewaehlten Rubrik ist: pflicht, frei, nie.
    * Ohne gewaehlte Rubrik gilt alles als 'frei' - dann steht in der
@@ -1296,6 +1655,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   function noetig(teil) {
     var r = rubrik();
     if (!r) { return 'frei'; }
+
+    /* Der Gutachtervorschlag steht in keiner Teile-Tabelle - er haengt am
+       Peer Review, nicht am Aufbau des Beitrags. Ohne diese Zeile stand er
+       auch bei Kommentar und Wissenstransfer da und lud dazu ein, jemanden
+       fuer eine Begutachtung vorzuschlagen, die es nicht gibt. */
+    if (teil === 'gutachtervorschlag') { return r.peer ? 'frei' : 'nie'; }
+
     return (r.teile && r.teile[teil]) || 'frei';
   }
 
@@ -1369,7 +1735,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       b.type = 'button';
       b.className = 'schritt';
       b.innerHTML = '<span class="nr">' + (i+1) + '</span>' +
-        '<span class="txt">' + esc(s.name) + '<small>' + esc(s.unter) + '</small></span>';
+        '<span class="txt">' + esc(s.name) + '</span>';
       b.addEventListener('click', function(){ zeige(i); });
       n.appendChild(b);
     });
@@ -1417,12 +1783,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     {s:0, feld:'titel',     text:spanne('Überschrift eintragen', 20, 100), min:20, max:100},
     {s:0, teil:'vorspann', feld:'vorspann',  text:spanne('Vorspann schreiben', 600, 900), min:600, max:900},
     {s:0, liste:'manuskript', text:'Manuskript hochladen'},
+    /* Die Literatur steht seit dem 17.09.2026 in Schritt 1. Die Regel blieb
+       auf s:4 stehen - die Lueckenliste bot dann "zu Schritt 5" an und sprang
+       auf eine Seite, auf der das Feld gar nicht mehr ist
+       (Mariann Stegmaier, 18.09.2026). */
+    {s:0, teil:'literatur', feld:'literatur', text:'Literatur', min:20},
     {s:1, teil:'zusammenfassung', feld:'abstractDe', text:spanne('Deutsches Abstract', 1000, 1500), min:1000, max:1500},
     {s:1, teil:'zusammenfassung', feld:'schlagDe',  text:'Deutsche Schlüsselwörter (3 bis 7)', komma:3},
     {s:1, teil:'zusammenfassung', feld:'titelEn',   text:'Englischer Titel', min:10, max:100},
     {s:1, teil:'zusammenfassung', feld:'abstractEn', text:spanne('Englisches Abstract', 1000, 1500), min:1000, max:1500},
     {s:1, teil:'zusammenfassung', feld:'schlagEn',  text:'Englische Keywords (3 bis 7)', komma:3},
-    {s:3, autor:true,       text:'Haupt- und Korrespondenzautor anlegen: Name, E-Mail, Vita'},
+    {s:3, autor:true,       text:'Haupt- und Korrespondenzautor:in anlegen: Name, E-Mail, Vita'},
     /* Zu lang steht als eigene Regel daneben: Die Regel darueber prueft, ob
        ueberhaupt etwas dasteht - hier geht es um eine Vita, die vollstaendig
        ist und nur gekuerzt werden muss. Zwei verschiedene Meldungen, sonst
@@ -1433,12 +1804,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
        return (a.vita || '').trim().length > hoechstens(VITA_MAX);
      },
      text:'Vita kürzen (höchstens ' + VITA_MAX + ' Zeichen)'},
-    {s:4, teil:'literatur', feld:'literatur', text:'Literatur', min:20},
     {s:4, teil:'zitation', feld:'zitation',  text:'Zitation', min:20},
-    {s:4, feld:'ausgabe',   text:'Ausgabe wählen'},
-    {s:4, pruef:function(){ return !!stand.ausgabe && !ausgabeMoeglich(stand.ausgabe); },
-     text:'Die gewählte Ausgabe liegt für Ihre Rubrik zu nah'},
-    {s:4, teil:'konflikte', feld:'konflikte', text:'Interessenkonflikte und Förderung', min:10}
+    {s:4, teil:'konflikte', feld:'konflikte', text:'Autorenerklärung', min:10}
   ];
 
   /* Der Text einer Regel darf von der Rubrik abhaengen - dann steht er als
@@ -1541,6 +1908,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       el.addEventListener('input', function () {
         stand[name] = el.value;
         zaehlerMalen(name);
+        if (name === 'titel') { zitationMalen(); }
         sichern();
         leisteMalen();
       });
@@ -1603,6 +1971,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     $('#rubrikWink').textContent = (r && r.wink && r.wink.replace(/<[^>]+>/g, '')) ||
       'Die Rubrik bestimmt, wie Ihr Beitrag gesetzt und begutachtet wird.';
 
+    rubrikTafelMalen();
+
     $$('[data-teil]').forEach(function (g) {
       var z = noetig(g.dataset.teil);
       g.hidden = (z === 'nie');
@@ -1618,7 +1988,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       ohne.hidden = !weg;
       if (weg) {
         ohne.innerHTML = '<b>F\u00fcr ' + esc(r ? r.name : 'diese Rubrik') + ' brauchen wir '
-          + 'keine Zusammenfassung.</b> Abstract, englischen Titel und Schlagw\u00f6rter '
+          + 'keine Zusammenfassung.</b> Abstract, englischen Titel und Schl\u00fcsselw\u00f6rter '
           + 'tragen im Heft nur Wissenschaft, Wissen und Wissenstransfer. Gehen Sie '
           + 'einfach weiter \u2014 hier fehlt Ihnen nichts.';
       }
@@ -1665,10 +2035,31 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     if (!k) { return; }
     if (!r) { k.hidden = true; return; }
     var namen = {vorzeile:'Vorzeile', vorspann:'Vorspann',
-                 zusammenfassung:'Abstract und Schlagw\u00f6rter (deutsch und englisch)',
+                 zusammenfassung:'Abstract und Schl\u00fcsselw\u00f6rter (deutsch und englisch)',
                  literatur:'Literaturverzeichnis', zitation:'Zitationsvorschlag',
-                 konflikte:'Interessenkonflikte'};
-    var muss = ['\u00dcberschrift', 'Manuskript', 'Ausgabe', 'Erstautor mit Vita'];
+                 konflikte:'Autorenerklärung'};
+    /* Der Zusatz zur Vita steht bei Wissen, Wissenstransfer und Kommentar, nicht
+       beim wissenschaftlichen Beitrag (Peter Stegmaier, 18.09.2026). Das Feld ist
+       ueberall dasselbe; die Begruendung wird nur dort mitgegeben, wo sie
+       gebraucht wird. */
+    var VITA_ZUSATZ = ['wissen', 'wissenstransfer', 'kommentar'];
+    var vita;
+    if (stand.rubrik === 'wissenschaft') {
+        /* Beim wissenschaftlichen Beitrag braucht JEDE Autorin und JEDER Autor
+           eine Vita, nicht nur die erste Person (Peter Stegmaier, 18.09.2026).
+
+           ACHTUNG, hier klafft etwas: Das Formular verlangt die Vita weiterhin
+           nur beim Haupt- und Korrespondenzautor. REGELN prueft `stand.autoren[0]`,
+           bei Mitautor:innen steht "Name genuegt", und die Lueckenliste meldet eine
+           fehlende Mitautoren-Vita nicht. Diese Zeile sagt also mehr, als die Seite
+           durchsetzt. Absicht - solange die Durchsetzung nicht entschieden ist. */
+        vita = 'Alle Autor:innen mit Vita';
+    } else if (VITA_ZUSATZ.indexOf(stand.rubrik) > -1) {
+        vita = 'Erstautor:in mit Vita (f\u00fcr das Online-Profil der Autor:in)';
+    } else {
+        vita = 'Erstautor:in mit Vita';
+    }
+    var muss = ['\u00dcberschrift', 'Manuskript', vita];
     var kann = [], weg = [];
     Object.keys(namen).forEach(function (t) {
       var z = noetig(t);
@@ -1676,9 +2067,23 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       else if (z === 'frei') { kann.push(namen[t]); }
       else { weg.push(namen[t]); }
     });
+
+    /* Diese vier stehen in keiner Teile-Tabelle und fehlten darum in der Liste -
+       sie gelten fuer jede Rubrik gleich. Seit die Tafel keine
+       Bestandteilsspalten mehr hat, ist dieser Kasten die einzige Stelle, die
+       sagt, was zu liefern ist; unvollstaendig waere er hier schlimmer als
+       vorher (Mariann Stegmaier, 18.09.2026: "entweder komplett vollstaendig
+       oder gar nicht"). Lizenz und eFirst bleiben bewusst draussen: Sie sind
+       Voreinstellungen im Formular, keine Zulieferung. */
+    kann.push('Abbildungen und Tabellen', 'Danksagung');
+    if (noetig('gutachtervorschlag') === 'frei') {
+      kann.push('Vorschlag von Gutachter:innen');
+    }
+
     var t = '<p><b>' + esc(r.name) + ':</b> ' + esc(r.wink.replace(/<[^>]+>/g, '')) + '</p>';
     t += '<p><b>Gebraucht wird:</b> ' + esc(muss.join(', ')) + '.</p>';
     if (kann.length) { t += '<p><b>Freiwillig:</b> ' + esc(kann.join(', ')) + '.</p>'; }
+    t += '<p><b>Wenn zutreffend:</b> Einsatz von KI.</p>';
     if (weg.length)  { t += '<p><b>Entf\u00e4llt:</b> ' + esc(weg.join(', ')) + '.</p>'; }
     if (r.intern) {
       t += '<p>Diese Rubrik f\u00fcllt die Redaktion selbst aus.</p>';
@@ -1888,7 +2293,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       'Titel:       ' + (stand.titel || '-'),
       'Autor:       ' + ((stand.autoren[0] && stand.autoren[0].name) || '-'),
       'Rubrik:      ' + ((RUBRIKEN[stand.rubrik] || {}).name || '-'),
-      'Ausgabe:     ' + (stand.ausgabe || 'noch nicht gewählt'),
+      'Ausgabe:     ' + (stand.ausgabe || 'trägt der Herausgeber ein'),
       'Zeichenzahl: ' + tausend(n) + ' (normal sind rund ' + tausend(normal) + ')',
       '', 'Mit freundlichen Grüßen', ''
     ].join(U);
@@ -1906,7 +2311,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       + '<p><a class="knopf" href="mailto:stegmaier@m-vf.de'
       + '?subject=' + encodeURIComponent(betreff)
       + '&body=' + encodeURIComponent(leib) + '">Fertige E-Mail öffnen</a></p>'
-      + '<p class="wink">Die Mail ist vorausgefüllt mit Titel, Autor, Rubrik, Ausgabe '
+      + '<p class="wink">Die Mail ist vorausgefüllt mit Titel, Autor:in, Rubrik, Ausgabe '
       + 'und Zeichenzahl — Sie müssen nur noch absenden.</p>';
   }
 
@@ -1987,6 +2392,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   }
 
   function bildPruefen(datei) {
+    if (stand.bilder.length >= MAX_BILDER) {
+      dateiMeldung('<b>' + esc(datei.name) + '</b> wurde nicht angenommen: Mehr als '
+        + MAX_BILDER + ' Abbildungen nehmen wir nicht an. Bitte wählen Sie aus, welche '
+        + 'vier Sie einreichen möchten.', true);
+      return;
+    }
     var url = URL.createObjectURL(datei);
     var bild = new Image();
     bild.onload = function () {
@@ -2087,7 +2498,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             : '<span class="marke-pill ok">' + d.breite + ' × ' + d.hoehe + ' px</span>';
           var warn = d.zuKlein ? '<p class="wink" style="color:var(--warn)">Gebraucht werden ' +
             MIN_BILD.toLocaleString('de-DE') + ' Pixel Breite. Bitte die Fassung in ' +
-            'Originalgröße hochladen — ein vergrößertes Bild wird dadurch nicht schärfer.</p>' : '';
+            'Originalgröße hochladen — ein vergrößertes Bild wird dadurch nicht schärfer.</p>'
+            + nachreichHaken() : '';
           var fehlt = !d.unterschrift.trim();
           return '<div class="stueck"><div class="stueck-kopf">' +
             '<span class="marke-pill">Abbildung ' + (i+1) + '</span>' + pill +
@@ -2155,18 +2567,18 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     document.querySelector('#autorListe').innerHTML = stand.autoren.map(function (a, i) {
       var haupt = (i === 0);
       var kopf = haupt
-        ? '<span class="marke-pill ok">Haupt- und Korrespondenzautor</span>'
-        : '<span class="marke-pill">Mitautor ' + (i+1) + '</span>';
+        ? '<span class="marke-pill ok">Haupt- und Korrespondenzautor:in</span>'
+        : '<span class="marke-pill">Mitautor:in ' + (i+1) + '</span>';
       var weg = haupt ? '' :
         '<button type="button" class="weg" data-autorweg="' + i + '" aria-label="Entfernen">&times;</button>';
       var stern = haupt ? ' <span class="pflicht">*</span>' : '';
 
       var anleitung = haupt
         ? '<p class="anleitung">Hier legen Sie sich selbst als <b>Haupt- und ' +
-          'Korrespondenzautor</b> an. An diese Adresse schreibt die Redaktion bei ' +
+          'Korrespondenzautor:in</b> an. An diese Adresse schreibt die Redaktion bei ' +
           'Rückfragen, und unter diesem Namen steht Ihr Beitrag an erster Stelle.</p>'
-        : '<p class="anleitung">Tragen Sie hier bitte den nächsten Mitautor ein, in der ' +
-          'Reihenfolge, in der er im Heft stehen soll. Name genügt; E-Mail und Vita kann ' +
+        : '<p class="anleitung">Tragen Sie hier bitte die nächste Mitautor:in ein, in der ' +
+          'Reihenfolge, in der sie im Heft stehen soll. Name genügt; E-Mail und Vita kann ' +
           'die Redaktion später nachfordern.</p>';
 
       return '<div class="stueck"><div class="stueck-kopf">' + kopf + weg + '</div>' +
@@ -2187,7 +2599,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         '<div><label style="font-size:13px;font-weight:700">Institution' + stern +
         '</label><input type="text" data-autor="institution" data-i="' + i + '" ' +
         'placeholder="Einrichtung, Ort" value="' + esc(a.institution || '') + '">' +
-        '<p class="wink">So, wie sie im Heft stehen soll — ohne Abteilungskette.</p></div>' +
+        '<p class="wink">So, wie sie im Heft stehen soll, ohne Abteilungskette.</p></div>' +
         '<div><label style="font-size:13px;font-weight:700">ORCID</label>' +
         '<input type="text" data-autor="orcid" data-i="' + i + '" ' +
         'placeholder="0000-0002-1825-0097" value="' + esc(a.orcid || '') + '">' +
@@ -2204,13 +2616,161 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         'maxlength="' + hoechstens(VITA_MAX) + '" ' +
         'placeholder="Zwei bis vier Sätze: Funktion, Einrichtung, Arbeitsschwerpunkt.">' +
         esc(a.vita) + '</textarea>' +
-        (haupt ? '<p class="wink">' + VITA_MIN + ' bis ' + VITA_MAX + ' Zeichen — sie ' +
-                 'erscheint neben Ihrem Beitrag im Heft, und dort ist der Platz ' +
+        (haupt ? '<p class="wink">' + VITA_MIN + ' bis ' + VITA_MAX + ' Zeichen. Sie ' +
+                 'erscheint unter Ihrem Beitrag im Heft, und dort ist der Platz ' +
                  'begrenzt.</p>' : '') +
+        (haupt ? '' :
+          '<p style="margin:10px 0 0"><label style="font-weight:400;font-size:13.5px">' +
+          '<input type="checkbox" data-autor="erstautor" data-i="' + i + '"' +
+          (a.erstautor ? ' checked' : '') + '> ' +
+          'Diese Person als <b>weitere:n Erstautor:in</b> markieren</label>' +
+          '<span class="wink" style="display:block;margin-top:3px">Geteilte ' +
+          'Erstautorenschaft. Im Heft steht dann an beiden Namen ein Hinweis.</span></p>') +
         '</div>';
     }).join('');
     vitaZaehler();
   }
+
+  /* Eine zu schmale Abbildung haelt die Einreichung nicht auf - sie hielte
+     sonst den ganzen Beitrag auf, oft wochenlang, weil die Originaldatei bei
+     einem Institut liegt und nicht beim Autor. Stattdessen sagt er zu,
+     nachzuliefern, und die Redaktion sieht die Zusage als offenen Posten.
+     Angeschlossen ist sie an das vorhandene `nachreichen` des Endpunkts. */
+  function nachreichHaken() {
+    return '<p class="kasten acht" style="margin:8px 0 0">' +
+      '<label style="font-weight:400;font-size:13.5px">' +
+      '<input type="checkbox" data-nachreichen' +
+      (stand.bildNachreichen ? ' checked' : '') + '> ' +
+      '<b>Mir ist bewusst, dass diese Abbildung für den Druck nicht ausreicht.</b> ' +
+      'Ich möchte den Beitrag dennoch einreichen und reiche eine ausreichend große ' +
+      'Abbildung nach.</label>' +
+      '<span class="wink" style="display:block;margin-top:5px">Nach dem Einreichen ' +
+      'bekommen Sie dafür einen Zugangslink; darüber laden Sie die Datei nach. ' +
+      'Bis dahin steht die Abbildung bei uns als offener Punkt.</span></p>';
+  }
+
+  document.addEventListener('change', function (e) {
+    var h = e.target.closest('[data-nachreichen]');
+    if (!h) { return; }
+    stand.bildNachreichen = h.checked;
+    dateienMalen(); sichern(); leisteMalen();
+  });
+
+  /* Nach dem Einreichen loest der Autor die Zusage selbst ein - ohne Mail an
+     die Redaktion und ohne dass dort jemand etwas freischaltet. Ausweis ist
+     die Anmeldung, nicht die Beitragsnummer; deshalb steht hier der Hinweis
+     auf den Zugangslink, wenn sie fehlt. */
+  function nachliefernBlock() {
+    var angemeldet = !!sitzung();
+    return '<div class="kasten acht" style="margin-top:14px">'
+      + '<p><b>Sie haben zugesagt, eine Abbildung in Druckgröße nachzureichen.</b> '
+      + 'Sie können das hier tun, sobald Sie die Datei haben — der Beitrag '
+      + '(Nr. ' + esc(String(stand.eingereicht.beitrag)) + ') wartet darauf.</p>'
+      + (angemeldet
+          ? '<p style="margin:10px 0 0">'
+            + '<button type="button" class="knopf" id="nachliefernWahl">'
+            + 'Abbildung nachreichen</button></p>'
+            + '<div id="nachliefernStand" class="wink" style="margin-top:8px"></div>'
+          : '<p style="margin:10px 0 0">Dafür müssen Sie angemeldet sein. Lassen Sie '
+            + 'sich unten auf dieser Seite einen <b>Zugangslink</b> schicken — an die '
+            + 'Adresse, unter der Sie eingereicht haben.</p>')
+      + '</div>';
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!e.target || e.target.id !== 'nachliefernWahl') { return; }
+    var wahl = document.createElement('input');
+    wahl.type = 'file';
+    wahl.accept = '.jpg,.jpeg,.png';
+    wahl.addEventListener('change', function () {
+      if (!this.files || !this.files[0]) { return; }
+      nachliefern(this.files[0]);
+    });
+    wahl.click();
+  });
+
+  function nachliefernStand(html, schlimm) {
+    var n = $('#nachliefernStand');
+    if (n) { n.innerHTML = (schlimm ? '<b style="color:var(--stop)">' : '<b>')
+                          + html + '</b>'; }
+  }
+
+  function nachliefern(datei) {
+    nachliefernStand('Wird hochgeladen …', false);
+    dateiSenden('abbildung', datei, function (a) {
+      if (!a || !a.ok) {
+        nachliefernStand(esc((a && (a.meldung || a.grund)) || 'Die Datei wurde nicht '
+          + 'angenommen.'), true);
+        return;
+      }
+      ruf('nachliefern', {beitrag: stand.eingereicht.beitrag, anhang: a.id})
+        .then(function (b) {
+          if (!b || !b.ok) {
+            nachliefernStand(esc((b && (b.meldung || b.grund)) || 'Das Nachreichen hat '
+              + 'nicht geklappt.'), true);
+            return;
+          }
+          stand.bildNachreichen = false;
+          sichern(true);
+          pruefenMalen();
+          $('#ergebnis').innerHTML = '<div class="kasten gut" style="margin-top:22px">'
+            + '<p><b>Angekommen.</b> Die Abbildung hängt jetzt am Beitrag, und der '
+            + 'offene Punkt ist erledigt.</p></div>';
+        })
+        .catch(function () {
+          nachliefernStand('Keine Verbindung zum Server. Bitte später noch einmal.', true);
+        });
+    });
+  }
+
+  /* Der Zitationsvorschlag wird gebildet, nicht erfunden.
+
+     Vorher war das ein leeres Feld mit einem Beispiel daneben - und damit
+     eine Einladung, sich eine eigene Form auszudenken. Mariann Stegmaier am
+     17.09.2026: "Der Zitationsvorschlag ist doch immer gleich. Den kann man
+     sich doch nicht aussuchen?" Sie hat recht. Das Feld bleibt trotzdem
+     sichtbar, denn bei mehrteiligen Namen trifft keine Automatik die
+     richtige Trennung - aber es kommt gefuellt.
+
+     Ueberschrieben wird nur, was die Automatik selbst geschrieben hat: Was
+     ein Autor von Hand geaendert hat, bleibt stehen. */
+  var zitationZuletzt = '';
+
+  function zitationBilden() {
+    var namen = (stand.autoren || [])
+      .map(function (a) { return (a.name || '').trim(); })
+      .filter(Boolean)
+      .map(function (voll) {
+        var teile = voll.split(/\s+/).filter(function (w) { return w.indexOf('.') < 0; });
+        if (teile.length < 2) { return voll; }
+        var nach = teile[teile.length - 1];
+        var vor  = teile[0];
+        return nach + ', ' + vor.charAt(0).toUpperCase() + '.';
+      });
+    if (!namen.length) { return ''; }
+    var titel = (stand.titel || '').trim();
+    return namen.join(', ') + ': „' + (titel || '…') + '“, in '
+         + '„Monitor Versorgungsforschung“';
+  }
+
+  function zitationMalen(erzwingen) {
+    var feld = $('#zitation');
+    if (!feld) { return; }
+    var neu = zitationBilden();
+    if (!neu) { return; }
+    var jetzt = (stand.zitation || '').trim();
+    if (!erzwingen && jetzt !== '' && jetzt !== zitationZuletzt) { return; }
+    stand.zitation = neu;
+    zitationZuletzt = neu;
+    feld.value = neu;
+    zaehlerMalen('zitation');
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!e.target || e.target.id !== 'zitationNeu') { return; }
+    zitationMalen(true);
+    sichern(); leisteMalen();
+  });
 
   function vitaZaehler() {
     stand.autoren.forEach(function (a, i) {
@@ -2271,10 +2831,18 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var f = e.target.closest('[data-autor]');
     if (!f) { return; }
     var nr = parseInt(f.dataset.i, 10);
-    stand.autoren[nr][f.dataset.autor] = f.value;
+    stand.autoren[nr][f.dataset.autor] =
+      (f.type === 'checkbox') ? f.checked : f.value;
+    if (f.dataset.autor === 'name') { zitationMalen(); }
     if (f.dataset.autor === 'vita')  { vitaZaehler(); }
     if (f.dataset.autor === 'orcid') { orcidWinkMalen(nr, f.value); }
     sichern(); leisteMalen();
+  });
+  document.addEventListener('change', function (e) {
+    var f = e.target.closest('[data-autor]');
+    if (!f || f.type !== 'checkbox') { return; }
+    stand.autoren[parseInt(f.dataset.i, 10)][f.dataset.autor] = f.checked;
+    sichern();
   });
   document.addEventListener('click', function (e) {
     var w = e.target.closest('[data-autorweg]');
@@ -2288,13 +2856,32 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   function pruefenMalen() {
     var offen = luecken();
     var hinweise = [];
+    var zuSchmal = 0;
     stand.bilder.forEach(function (b) {
-      if (b.zuKlein) { hinweise.push('Abbildung „' + b.name + '“ ist zu schmal für den Druck.'); }
+      if (b.zuKlein) {
+        zuSchmal++;
+        if (!stand.bildNachreichen) {
+          hinweise.push('Abbildung „' + b.name + '“ ist zu schmal für den Druck.');
+        }
+      }
       if (!b.unterschrift.trim()) { hinweise.push('Abbildung „' + b.name + '“ hat keine Unterschrift.'); }
     });
     stand.tabellen.forEach(function (t) {
       if (!t.unterschrift.trim()) { hinweise.push('Tabelle „' + t.name + '“ hat keine Unterschrift.'); }
     });
+
+    /* Der Haken steht auch hier, am letzten Punkt vor dem Absenden - wer
+       Schritt 3 laengst hinter sich hat, soll nicht dorthin zurueckmuessen. */
+    var nachreichBlock = (stand.eingereicht && stand.bildNachreichen)
+      ? nachliefernBlock()
+      : zuSchmal
+      ? nachreichHaken()
+        + (stand.bildNachreichen
+            ? '<p class="wink">Vermerkt. ' + zuSchmal + ' Abbildung'
+              + (zuSchmal > 1 ? 'en werden' : ' wird') + ' als offener Punkt '
+              + 'mit übergeben.</p>'
+            : '')
+      : '';
 
     var zeilen = [];
     if (offen.length === 0 && hinweise.length === 0) {
@@ -2311,6 +2898,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         '</span><button type="button" class="springen" data-spring="2">zu Schritt 3</button></li>');
     });
     $('#pruefListe').innerHTML = zeilen.join('');
+    $('#pruefNachreichen').innerHTML = nachreichBlock;
 
     $('#uebersicht').innerHTML = uebersicht();
     absendbar();
@@ -2355,9 +2943,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       zeile('Tabellen', stand.tabellen.map(function(d){return d.name;}).join(', ')) +
       '</dl></div>';
 
-    t += '<div class="uebersicht"><h3>Autoren</h3><dl>' +
+    t += '<div class="uebersicht"><h3>Autor:innen</h3><dl>' +
       stand.autoren.map(function (a, i) {
-        return zeile(i === 0 ? 'Korrespondenzautor' : 'Autor ' + (i+1),
+        return zeile(i === 0 ? 'Korrespondenzautor:in' : 'Autor:in ' + (i+1),
           a.name ? a.name + (a.mail ? ' · ' + a.mail : '') : '');
       }).join('') + '</dl></div>';
 
@@ -2365,11 +2953,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       wenn('literatur', zeile('Literatur', stand.literatur ? stand.literatur.split(/\n/).filter(Boolean).length + ' Einträge' : '')) +
       wenn('zitation', zeile('Zitation', stand.zitation)) +
       zeile('Danksagung', stand.danksagung) +
-      zeile('Ausgabe', stand.ausgabe) +
+      zeile('Ausgabe', 'trägt der Herausgeber ein') +
+      zeile('Einsatz von KI', stand.kiEinsatz || 'keine Angabe') +
       zeile('eFirst beantragt', stand.efirst === 'ja'
         ? 'Ja — Antrag geht an Herausgeber und Chefredaktion' : 'Nein') +
       zeile('Lizenz', stand.lizenz === 'cc_by' ? 'CC BY 4.0' : 'CC BY-NC-ND 4.0') +
-      wenn('konflikte', zeile('Interessenkonflikte', stand.konflikte)) +
+      wenn('konflikte', zeile('Autorenerklärung', stand.konflikte)) +
       '</dl></div>';
     return t;
   }
@@ -2395,6 +2984,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       tag_de: stand.schlagDe, tag_en: stand.schlagEn,
       literatur: stand.literatur, zitation: stand.zitation,
       danksagung: stand.danksagung, ausgabe: stand.ausgabe, lizenz: stand.lizenz,
+      ki_einsatz: stand.kiEinsatz,
       interessenkonflikte: stand.konflikte,
       efirst_beantragt: stand.efirst === 'ja',
       erklaerung_bestaetigt: true, erklaerung_fassung: '2026-09-04',
@@ -2587,6 +3177,20 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   $$('[data-weiter]').forEach(function(b){ b.addEventListener('click', function(){ zeige(jetzt+1); }); });
   $$('[data-zurueck]').forEach(function(b){ b.addEventListener('click', function(){ zeige(jetzt-1); }); });
   $('#jetztSichern').addEventListener('click', function(){ sichern(true); });
+  /* Derselbe Knopf noch einmal im Speicherblock unten - dort, wo erklaert
+     wird, was er tut. Wer die drei Wege liest, soll den ersten gleich
+     ausloesen koennen, ohne wieder nach oben zu scrollen. */
+  var jsUnten = $('#jetztSichernUnten');
+  if (jsUnten) {
+    jsUnten.addEventListener('click', function () {
+      sichern(true);
+      var m = $('#sicherungMeldung');
+      if (m) {
+        m.classList.remove('fehler');
+        m.textContent = 'Im Browser gesichert.';
+      }
+    });
+  }
 
   /* ------------------------------------------------- Sicherung als Datei */
 
@@ -2717,7 +3321,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
   $('#autorNeu').addEventListener('click', function () {
     if (stand.autoren.length >= 10) { return; }
-    stand.autoren.push({name:'', mail:'', institution:'', orcid:'', vita:'', bild:null});
+    stand.autoren.push({name:'', mail:'', institution:'', orcid:'', vita:'',
+                        bild:null, erstautor:false});
     autorenMalen(); sichern();
   });
 
@@ -2799,6 +3404,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   function pruefMalen() {
     var n = $('#pruefBefunde');
     if (!n) { return; }
+
+    var etwasDa = (pruefLauf.liste || []).length > 0;
+    if ($('#pruefAnleitung')) { $('#pruefAnleitung').hidden = !etwasDa; }
+    if ($('#pruefNachladen')) { $('#pruefNachladen').hidden = !etwasDa; }
 
     var kuerzungen = [], andere = [];
     pruefLauf.liste.forEach(function (x) {
@@ -2950,12 +3559,27 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   });
 
   /* --- 2. Den Link einloesen -------------------------------------------- */
+  /* Dieselbe Nachricht auch oben, wo der Blick nach dem Klick landet. */
+  function zugangOben(html, schlimm) {
+    var n = $('#zugangMeldung');
+    if (!n) { return; }
+    n.hidden = false;
+    n.className = 'kasten' + (schlimm ? ' stop' : ' gut');
+    n.innerHTML = html;
+  }
+
   function zugangEinloesen(schluessel) {
     anmeldeMeldung('Anmeldung wird geprüft …', 'ruhig');
+    zugangOben('<p>Ihre Anmeldung wird geprüft …</p>', false);
     ruf('zugang', {zugang: schluessel}).then(function (a) {
       if (!a || !a.ok) {
         anmeldeMeldung((a && a.meldung) || 'Dieser Link gilt nicht mehr. Bitte fordern Sie '
           + 'unten einen neuen an.', 'fehler');
+        zugangOben('<p><b>Dieser Zugangslink gilt nicht mehr.</b> '
+          + esc((a && a.meldung) || '') + '</p>'
+          + '<p>Er lässt sich nur einmal verwenden — manche Mailprogramme rufen Links '
+          + 'beim Empfang bereits auf und verbrauchen ihn dadurch. Fordern Sie bitte '
+          + 'unten auf dieser Seite einen neuen an; das dauert einen Augenblick.</p>', true);
         return;
       }
       sitzungSetzen(a.sitzung);
@@ -2963,6 +3587,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       kopfMalen();
       anmeldeMeldung('Angemeldet als ' + a.mail + '. Ihr Zwischenstand liegt ab jetzt '
         + 'auch bei uns.', '');
+      zugangOben('<p><b>Angemeldet als ' + esc(a.mail) + '.</b> Ihr Zwischenstand liegt '
+        + 'ab jetzt auch bei uns. Sie arbeiten unten in den sechs Schritten weiter.</p>',
+        false);
       /* Vor dem ersten Wort auf dem Server steht die Frage, welcher Stand gilt. */
       standAbgleichen(a.stand);
     }).catch(function () {
