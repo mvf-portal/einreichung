@@ -921,6 +921,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           Pflicht; bei Mitautor:innen genügt zunächst der Name.</span></p>
         </div>
 
+        <!-- Der Weg aus der Annahme-Mail endet hier: ein Link, der angemeldet
+             auf diesen Schritt fuehrt und statt des Entwurfs die Personen des
+             ANGENOMMENEN Beitrags zeigt - mit Bildfeld bei jeder. Getrennt vom
+             Entwurf darunter, weil es zwei verschiedene Dinge sind: Der
+             Entwurf liegt im Browser, diese Angaben liegen in WordPress. -->
+        <div id="bilderTafel" hidden></div>
         <div id="autorListe"></div>
         <button type="button" class="knopf rand klein" id="autorNeu">Weitere:n Autor:in hinzufügen</button>
         <!-- Der Satz stand bis zum 19.09.2026 pauschal da. Portraet und Vita
@@ -2756,91 +2762,152 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     wahl.click();
   });
 
-  /* ----------------------------------------------------- Portraets
-     Das Portraet gehoert der PERSON, nicht dem Beitrag - es landet am
-     `autoren`-Profil (Feld `author_image_id`), nicht am Artikel. Wer alle zwei
-     Jahre einreicht, laedt es einmal hoch.
+  /* ------------------------------------------------- Bilder der Autor:innen
 
-     Der Hauptautor darf auch fuer seine Mitautor:innen hochladen (Peter
-     Stegmaier, 19.09.2026): Sie haben keinen eigenen Zugang, und die Redaktion
-     muesste sonst zehn Mails schreiben. Die Grenze zieht der Server - nur
-     Profile, die an DIESEM Beitrag haengen.
+     Portraets werden erst gebraucht, wenn ein Beitrag angenommen ist. Dann
+     schickt der Endpunkt dem Hauptautor eine Mail mit einem Zugangslink; der
+     fuehrt ihn angemeldet hierher, auf Schritt 4, wo seine Mitautor:innen
+     ohnehin stehen (Peter Stegmaier, 19.09.2026).
 
-     Angezeigt wird der Kasten erst nach dem Einreichen. Vorher gibt es keine
-     Beitragsnummer, an der die Berechtigung haengen koennte. */
-  function portraetBlock() {
-    if (!stand.eingereicht || !stand.eingereicht.beitrag) { return ''; }
-    var angemeldet = !!sitzung();
-    return '<div class="kasten acht" style="margin-top:14px">'
-      + '<p><b>Portr\u00e4ts nachreichen.</b> Die Redaktion fordert sie nach der Annahme '
-      + 'an. Sobald Sie die Dateien haben, k\u00f6nnen Sie sie hier hochladen, f\u00fcr sich '
-      + 'und f\u00fcr Ihre Mitautor:innen. Mindestens <b>' + MIN_PORTRAIT + ' Pixel breit</b>, '
-      + 'das sind 30 mm bei 300 dpi.</p>'
-      + (angemeldet
-          ? '<p style="margin:10px 0 0">'
-            + '<button type="button" class="knopf rand klein" id="portraetLaden">'
-            + 'Personen anzeigen</button></p>'
-            + '<div id="portraetListe" style="margin-top:10px"></div>'
-          : '<p style="margin:10px 0 0">Daf\u00fcr m\u00fcssen Sie angemeldet sein. Lassen Sie '
-            + 'sich unten auf dieser Seite einen <b>Zugangslink</b> schicken, an die '
-            + 'Adresse, unter der Sie eingereicht haben.</p>')
-      + '</div>';
+     Diese Tafel zeigt NICHT den Entwurf im Browser, sondern die Personen des
+     angenommenen Beitrags, wie sie in WordPress stehen. Deshalb eine eigene
+     Flaeche und nicht die Felder darunter: Wer hier etwas aendert, aendert den
+     Beitrag; wer unten etwas aendert, aendert nur seinen Entwurf. Dasselbe
+     Feld fuer beides waere eine Falle.
+
+     Frueher stand ein Kasten dafuer in Schritt 6. Ihn hat nie jemand gefunden:
+     Er erschien erst nach dem Einreichen, wurde direkt danach nicht einmal
+     gezeichnet, und nichts wies den Weg dorthin. */
+  var bilderModus = false, bilderBeitrag = 0;
+
+  function bilderTafelAn(beitrag) {
+    bilderModus = true;
+    bilderBeitrag = parseInt(beitrag, 10) || 0;
+    var t = $('#bilderTafel');
+    if (t) { t.hidden = false; }
+    // Der Entwurf darunter waere hier nur verwirrend: zwei Listen derselben
+    // Personen, von denen nur die obere wirkt.
+    var l = $('#autorListe'), n = $('#autorNeu');
+    if (l) { l.hidden = true; }
+    if (n) { n.hidden = true; }
+    zeige(3);
+    /* NACH zeige(): Das setzt #navZeile selbst wieder sichtbar.
+       Weg muss auch der Rahmen des Einreichens - der Auftragskasten, die
+       Schrittzaehlung und die Blaetterleiste. Wer hierherkommt, reicht nichts
+       mehr ein; sein Beitrag ist angenommen. Bliebe die Leiste stehen, koennte
+       er sich durch sechs Schritte eines Entwurfs blaettern, der mit dem
+       angenommenen Beitrag nichts mehr zu tun hat. */
+    var weg = ['#navZeile', '#leiste', '.blatt[data-blatt="3"] .auftrag',
+               '.blatt[data-blatt="3"] .zaehler'];
+    weg.forEach(function (w) {
+      var e = document.querySelector(w);
+      if (e) { e.hidden = true; }
+    });
+    bilderTafelMalen();
   }
 
-  function portraetListeMalen(liste) {
-    var n = $('#portraetListe');
-    if (!n) { return; }
-    if (!liste || !liste.length) {
-      n.innerHTML = '<p class="wink">Zu diesem Beitrag ist noch kein Autorenprofil '
-        + 'angelegt. Die Redaktion legt sie beim Bearbeiten an; versuchen Sie es '
-        + 'sp\u00e4ter noch einmal.</p>';
+  function bilderTafelMalen() {
+    var t = $('#bilderTafel');
+    if (!t) { return; }
+    if (!bilderBeitrag) {
+      t.innerHTML = '<div class="kasten stop"><p><b>Zu welchem Beitrag?</b> Der Link '
+        + 'hat die Beitragsnummer nicht mitgebracht. Bitte rufen Sie ihn noch einmal '
+        + 'aus der Mail auf, oder schreiben Sie an stegmaier@m-vf.de.</p></div>';
       return;
     }
-    n.innerHTML = liste.map(function (a) {
-      /* Auch ein vorhandenes Bild wird genannt, mit seiner Breite. Sonst laedt
-         jemand ein zweites hoch, weil er nicht sieht, dass schon eines da ist -
-         und weiss hinterher nicht, welches gilt. */
-      /* NICHT `stand` nennen - das ist der globale Zustand der Seite. */
+    t.innerHTML = '<div class="kasten"><p>Wird geladen \u2026</p></div>';
+    ruf('portraet', {beitrag: bilderBeitrag, tun: 'liste'})
+      .then(function (a) {
+        if (!a || !a.ok) {
+          t.innerHTML = '<div class="kasten stop"><p><b>'
+            + esc((a && (a.meldung || a.grund)) || 'Die Angaben kamen nicht.')
+            + '</b></p></div>';
+          return;
+        }
+        t.innerHTML = bilderTafelHtml(a.autoren || []);
+      })
+      .catch(function () {
+        t.innerHTML = '<div class="kasten stop"><p><b>Keine Verbindung zum Server.</b> '
+          + 'Bitte versuchen Sie es später noch einmal.</p></div>';
+      });
+  }
+
+  function bilderTafelHtml(liste) {
+    if (!liste.length) {
+      return '<div class="kasten"><p><b>Zu diesem Beitrag ist noch kein '
+        + 'Autorenprofil angelegt.</b> Das macht die Redaktion beim Bearbeiten. '
+        + 'Bitte versuchen Sie es in ein paar Tagen noch einmal.</p></div>';
+    }
+    var kopf = '<div class="kasten acht"><p><b>Ihr Beitrag ist angenommen.</b> '
+      + 'Hier fehlen noch die Bilder \u2014 Ihres und die Ihrer Mitautor:innen. '
+      + 'Mindestens <b>' + MIN_PORTRAIT + ' Pixel breit</b>, das sind 30 mm bei '
+      + '300 dpi, als jpg oder png.</p>'
+      + '<p>Name, Institution, ORCID und Vita k\u00f6nnen Sie bei dieser Gelegenheit '
+      + 'noch berichtigen. <b>Jede \u00c4nderung wirkt sofort</b> und wird der Redaktion '
+      + 'angezeigt.</p></div>';
+
+    return kopf + liste.map(function (a) {
       var marke = a.bild
         ? '<span class="marke-pill ' + (a.breite >= MIN_PORTRAIT ? 'ok' : 'warn') + '">'
           + (a.breite ? a.breite + ' px' : 'Bild vorhanden') + '</span>'
         : '<span class="marke-pill warn">kein Bild</span>';
-      return '<div class="zeile" style="align-items:center;margin-bottom:8px">'
-        + '<span style="flex:1 1 auto">' + esc(a.name) + ' ' + marke + '</span>'
-        + '<button type="button" class="knopf rand klein" data-portraet="'
-        + a.profil + '">' + (a.bild ? 'Ersetzen' : 'Bild w\u00e4hlen') + '</button>'
-        + '</div>'
-        + '<div class="wink" data-portraetstand="' + a.profil + '"></div>';
+      var f = function (feld, etikett, wert, lang) {
+        var id = 'ang-' + feld + '-' + a.profil;
+        return '<div><label style="font-size:13px;font-weight:700" for="' + id + '">'
+          + etikett + '</label>'
+          + (lang
+              ? '<textarea id="' + id + '" rows="3" data-angabe="' + feld
+                + '" data-profil="' + a.profil + '">' + esc(wert || '') + '</textarea>'
+              : '<input type="text" id="' + id + '" data-angabe="' + feld
+                + '" data-profil="' + a.profil + '" value="' + esc(wert || '') + '">')
+          + '</div>';
+      };
+      return '<div class="stueck">'
+        + '<div class="stueck-kopf"><span class="marke-pill ok">' + esc(a.name)
+        + '</span>' + marke + '</div>'
+        + '<p style="margin:0 0 10px">'
+        + '<button type="button" class="knopf rand klein" data-portraet="' + a.profil
+        + '">' + (a.bild ? 'Bild ersetzen' : 'Bild w\u00e4hlen') + '</button></p>'
+        + '<div class="reihe zwei" style="margin-bottom:11px">'
+        + f('name', 'Name mit akademischem Titel', a.name)
+        + f('institution', 'Institution', a.institution) + '</div>'
+        + '<div class="reihe zwei" style="margin-bottom:11px">'
+        + f('orcid', 'ORCID', a.orcid) + '<div></div></div>'
+        + f('vita', 'Kurze Vita', a.vita, true)
+        + '<div class="wink" data-angabenstand="' + a.profil + '"></div>'
+        + '</div>';
     }).join('');
   }
 
-  function portraetStand(profil, html, schlimm) {
-    var n = document.querySelector('[data-portraetstand="' + profil + '"]');
+  function bilderStand(profil, html, schlimm) {
+    var n = document.querySelector('[data-angabenstand="' + profil + '"]');
     if (n) { n.innerHTML = (schlimm ? '<b style="color:var(--stop)">' : '<b>')
                           + html + '</b>'; }
   }
 
-  function portraetHolen() {
-    var n = $('#portraetListe');
-    if (n) { n.innerHTML = '<p class="wink">Wird geladen \u2026</p>'; }
-    ruf('portraet', {beitrag: stand.eingereicht.beitrag, tun: 'liste'})
+  /* Gespeichert wird beim Verlassen des Feldes, nicht bei jedem Tastendruck:
+     Jeder Anschlag waere eine Anfrage und ein Eintrag im Aenderungsprotokoll. */
+  document.addEventListener('change', function (e) {
+    var f = e.target && e.target.closest ? e.target.closest('[data-angabe]') : null;
+    if (!f || !bilderModus) { return; }
+    var profil = parseInt(f.dataset.profil, 10);
+    bilderStand(profil, 'Wird gespeichert \u2026', false);
+    ruf('portraet', {beitrag: bilderBeitrag, tun: 'angaben', profil: profil,
+                     feld: f.dataset.angabe, wert: f.value})
       .then(function (a) {
         if (!a || !a.ok) {
-          if (n) { n.innerHTML = '<p class="wink"><b style="color:var(--stop)">'
-            + esc((a && (a.meldung || a.grund)) || 'Die Liste kam nicht.')
-            + '</b></p>'; }
+          bilderStand(profil, esc((a && (a.meldung || a.grund))
+            || 'Das wurde nicht \u00fcbernommen.'), true);
           return;
         }
-        portraetListeMalen(a.autoren);
+        bilderStand(profil, '\u00dcbernommen.', false);
       })
       .catch(function () {
-        if (n) { n.innerHTML = '<p class="wink"><b style="color:var(--stop)">Keine '
-          + 'Verbindung zum Server.</b></p>'; }
+        bilderStand(profil, 'Keine Verbindung zum Server.', true);
       });
-  }
+  });
 
   document.addEventListener('click', function (e) {
-    if (e.target && e.target.id === 'portraetLaden') { portraetHolen(); return; }
     var k = e.target && e.target.closest ? e.target.closest('[data-portraet]') : null;
     if (!k) { return; }
     var profil = parseInt(k.dataset.portraet, 10);
@@ -2854,26 +2921,26 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   });
 
   function portraetSenden(profil, datei) {
-    portraetStand(profil, 'Wird hochgeladen \u2026', false);
+    bilderStand(profil, 'Bild wird hochgeladen \u2026', false);
     dateiSenden('portrait', datei, function (a) {
       if (!a || !a.ok) {
-        portraetStand(profil, esc((a && (a.meldung || a.grund))
+        bilderStand(profil, esc((a && (a.meldung || a.grund))
           || 'Die Datei wurde nicht angenommen.'), true);
         return;
       }
-      ruf('portraet', {beitrag: stand.eingereicht.beitrag, tun: 'setzen',
+      ruf('portraet', {beitrag: bilderBeitrag, tun: 'setzen',
                        profil: profil, anhang: a.id})
         .then(function (b) {
           if (!b || !b.ok) {
-            portraetStand(profil, esc((b && (b.meldung || b.grund))
+            bilderStand(profil, esc((b && (b.meldung || b.grund))
               || 'Das Nachreichen hat nicht geklappt.'), true);
             return;
           }
-          portraetStand(profil, 'Angekommen. Das Portr\u00e4t h\u00e4ngt jetzt am Profil.', false);
-          portraetHolen();
+          bilderStand(profil, 'Angekommen. Das Portr\u00e4t h\u00e4ngt jetzt am Profil.', false);
+          bilderTafelMalen();
         })
         .catch(function () {
-          portraetStand(profil, 'Keine Verbindung zum Server. Bitte sp\u00e4ter noch einmal.',
+          bilderStand(profil, 'Keine Verbindung zum Server. Bitte sp\u00e4ter noch einmal.',
             true);
         });
     });
@@ -3088,7 +3155,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         '</span><button type="button" class="springen" data-spring="2">zu Schritt 3</button></li>');
     });
     $('#pruefListe').innerHTML = zeilen.join('');
-    $('#pruefNachreichen').innerHTML = nachreichBlock + portraetBlock();
+    $('#pruefNachreichen').innerHTML = nachreichBlock;
 
     $('#uebersicht').innerHTML = uebersicht();
     absendbar();
@@ -3758,7 +3825,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     n.innerHTML = html;
   }
 
-  function zugangEinloesen(schluessel) {
+  function zugangEinloesen(schluessel, tun, beitrag) {
     anmeldeMeldung('Anmeldung wird geprüft …', 'ruhig');
     zugangOben('<p>Ihre Anmeldung wird geprüft …</p>', false);
     ruf('zugang', {zugang: schluessel}).then(function (a) {
@@ -3782,6 +3849,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         false);
       /* Vor dem ersten Wort auf dem Server steht die Frage, welcher Stand gilt. */
       standAbgleichen(a.stand);
+      /* Kommt der Link aus der Annahme-Mail, geht es direkt zu den Bildern. */
+      if (tun === 'bilder') { bilderTafelAn(beitrag); }
     }).catch(function () {
       anmeldeMeldung('Keine Verbindung zum Server. Bitte versuchen Sie es später.', 'fehler');
     });
@@ -3889,12 +3958,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   /* Zum Schluss die Anmeldung anschliessen - erst jetzt steht alles, was
      standUebernehmen() braucht. */
   kopfMalen();
-  var ausUrl = new URLSearchParams(location.search).get('zugang');
+  var adresse = new URLSearchParams(location.search);
+  var ausUrl = adresse.get('zugang');
+  /* `tun` und `b` muessen VOR dem replaceState gelesen werden - danach ist die
+     Adresszeile leer. Sie kommen aus der Mail zur Annahme. */
+  var tunUrl = adresse.get('tun') || '';
+  var beitragUrl = adresse.get('b') || '';
   if (ausUrl) {
     /* Den Schluessel aus der Adresszeile nehmen, bevor irgendetwas ihn
        mitliest: Verlauf, Lesezeichen, ein Screenshot ueber die Schulter. */
     history.replaceState(null, '', location.pathname);
-    zugangEinloesen(ausUrl);
+    zugangEinloesen(ausUrl, tunUrl, beitragUrl);
     abgleichFertig = false;   // erst nach dem Einloesen
   } else if (sitzung()) {
     /* Angemeldet, aber die Seite frisch geoeffnet - vielleicht an einem
