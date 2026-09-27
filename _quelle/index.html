@@ -491,6 +491,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
              Formulars zaehlt: Die Autorenunterlagen muessen nicht danebenliegen. -->
         <p class="vor">Bei jedem Feld steht, welcher Teil Ihres Beitrags dort hineingehört
         und wie lang er sein darf.</p>
+        <!-- Der Weg nach der Einreichung steht nicht im Formular - er gehoert
+             auch nicht hinein. Wer ihn wissen will, klickt einmal; wer
+             einreichen will, liest weiter (Peter Stegmaier, 21.09.2026). -->
+        <p class="wink">Wie es nach der Einreichung weitergeht – Begutachtung,
+        Rückmeldung, Annahme, Satz –, zeigt das
+        <a href="ablauf.html" target="_blank" rel="noopener">Ablaufbild</a>.</p>
 
         <div class="auftrag">
           <p class="was">In diesem Schritt legen Sie den Beitrag an.</p>
@@ -511,7 +517,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <p class="anleitung">Wählen Sie hier bitte <b>eine</b> Rubrik aus der Liste.
           In der Tabelle sind die Unterschiede dargestellt. Wenn Sie unsicher sind, nehmen
           Sie die Rubrik, die dem Charakter Ihres Textes am nächsten kommt, und die
-          Redaktion korrigiert das notfalls.</p>
+          Redaktion korrigiert das notfalls. <b>Voreingestellt ist der
+          wissenschaftliche Beitrag.</b></p>
           <p class="anleitung"><b>Wissenschaft und Wissen gehen ins Peer&nbsp;Review.</b>
           Planen Sie dafür mindestens <b>sechs Wochen</b> zwischen Einreichung und
           möglicher Publikation ein. Für alle anderen Rubriken rechnen Sie mit
@@ -1335,7 +1342,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
      =================================================================== */
   var LAGER = 'mvf-einreichung-entwurf';
   var stand = laden() || {
-    rubrik:'', vorzeile:'', titel:'', vorspann:'',
+    /* Voreingestellt ist der wissenschaftliche Beitrag (Peter Stegmaier,
+       20.09.2026). Er ist der haeufigste Fall, und ein leeres Pflichtfeld
+       ganz oben ist die unfreundlichste Art, eine Seite zu beginnen. Wer
+       etwas anderes schreibt, aendert es in derselben Zeile. */
+    rubrik:'wissenschaft', vorzeile:'', titel:'', vorspann:'',
     abstractDe:'', schlagDe:'', titelEn:'', abstractEn:'', schlagEn:'',
     literatur:'', zitation:'', danksagung:'', ausgabe:'', lizenz:'cc_by',
     /* `ausgabe` bleibt im Stand, aber leer: Sie traegt seit dem 17.09.2026
@@ -1611,6 +1622,46 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
   /** Die Beschreibung der gewaehlten Rubrik, oder null. */
   function rubrik() { return RUBRIKEN[stand.rubrik] || null; }
+
+  /* Eine Rubrik, die es auf dieser Seite nicht zur Wahl gibt.
+
+     DER FALL (Peter Stegmaier, 20.09.2026): Im gespeicherten Stand stand
+     `report`. Das Auswahlfeld kennt diesen Wert nicht und blieb deshalb
+     leer - der Rest der Seite arbeitete aber weiter danach. Der Autor sah
+     gruene Haken an Schritten, die er nie geoeffnet hatte (Report braucht
+     kein Abstract, keine Zitation, keine Interessenkonflikte), und unter
+     dem leeren Feld stand die Erlaeuterung zu einer Rubrik, die er nicht
+     gewaehlt hatte. Nichts davon war falsch gerechnet; es war nur
+     unsichtbar, woran es lag.
+
+     Deshalb hier: Was das Auswahlfeld nicht anbietet, gilt nicht. Der
+     Stand faellt auf die Grundeinstellung zurueck, und der Autor erfaehrt
+     es - stilles Zuruecksetzen waere derselbe Fehler mit anderem
+     Vorzeichen.
+
+     Ein leeres Feld bleibt leer: Wer „Bitte waehlen" gewaehlt hat, hat
+     sich entschieden, noch nicht zu entscheiden. Das meldet die
+     Lueckenliste, nicht dieser Kasten. */
+  var RUBRIK_STANDARD = 'wissenschaft';
+
+  function rubrikPruefen() {
+    var r = stand.rubrik;
+    if (!r) { return ''; }
+    var e = RUBRIKEN[r];
+    if (e && !e.intern) { return ''; }
+    stand.rubrik = RUBRIK_STANDARD;
+    return e ? e.name : r;
+  }
+
+  /** Der Kasten oben, wenn eine Rubrik verworfen wurde. */
+  function rubrikVerworfenMelden(alt) {
+    if (!alt) { return; }
+    zugangOben('<p><b>Die Rubrik Ihres Zwischenstands steht hier nicht zur '
+      + 'Wahl.</b> „' + esc(alt) + '“ stellt die Redaktion selbst ein. '
+      + 'Eingestellt ist jetzt <b>' + esc(RUBRIKEN[RUBRIK_STANDARD].name)
+      + '</b> – bitte prüfen Sie in Schritt 1, ob das passt. Ihre übrigen '
+      + 'Eingaben sind unverändert.</p>', true);
+  }
 
   /* Die vier Rubriken auf einen Blick.
 
@@ -3243,14 +3294,45 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
   /* Eine ORCID besteht aus 16 Ziffern; die letzte darf ein X sein (Pruefziffer
      10). Angegeben wird sie nackt, mit Bindestrichen oder als ganze Adresse -
-     alle drei meinen dasselbe. Geprueft wird nur die Form, nicht ob es die
-     ORCID wirklich gibt: Dafuer muesste die Seite bei orcid.org nachfragen,
-     und das ginge nicht ohne den Namen des Autors dorthin zu schicken. */
+     alle drei meinen dasselbe.
+
+     GEPRUEFT WIRD SEIT DEM 20.09.2026 AUCH, WEM SIE GEHOERT.
+
+     Hier stand: "Dafuer muesste die Seite bei orcid.org nachfragen, und das
+     ginge nicht ohne den Namen des Autors dorthin zu schicken." Der zweite
+     Halbsatz stimmt nicht - zum Register geht NUR die Kennung, und die ist
+     selbst ein oeffentlicher Bezeichner. Der Name kommt von dort zurueck.
+
+     Der Anlass: Am 20.09.2026 wurden 1.517 Beitraege gegen das Register
+     gehalten. 28 Kennungen standen bei mehreren Namen, eine bei sieben
+     Personen; fuenf gehoerten nachweislich jemand anderem. Zusammen 63
+     falsche Zuschreibungen - entstanden, weil jemand den Bogen fuer die
+     Mitautoren ausfuellte und die eigene Kennung stehenliess.
+
+     Die Form allein kann das nicht finden: Die ORCID eines fremden Menschen
+     ist formal tadellos. */
   function orcidForm(roh) {
     var z = String(roh || '').toUpperCase().replace(/[^0-9X]/g, '');
     if (z.length !== 16) { return null; }
     if (z.indexOf('X') !== -1 && z.indexOf('X') !== 15) { return null; }
     return z.slice(0,4) + '-' + z.slice(4,8) + '-' + z.slice(8,12) + '-' + z.slice(12);
+  }
+
+  /* Was das Register zu einer Kennung gesagt hat. Einmal gefragt, bleibt die
+     Antwort - sonst geht bei jedem Tastendruck eine Anfrage hinaus. */
+  var orcidGemerkt = {};
+
+  /* Steht dieselbe Kennung schon in einer anderen Zeile?
+     Gibt den Namen der anderen Person zurueck, sonst null. */
+  function orcidDoppelt(i, gut) {
+    if (!gut) { return null; }
+    for (var k = 0; k < stand.autoren.length; k++) {
+      if (k === i) { continue; }
+      if (orcidForm(stand.autoren[k].orcid) === gut) {
+        return String(stand.autoren[k].name || '').trim() || ('Person ' + (k + 1));
+      }
+    }
+    return null;
   }
 
   function orcidWinkMalen(i, wert) {
@@ -3262,14 +3344,72 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var roh = String(wert || '').trim();
     if (roh === '') { z.textContent = z.dataset.vorgabe || ''; z.style.color = ''; return; }
     var gut = orcidForm(roh);
-    if (gut) {
-      z.textContent = 'Wird als ' + gut + ' gespeichert.';
-      z.style.color = 'var(--ok)';
-    } else {
+    if (!gut) {
       z.textContent = 'Das sieht nicht nach einer ORCID aus - erwartet werden '
         + '16 Stellen, etwa 0000-0002-1825-0097.';
       z.style.color = 'var(--stop)';
+      return;
     }
+
+    /* Dieselbe Kennung zweimal ist der haeufigste Fehler - und der einzige,
+       den die Seite ohne Nachfrage sofort sieht. */
+    var schon = orcidDoppelt(i, gut);
+    if (schon) {
+      z.textContent = 'Diese Kennung steht schon bei ' + schon
+        + '. Eine ORCID gehoert genau einer Person.';
+      z.style.color = 'var(--stop)';
+      return;
+    }
+
+    if (orcidGemerkt[gut]) {
+      orcidAntwortMalen(z, gut, orcidGemerkt[gut]);
+      return;
+    }
+
+    z.textContent = 'Wird als ' + gut + ' gespeichert. Wird im ORCID-Register nachgesehen ...';
+    z.style.color = '';
+
+    /* Erst fragen, wenn eine Sekunde lang nichts mehr getippt wurde. */
+    clearTimeout(z.dataset.uhr ? Number(z.dataset.uhr) : 0);
+    z.dataset.uhr = String(setTimeout(function () {
+      var daten = new FormData();
+      daten.append('action', 'orcid');
+      daten.append('orcid', gut);
+      fetch(ZIEL, { method: 'POST', body: daten })
+        .then(function (a) { return a.json(); })
+        .then(function (a) {
+          orcidGemerkt[gut] = a;
+          /* Der Kasten kann inzwischen einer anderen Zeile gehoeren. */
+          if (orcidForm(stand.autoren[i] && stand.autoren[i].orcid) === gut) {
+            orcidAntwortMalen(z, gut, a);
+          }
+        })
+        .catch(function () {
+          z.textContent = 'Wird als ' + gut + ' gespeichert. '
+            + 'Das Register war nicht erreichbar.';
+          z.style.color = '';
+        });
+    }, 1000));
+  }
+
+  /* Die Antwort des Registers anzeigen - und wenn ein Name dasteht, ihn mit
+     dem verglichen, was in der Zeile steht. Der Vergleich passiert HIER, im
+     Browser: Zum Register ging nur die Kennung. */
+  function orcidAntwortMalen(z, gut, a) {
+    if (!a || a.ok !== true) {
+      z.textContent = (a && a.meldung) ? a.meldung
+        : 'Die Kennung liess sich nicht nachschlagen.';
+      z.style.color = (a && a.grund === 'unbekannt') ? 'var(--stop)' : '';
+      return;
+    }
+    if (!a.name) {
+      z.textContent = 'Die Kennung gibt es. Der Name steht im Register nicht '
+        + 'oeffentlich.';
+      z.style.color = 'var(--ok)';
+      return;
+    }
+    z.textContent = 'Laut ORCID-Register: ' + a.name;
+    z.style.color = 'var(--ok)';
   }
   document.addEventListener('input', function (e) {
     var f = e.target.closest('[data-autor]');
@@ -3739,6 +3879,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     ['manuskript', 'bilder', 'tabellen'].forEach(function (k) {
       if (!Array.isArray(stand[k])) { stand[k] = []; }
     });
+    /* Auch ein Stand aus einer Datei oder vom Server kann eine Rubrik
+       mitbringen, die es hier nicht gibt. */
+    rubrikVerworfenMelden(rubrikPruefen());
     felderFuellen();
     ausgabenMalen();
     efirstWink();
@@ -4151,12 +4294,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     anmeldeMeldung('Abgemeldet.', 'ruhig');
   });
 
+  /* Vor dem ersten Zeichnen: Sonst baut die Seite Tafel, Felder und
+     Schrittleiste nach einer Rubrik auf, die gleich darauf wegfaellt. */
+  var rubrikWeg = rubrikPruefen();
+
   leisteBauen();
   felderBinden();
   ablagenBinden();
   dateienMalen();
   autorenMalen();
   zeige(0);
+  if (rubrikWeg) { rubrikVerworfenMelden(rubrikWeg); sichern(true); }
   if (localStorage.getItem(LAGER)) { sichern(true); }
 
   /* Zum Schluss die Anmeldung anschliessen - erst jetzt steht alles, was

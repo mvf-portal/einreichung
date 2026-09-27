@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Der Weg eines Beitrags — Monitor Versorgungsforschung</title>
+<meta name="description" content="Vom Manuskript ins Heft: der vollständige Weg eines Beitrags bei Monitor Versorgungsforschung, von der Einreichung über das Peer Review bis zum Erscheinen.">
+<link rel="icon" href="logo/hub-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="logo/hub-icon-180.png">
+<style>
+  /* Dieselben Schriften und Farben wie das Einreichungsmodul nebenan.
+     Kein Verweis nach draußen: Die Seite läuft auch ohne Netz zu Dritten. */
+  @font-face{ font-family:"Lato"; font-style:normal; font-weight:300;
+    src:url("fonts/lato-300.woff2") format("woff2"); font-display:swap; }
+  @font-face{ font-family:"Lato"; font-style:normal; font-weight:400;
+    src:url("fonts/lato-400.woff2") format("woff2"); font-display:swap; }
+  @font-face{ font-family:"Lato"; font-style:normal; font-weight:700;
+    src:url("fonts/lato-700.woff2") format("woff2"); font-display:swap; }
+
+  :root{
+    --paper:#EDF2FA; --card:#FFFFFF; --card-2:#F7FAFD;
+    --ink:#111111; --ink-soft:#444A50; --ink-faint:#5A646D;
+    --line:#D0D8E4; --line-soft:#E3EAF3;
+    --brand:#0051A1; --brand-deep:#003B77; --brand-tint:#E1EAF6;
+    --gold:#8A6F2C; --gold-tint:#F6EEDD;
+    --ok:#1F6B4F; --ok-tint:#E4F1EB;
+    --s:"Lato",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--s)}
+
+  header.top{background:var(--card);border-bottom:1px solid var(--line)}
+  .kopf{max-width:1180px;margin:0 auto;padding:14px 18px;display:flex;
+        align-items:center;gap:14px;flex-wrap:wrap}
+  .marke{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+  .marke-logo{height:34px;width:auto;display:block}
+  .marke-text{font-weight:700;font-size:15px;color:var(--brand-deep);
+              letter-spacing:.02em}
+  .kopf a.zurueck{margin-left:auto;font-size:14.5px;color:var(--brand);
+                  text-decoration:none;font-weight:700}
+  .kopf a.zurueck:hover{text-decoration:underline}
+
+  main{max-width:1180px;margin:0 auto;padding:26px 18px 60px}
+  h1{font-size:clamp(25px,3.6vw,34px);line-height:1.15;margin:0 0 10px;
+     color:var(--brand-deep)}
+  h2{font-size:21px;margin:38px 0 10px;color:var(--brand-deep)}
+  p{max-width:70ch}
+  .vor{color:var(--ink-soft);max-width:72ch}
+  .stand{font-size:13.5px;color:var(--ink-faint);margin:10px 0 0}
+
+  .legende{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0;padding:0;
+           list-style:none}
+  .legende li{flex:1 1 235px;display:flex;gap:9px;align-items:flex-start;
+              background:var(--card);border:1px solid var(--line);
+              border-radius:9px;padding:11px 13px}
+  .legende i{width:14px;height:14px;border-radius:4px;flex:0 0 auto;margin-top:3px}
+  .legende b{display:block;font-size:14px}
+  .legende span{font-size:13.5px;color:var(--ink-faint);line-height:1.4}
+
+  figure{margin:16px 0 0}
+  .rahmen{background:var(--card);border:1px solid var(--line);border-radius:12px;
+          padding:14px;overflow-x:auto}
+  .rahmen svg{display:block;min-width:760px}
+  figcaption{font-size:13.5px;color:var(--ink-faint);margin-top:10px;max-width:74ch}
+
+  table{border-collapse:collapse;width:100%;font-size:14.5px;background:var(--card);
+        border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line-soft);
+        vertical-align:top}
+  thead th{background:var(--brand-tint);color:var(--brand-deep);font-size:12.5px;
+           letter-spacing:.06em;text-transform:uppercase}
+  tbody tr:last-child td{border-bottom:0}
+  td.wer{white-space:nowrap}
+  .tabellenrahmen{overflow-x:auto}
+
+  .merke{background:var(--card);border:1px solid var(--line);
+         border-left:5px solid var(--gold);border-radius:9px;padding:14px 16px;
+         margin:18px 0 0}
+  .merke p{margin:0 0 8px} .merke p:last-child{margin:0}
+
+  footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);
+         font-size:13.5px;color:var(--ink-faint)}
+  footer a{color:var(--brand)}
+  @media (max-width:700px){ .rahmen{padding:8px} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="kopf">
+    <a class="marke" href="./">
+      <img class="marke-logo" src="logo/mvf-logo.png" width="1257" height="316"
+           alt="Monitor Versorgungsforschung">
+      <span class="marke-text">Einreichungsmodul</span>
+    </a>
+    <a class="zurueck" href="./">&larr; Zurück zum Einreichungsmodul</a>
+  </div>
+</header>
+
+<main>
+  <h1>Vom Manuskript ins Heft: wer was sieht</h1>
+  <p class="vor">Der vollständige Weg eines Beitrags — Einreichung, Peer&nbsp;Review,
+  Überarbeitung, Annahme, Satz. Farbig danach, wer in welchem Abschnitt etwas zu
+  sehen bekommt, und mit jeder automatischen Benachrichtigung an ihrem Platz.</p>
+  <p class="stand">Stand: 21. September 2026</p>
+
+  <h2>Wie das Bild zu lesen ist</h2>
+  <ul class="legende">
+    <li><i style="background:#0051A1"></i>
+      <span><b>Extern sichtbar</b>Was Sie als Autor:in sehen und tun. Alles in dieser
+      Bahn steht auch in den Autorenhinweisen.</span></li>
+    <li><i style="background:#1F6B4F"></i>
+      <span><b>Intern</b>Redaktion und Herausgeber: Stufen, Listen, Satz.</span></li>
+    <li><i style="background:#8A6F2C"></i>
+      <span><b>Verdeckt</b>Die Begutachtung. Nur Herausgeber und die einzelne
+      Gutachter:in — und die beiden sehen einander nicht vollständig.</span></li>
+    <li><i style="background:#8A6F2C;opacity:.55"></i>
+      <span><b>Goldene Schrift</b>Eine automatische E-Mail. Gestrichelt heißt: nur
+      eine Nachricht, der Beitrag selbst bewegt sich nicht.</span></li>
+  </ul>
+
+  <h2>Der Weg im Ganzen</h2>
+  <figure>
+    <div class="rahmen">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1136 1486" width="100%" data-hoehe="1486">
+<rect x="0" y="0" width="1136" height="1486" fill="#FFFFFF"/>
+<defs><marker id="sp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4A5057"/></marker><marker id="spm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8A6F2C"/></marker></defs>
+<text x="24" y="28" font-family="Lato, Calibri, sans-serif" font-size="19" font-weight="700" fill="#111111">Von der Einreichung bis zum Erscheinen</text>
+<rect x="24" y="60" width="260" height="1416" rx="9" fill="#E1EAF6" stroke="#0051A1" stroke-opacity=".35"/>
+<rect x="24" y="40" width="260" height="30" rx="7" fill="#0051A1"/>
+<text x="154" y="60" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" letter-spacing="1">AUTOR:IN</text>
+<rect x="300" y="60" width="260" height="1416" rx="9" fill="#E4F1EB" stroke="#1F6B4F" stroke-opacity=".35"/>
+<rect x="300" y="40" width="260" height="30" rx="7" fill="#1F6B4F"/>
+<text x="430" y="60" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" letter-spacing="1">REDAKTION</text>
+<rect x="576" y="60" width="260" height="1416" rx="9" fill="#F6EEDD" stroke="#8A6F2C" stroke-opacity=".35"/>
+<rect x="576" y="40" width="260" height="30" rx="7" fill="#8A6F2C"/>
+<text x="706" y="60" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" letter-spacing="1">HERAUSGEBER</text>
+<rect x="852" y="60" width="260" height="1416" rx="9" fill="#F6EEDD" stroke="#8A6F2C" stroke-opacity=".35"/>
+<rect x="852" y="40" width="260" height="30" rx="7" fill="#8A6F2C"/>
+<text x="982" y="60" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" letter-spacing="1">GUTACHTER:IN</text>
+<path d="M154 182 V196 H430 V208" fill="none" stroke="#8A6F2C" stroke-width="1.6" marker-end="url(#spm)"/>
+<text x="292" y="190" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Beitrag liegt als Entwurf in WordPress</text>
+<path d="M268 147 H666" fill="none" stroke="#8A6F2C" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#spm)"/>
+<text x="278" y="140" text-anchor="start" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Meldung an Herausgeber und Chefredaktion</text>
+<path d="M430 279 V292 H706 V305" fill="none" stroke="#4A5057" stroke-width="1.6" marker-end="url(#sp)"/>
+<path d="M706 376 V388 V402" fill="none" stroke="#4A5057" stroke-width="1.6" marker-end="url(#sp)"/>
+<path d="M706 472 V485 V498" fill="none" stroke="#4A5057" stroke-width="1.6" marker-end="url(#sp)"/>
+<path d="M706 568 V582 H982 V594" fill="none" stroke="#8A6F2C" stroke-width="1.6" marker-end="url(#spm)"/>
+<text x="844" y="576" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Einladung mit eigenem Zugang, 180 Tage</text>
+<path d="M868 630 H746" fill="none" stroke="#8A6F2C" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#spm)"/>
+<text x="756" y="623" text-anchor="start" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Zusage/Absage sofort</text>
+<path d="M982 665 V678 V691" fill="none" stroke="#4A5057" stroke-width="1.6" marker-end="url(#sp)"/>
+<path d="M982 777 V790 H706 V803" fill="none" stroke="#8A6F2C" stroke-width="1.6" marker-end="url(#spm)"/>
+<text x="844" y="784" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Gutachten eingegangen</text>
+<path d="M706 889 V902 H154 V915" fill="none" stroke="#8A6F2C" stroke-width="1.6" marker-end="url(#spm)"/>
+<text x="430" y="896" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Rückmeldung und Link zum Hochladen</text>
+<path d="M154 986 V998 H706 V1012" fill="none" stroke="#8A6F2C" stroke-width="1.6" marker-end="url(#spm)"/>
+<text x="430" y="992" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Überarbeitete Fassung eingegangen</text>
+<path d="M706 1066 V1080 H154 V1092" fill="none" stroke="#8A6F2C" stroke-width="1.6" marker-end="url(#spm)"/>
+<text x="430" y="1074" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Annahme und Link zu den Autorenbildern</text>
+<path d="M154 1163 V1176 H430 V1189" fill="none" stroke="#4A5057" stroke-width="1.6" marker-end="url(#sp)"/>
+<text x="292" y="1170" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="400" fill="#4A5057">Bilder und Angaben wirken sofort</text>
+<path d="M430 1260 V1272 H154 V1286" fill="none" stroke="#8A6F2C" stroke-width="1.6" marker-end="url(#spm)"/>
+<text x="292" y="1266" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#8A6F2C">Beitrag zur Durchsicht</text>
+<path d="M154 1356 V1369 H430 V1382" fill="none" stroke="#4A5057" stroke-width="1.6" marker-end="url(#sp)"/>
+<text x="292" y="1363" text-anchor="middle" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="400" fill="#4A5057">Freigabe des Autors</text>
+<rect x="40" y="112" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#0051A1" stroke-width="1.2"/>
+<rect x="40" y="113" width="5" height="68" fill="#0051A1"/>
+<text x="55" y="134" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">1 · Einreichen</text>
+<text x="55" y="150" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Sechs Schritte im Portal,</text>
+<text x="55" y="165" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Autorenerklärung, Freigabe</text>
+<rect x="40" y="208" width="228" height="70" rx="7" fill="none" stroke="#0051A1" stroke-width="1.1" stroke-dasharray="4 4" stroke-opacity=".7"/>
+<text x="55" y="230" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#4A5057">Zurückziehen</text>
+<text x="55" y="246" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">Möglich, solange die Begutachtung</text>
+<text x="55" y="262" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">nicht begonnen hat</text>
+<rect x="316" y="208" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#1F6B4F" stroke-width="1.2"/>
+<rect x="316" y="210" width="5" height="68" fill="#1F6B4F"/>
+<text x="331" y="230" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">2 · Vorprüfung</text>
+<text x="331" y="246" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Stufe „Eingereicht“: passend?</text>
+<text x="331" y="262" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">vollständig?</text>
+<rect x="592" y="305" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#8A6F2C" stroke-width="1.2"/>
+<rect x="592" y="306" width="5" height="68" fill="#8A6F2C"/>
+<text x="607" y="327" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">3 · Gutachter:innen bestimmen</text>
+<text x="607" y="342" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Zwei Personen. Der Herausgeber</text>
+<text x="607" y="358" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">entscheidet.</text>
+<rect x="868" y="305" width="228" height="70" rx="7" fill="none" stroke="#8A6F2C" stroke-width="1.1" stroke-dasharray="4 4" stroke-opacity=".7"/>
+<text x="883" y="327" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#4A5057">Vorschläge der Autoren</text>
+<text x="883" y="342" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">Unverbindlich, und sie bekommen</text>
+<text x="883" y="358" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">nichts, bevor entschieden ist</text>
+<rect x="316" y="402" width="228" height="55" rx="7" fill="none" stroke="#1F6B4F" stroke-width="1.1" stroke-dasharray="4 4" stroke-opacity=".7"/>
+<text x="331" y="424" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#4A5057">Ablehnung</text>
+<text x="331" y="439" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">Bleibt in WordPress</text>
+<rect x="592" y="402" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#8A6F2C" stroke-width="1.2"/>
+<rect x="592" y="402" width="5" height="68" fill="#8A6F2C"/>
+<text x="607" y="424" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">4 · Manuskript freigeben</text>
+<text x="607" y="439" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Anonymisiert. Ohne Freigabe sieht</text>
+<text x="607" y="454" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">niemand ein Manuskript.</text>
+<rect x="40" y="498" width="228" height="70" rx="7" fill="none" stroke="#0051A1" stroke-width="1.1" stroke-dasharray="4 4" stroke-opacity=".7"/>
+<text x="55" y="520" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#4A5057">Verdeckt</text>
+<text x="55" y="536" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">Der Autor erfährt nicht, wer</text>
+<text x="55" y="551" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">eingeladen ist und wer begutachtet</text>
+<rect x="592" y="498" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#8A6F2C" stroke-width="1.2"/>
+<rect x="592" y="499" width="5" height="68" fill="#8A6F2C"/>
+<text x="607" y="520" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">5 · Stufe „In Begutachtung“</text>
+<text x="607" y="536" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Erst dieser Schritt verschickt die</text>
+<text x="607" y="551" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Einladungen</text>
+<rect x="868" y="594" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#8A6F2C" stroke-width="1.2"/>
+<rect x="868" y="596" width="5" height="68" fill="#8A6F2C"/>
+<text x="883" y="616" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">6 · Zusagen oder absagen</text>
+<text x="883" y="632" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Zusage mit Zeitangabe: 2 bis 5</text>
+<text x="883" y="648" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Wochen</text>
+<rect x="592" y="691" width="228" height="70" rx="7" fill="none" stroke="#8A6F2C" stroke-width="1.1" stroke-dasharray="4 4" stroke-opacity=".7"/>
+<text x="607" y="713" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#4A5057">Auf anderem Weg</text>
+<text x="607" y="728" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">Gutachten aus Mail oder Formblatt</text>
+<text x="607" y="744" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">trägt der Herausgeber ein</text>
+<rect x="868" y="691" width="228" height="86" rx="7" fill="#FFFFFF" stroke="#8A6F2C" stroke-width="1.2"/>
+<rect x="868" y="692" width="5" height="84" fill="#8A6F2C"/>
+<text x="883" y="713" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">7 · Gutachten abgeben</text>
+<text x="883" y="728" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Raster, Befürwortung, Text,</text>
+<text x="883" y="744" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Empfehlung — dazu ein vertraulicher</text>
+<text x="883" y="760" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Teil</text>
+<rect x="592" y="803" width="228" height="86" rx="7" fill="#FFFFFF" stroke="#8A6F2C" stroke-width="1.2"/>
+<rect x="592" y="804" width="5" height="84" fill="#8A6F2C"/>
+<text x="607" y="825" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">8 · Zusammenführen</text>
+<text x="607" y="840" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Ohne Namen, ohne den vertraulichen</text>
+<text x="607" y="856" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Teil. Die Synthese schreibt der</text>
+<text x="607" y="872" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Herausgeber.</text>
+<rect x="868" y="803" width="228" height="70" rx="7" fill="none" stroke="#8A6F2C" stroke-width="1.1" stroke-dasharray="4 4" stroke-opacity=".7"/>
+<text x="883" y="825" font-family="Lato, Calibri, sans-serif" font-size="12" font-weight="700" fill="#4A5057">Anhalten</text>
+<text x="883" y="840" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">Unterbrochen oder abgebrochen:</text>
+<text x="883" y="856" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057" font-style="italic">nichts geht verloren</text>
+<rect x="40" y="915" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#0051A1" stroke-width="1.2"/>
+<rect x="40" y="916" width="5" height="68" fill="#0051A1"/>
+<text x="55" y="937" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">9 · Überarbeitete Fassung</text>
+<text x="55" y="952" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Word-Datei mit Änderungsverfolgung,</text>
+<text x="55" y="968" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">dazu was geändert wurde</text>
+<rect x="592" y="1012" width="228" height="55" rx="7" fill="#FFFFFF" stroke="#8A6F2C" stroke-width="1.2"/>
+<rect x="592" y="1012" width="5" height="53" fill="#8A6F2C"/>
+<text x="607" y="1034" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">10 · Entscheidung</text>
+<text x="607" y="1049" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Annahme mit festgehaltener Grundlage</text>
+<rect x="40" y="1092" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#0051A1" stroke-width="1.2"/>
+<rect x="40" y="1094" width="5" height="68" fill="#0051A1"/>
+<text x="55" y="1114" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">11 · Autorenbilder</text>
+<text x="55" y="1130" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Mindestens 354 px, für jede Person.</text>
+<text x="55" y="1146" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Angaben noch zu berichtigen.</text>
+<rect x="316" y="1189" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#1F6B4F" stroke-width="1.2"/>
+<rect x="316" y="1190" width="5" height="68" fill="#1F6B4F"/>
+<text x="331" y="1211" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">12 · Ausgabe, DOI, Satz</text>
+<text x="331" y="1226" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Die Ausgabe trägt der Herausgeber</text>
+<text x="331" y="1242" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">ein</text>
+<rect x="40" y="1286" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#0051A1" stroke-width="1.2"/>
+<rect x="40" y="1286" width="5" height="68" fill="#0051A1"/>
+<text x="55" y="1308" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">13 · Durchsicht</text>
+<text x="55" y="1323" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Der Autor sieht seinen Beitrag vor</text>
+<text x="55" y="1338" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">dem Druck</text>
+<rect x="316" y="1382" width="228" height="70" rx="7" fill="#FFFFFF" stroke="#1F6B4F" stroke-width="1.2"/>
+<rect x="316" y="1383" width="5" height="68" fill="#1F6B4F"/>
+<text x="331" y="1404" font-family="Lato, Calibri, sans-serif" font-size="13" font-weight="700" fill="#111111">14 · Erscheinen</text>
+<text x="331" y="1420" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">Print und Open Access, unter der</text>
+<text x="331" y="1435" font-family="Lato, Calibri, sans-serif" font-size="12.5" fill="#4A5057">gewählten Lizenz</text>
+</svg>
+    </div>
+    <figcaption>Der Weg eines wissenschaftlichen Beitrags. Rubriken ohne
+    Peer&nbsp;Review — Wissenstransfer, Kommentar und alles, was die Redaktion selbst
+    einstellt — überspringen die Schritte 3 bis 9 und gehen von der Vorprüfung
+    unmittelbar zur Annahme.</figcaption>
+  </figure>
+
+  <div class="merke">
+    <p><b>Die drei Sätze, an denen das ganze Bild hängt.</b></p>
+    <p><b>1.</b> Wer begutachtet, entscheidet der Herausgeber — je Beitrag, und auch
+    dann verdeckt, wenn es im Einzelfall offensichtlich wäre. Vorschläge der
+    Autor:innen sind unverbindlich und bekommen nichts, solange nicht entschieden ist.</p>
+    <p><b>2.</b> Ohne ausdrückliche Freigabe des anonymisierten Textes sieht eine
+    Gutachter:in kein Manuskript. Die Freigabe lässt sich jederzeit zurücknehmen;
+    dann ist der Text sofort wieder weg.</p>
+    <p><b>3.</b> Der vertrauliche Teil eines Gutachtens erreicht die Autor:innen nie.
+    Die Zusammenführung liest ihn gar nicht erst — und sie nennt keine Namen, sondern
+    nummeriert.</p>
+  </div>
+
+  <h2>Wer wann welche Nachricht bekommt</h2>
+  <p>Zwölf automatische Nachrichten. Alles andere im Verfahren geschieht still.
+  Wo Herausgeber und Chefredaktion beide gemeint sind, bekommt <b>jede:r eine eigene
+  Mail</b>.</p>
+  <div class="tabellenrahmen">
+  <table>
+    <thead><tr><th>Anlass</th><th>Geht an</th><th>Was drinsteht</th></tr></thead>
+    <tbody>
+      <tr><td>Einreichung</td><td class="wer">Autor:in</td>
+        <td>Eingangsbestätigung mit Titel, Datum, Uhrzeit und Beitragsnummer</td></tr>
+      <tr><td>Einreichung</td><td class="wer">Herausgeber, Chefredaktion</td>
+        <td>Titel, Rubrik mit dem Vermerk <i>Peer Review</i>, Autor, Eingangszeit,
+        Beitragsnummer</td></tr>
+      <tr><td>eFirst beantragt</td><td class="wer">Herausgeber, Chefredaktion</td>
+        <td>Titel, Rubrik, Autor — als eigene, zweite Mail</td></tr>
+      <tr><td>Einladung zur Begutachtung</td><td class="wer">jede Gutachter:in einzeln</td>
+        <td>Anrede, Zusammenfassung, eigener Zugang, Formblatt im Anhang</td></tr>
+      <tr><td>Zusage oder Absage</td><td class="wer">Herausgeber</td>
+        <td>Wer, wann, benötigte Wochen, Grund, Ersatzvorschlag</td></tr>
+      <tr><td>Gutachter:in möchte jemanden hinzuziehen</td><td class="wer">Herausgeber</td>
+        <td>Hinweis und Kontakt — das Manuskript wurde nicht weitergegeben</td></tr>
+      <tr><td>Gutachten abgegeben</td><td class="wer">Herausgeber</td>
+        <td>Empfehlung, Raster, Befürwortung, Text; der vertrauliche Teil nur hier</td></tr>
+      <tr><td>Rückmeldung der Begutachtung</td><td class="wer">Korrespondenzautor:in</td>
+        <td>Die Synthese des Herausgebers und der Link zum Hochladen der neuen Fassung</td></tr>
+      <tr><td>Überarbeitete Fassung eingegangen</td><td class="wer">Herausgeber</td>
+        <td>Nummer der Fassung, Dateiname, was geändert wurde</td></tr>
+      <tr><td>Annahme</td><td class="wer">Hauptautor:in</td>
+        <td>Glückwunsch und der Link zu den Autorenbildern</td></tr>
+      <tr><td>Fertig zum Satz</td><td class="wer">Chefredaktion</td>
+        <td>Titel, Rubrik, Ausgabe und was für den Satz noch fehlt</td></tr>
+      <tr><td>Beitrag zurückgezogen</td><td class="wer">Chefredaktion</td>
+        <td>Welcher Beitrag, wann, durch wen</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Wann die Autorenbilder kommen</h2>
+  <p>Erst nach der Annahme, und nicht früher. Mit dem Schritt auf <i>Zur
+  Veröffentlichung angenommen</i> geht die Annahmemail an die Hauptautor:in; ihr Link
+  führt angemeldet auf Schritt 4 des Moduls, wo alle Personen des Beitrags stehen —
+  mit einem Bildfeld bei jeder. Verlangt sind mindestens <b>354 Pixel</b> Breite, das
+  sind 30 mm bei 300 dpi. Name, Institution, ORCID und Vita lassen sich bei dieser
+  Gelegenheit noch berichtigen; jede Änderung wirkt sofort.</p>
+  <p>Im Heft erscheinen Porträt und Vita nur beim wissenschaftlichen Beitrag — bei
+  allen anderen Rubriken tragen sie das Online-Autorenprofil. Beim wissenschaftlichen
+  Beitrag braucht deshalb jede Person eine Vita, sonst genügt sie bei der
+  Korrespondenzautor:in.</p>
+
+  <h2>Die Stufen in der Liste</h2>
+  <div class="tabellenrahmen">
+  <table>
+    <thead><tr><th>Stufe</th><th>Was sie bedeutet</th><th>Was hier noch möglich ist</th></tr></thead>
+    <tbody>
+      <tr><td class="wer"><b>Eingereicht</b></td>
+        <td>Der Beitrag ist da, die Vorprüfung läuft.</td>
+        <td>Sie können selbst zurückziehen, überarbeiten und neu einreichen.</td></tr>
+      <tr><td class="wer"><b>In&nbsp;Begutachtung</b></td>
+        <td>Die Einladungen sind hinaus. Ab hier hängt fremde Arbeit am Beitrag.</td>
+        <td>Zurückziehen nur noch über die Redaktion. Das Verfahren lässt sich
+        unterbrechen oder abbrechen, ohne dass etwas verlorengeht.</td></tr>
+      <tr><td class="wer"><b>Zur&nbsp;Veröffentlichung angenommen</b></td>
+        <td>Die Begutachtung ist beendet und der Beitrag angenommen.</td>
+        <td>Dieser Schritt verschickt die Annahmemail mit dem Link für die Bilder.</td></tr>
+      <tr><td class="wer"><b>Geplant / Veröffentlicht</b></td>
+        <td>Satz, Durchsicht, Erscheinen.</td>
+        <td>Sie sehen Ihren Beitrag vor dem Druck zur Durchsicht.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <footer>
+    <p>Monitor Versorgungsforschung · Herausgeber Prof. Dr. Reinhold Roski ·
+    Chefredaktion Peter Stegmaier · eRelation AG – Content in Health, Bonn.
+    Fragen an <a href="mailto:stegmaier@m-vf.de">stegmaier@m-vf.de</a>.
+    <a href="./">Zurück zum Einreichungsmodul</a></p>
+  </footer>
+</main>
+
+</body>
+</html>
