@@ -1359,6 +1359,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     konflikte:'', erklaerung:false, efirst:'nein',
     manuskript:[], bilder:[], tabellen:[],
     autoren:[{name:'', mail:'', institution:'', orcid:'', vita:'', bild:null}],
+    /* Haupt- und Korrespondenzautor:in sind in der Regel dieselbe Person.
+       Wenn nicht, fuehrt jemand anderes den Schriftwechsel - an der
+       Reihenfolge im Heft aendert das nichts (Peter Stegmaier, 27.09.2026). */
+    korrAnders:false, korrName:'', korrMail:'',
     /* Die Vorgangsnummer entsteht mit dem Entwurf und bleibt bei ihm. Zu
        derselben Nummer legt der Server keinen zweiten Beitrag an - das ist
        der Schutz gegen den doppelten Klick, gegen die Wiederholung nach
@@ -1894,6 +1898,15 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
        return (a.vita || '').trim().length > hoechstens(VITA_MAX);
      },
      text:'Vita kürzen (höchstens ' + VITA_MAX + ' Zeichen)'},
+    /* Angekreuzt und leer gelassen ist schlimmer als gar nicht angekreuzt:
+       Dann geht die Post an niemanden. */
+    {s:3, auchFrei:true,
+     pruef:function(){
+       if (!stand.korrAnders) { return false; }
+       return !((stand.korrName || '').trim().length > 2
+                && /.+@.+\..+/.test(stand.korrMail || ''));
+     },
+     text:'Korrespondenzautor:in mit Name und E-Mail angeben'},
     /* Die Mitautoren-Vita steht als eigene Regel, nicht in der Regel oben:
        Dort geht es um die erste Person, hier um alle uebrigen. Eine gemeinsame
        Meldung hiesse "Vita fehlt", und der Autor sucht bei sich selbst. */
@@ -2697,11 +2710,53 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
   /* ------------------------------------------------------- Autoren */
 
+  /* Eine andere Korrespondenzautor:in.
+
+     DER FALL (Peter Stegmaier, 27.09.2026): Die Person, die den
+     Schriftwechsel fuehrt, ist nicht immer die, die im Heft an erster
+     Stelle steht. Eine Assistenz reicht fuer die Professorin ein, eine
+     Mitautorin uebernimmt die Abstimmung, weil die Erstautorin im Ausland
+     ist.
+
+     WAS SICH DABEI NICHT AENDERT: die Reihenfolge im Beitrag. Der
+     Hauptautor bleibt der erste Autor. Deshalb steht die
+     Korrespondenzautor:in NICHT in der Autorenliste - sonst verschoebe
+     ihre Eintragung genau das, was sie nicht anruehren soll.
+
+     Eingereicht wird in diesem Fall von der Korrespondenzautor:in selbst:
+     Sie handelt im Namen des Hauptautors, und damit ist ihre Adresse
+     ohnehin die angemeldete. */
+  function korrKasten() {
+    var an = !!stand.korrAnders;
+    var h = '<div class="kasten acht" style="margin:0 0 12px">'
+      + '<label style="font-weight:700;font-size:13px;display:block">'
+      + '<input type="checkbox" id="korrAnders"' + (an ? ' checked' : '') + '> '
+      + 'Es gibt eine andere Korrespondenzautor:in</label>'
+      + '<p class="wink" style="margin:6px 0 0">Ankreuzen, wenn der Schriftwechsel '
+      + 'nicht bei der Person oben liegt. <b>An der Reihenfolge im Heft ändert das '
+      + 'nichts</b> &ndash; oben steht weiterhin, wer an erster Stelle genannt wird.</p>';
+    if (!an) { return h + '</div>'; }
+    return h
+      + '<div class="reihe zwei" style="margin-top:11px">'
+      + '<div><label style="font-size:13px;font-weight:700">Name mit akademischem Titel'
+      + ' <span class="pflicht">*</span></label>'
+      + '<input type="text" data-korr="name" placeholder="Prof. Dr. Vorname Nachname" '
+      + 'value="' + esc(stand.korrName || '') + '"></div>'
+      + '<div><label style="font-size:13px;font-weight:700">E-Mail-Adresse'
+      + ' <span class="pflicht">*</span></label>'
+      + '<input type="email" data-korr="mail" placeholder="name@einrichtung.de" '
+      + 'value="' + esc(stand.korrMail || '') + '"></div></div>'
+      + '<p class="wink" style="margin:9px 0 0"><b>An diese Adresse geht die gesamte '
+      + 'Abstimmung</b>: Eingangsbestätigung, Rückmeldung aus der Begutachtung, '
+      + 'Annahme und die Anforderung der Bilder.</p></div>';
+  }
+
   function autorenMalen() {
     document.querySelector('#autorListe').innerHTML = stand.autoren.map(function (a, i) {
       var haupt = (i === 0);
       var kopf = haupt
-        ? '<span class="marke-pill ok">Haupt- und Korrespondenzautor:in</span>'
+        ? '<span class="marke-pill ok">' + (stand.korrAnders
+            ? 'Hauptautor:in' : 'Haupt- und Korrespondenzautor:in') + '</span>'
         : '<span class="marke-pill">Mitautor:in ' + (i+1) + '</span>';
       var weg = haupt ? '' :
         '<button type="button" class="weg" data-autorweg="' + i + '" aria-label="Entfernen">&times;</button>';
@@ -2711,9 +2766,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       var vitaStern = (haupt || alleVitae()) ? ' <span class="pflicht">*</span>' : '';
 
       var anleitung = haupt
-        ? '<p class="anleitung">Hier legen Sie sich selbst als <b>Haupt- und ' +
-          'Korrespondenzautor:in</b> an. An diese Adresse schreibt die Redaktion bei ' +
-          'Rückfragen, und unter diesem Namen steht Ihr Beitrag an erster Stelle.</p>'
+        ? (stand.korrAnders
+          ? '<p class="anleitung">Hier steht die <b>Hauptautor:in</b> &ndash; die Person, ' +
+            'die im Heft an erster Stelle genannt wird. Den Schriftwechsel führt jemand ' +
+            'anderes; das tragen Sie gleich darunter ein.</p>'
+          : '<p class="anleitung">Hier legen Sie sich selbst als <b>Haupt- und ' +
+            'Korrespondenzautor:in</b> an. An diese Adresse schreibt die Redaktion bei ' +
+            'Rückfragen, und unter diesem Namen steht Ihr Beitrag an erster Stelle.</p>')
         : '<p class="anleitung">Tragen Sie hier bitte die nächste Mitautor:in ein, in der ' +
           'Reihenfolge, in der sie im Heft stehen soll. ' + (alleVitae()
             ? '<b>Die Vita wird gebraucht</b>: Beim wissenschaftlichen Beitrag steht sie ' +
@@ -2724,6 +2783,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
       return '<div class="stueck"><div class="stueck-kopf">' + kopf + weg + '</div>' +
         anleitung +
+        (haupt ? korrKasten() : '') +
         '<div class="reihe zwei" style="margin-bottom:11px">' +
         '<div><label style="font-size:13px;font-weight:700">Name mit akademischem Titel' + stern +
         '</label><input type="text" data-autor="name" data-i="' + i + '" ' +
@@ -3437,6 +3497,24 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     stand.autoren[parseInt(f.dataset.i, 10)][f.dataset.autor] = f.checked;
     sichern();
   });
+  /* Das Kaestchen zeichnet die Liste neu - der Kopf des ersten Stuecks und
+     die Anleitung darin haengen daran. Ein Kaestchen hat keinen Textcursor,
+     der dabei verlorengehen koennte. */
+  document.addEventListener('change', function (e) {
+    if (!e.target || e.target.id !== 'korrAnders') { return; }
+    stand.korrAnders = e.target.checked;
+    if (!stand.korrAnders) { stand.korrName = ''; stand.korrMail = ''; }
+    autorenMalen(); sichern(); leisteMalen();
+  });
+
+  /* Die Felder schreiben ohne Neuzeichnen - sonst spraenge der Cursor. */
+  document.addEventListener('input', function (e) {
+    var f = e.target.closest ? e.target.closest('[data-korr]') : null;
+    if (!f) { return; }
+    stand[f.dataset.korr === 'name' ? 'korrName' : 'korrMail'] = f.value;
+    sichern(); leisteMalen();
+  });
+
   document.addEventListener('click', function (e) {
     var w = e.target.closest('[data-autorweg]');
     if (!w) { return; }
@@ -3582,6 +3660,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       efirst_beantragt: stand.efirst === 'ja',
       erklaerung_bestaetigt: true, erklaerung_fassung: '2026-09-04',
       autoren: stand.autoren, manuskript: stand.manuskript,
+      /* Nur wenn es wirklich eine andere ist - sonst stuende am Beitrag
+         eine Korrespondenzadresse, die nur den Erstautor wiederholt. */
+      korrespondenz: stand.korrAnders
+        ? {name: (stand.korrName || '').trim(), mail: (stand.korrMail || '').trim()}
+        : null,
       abbildungen: stand.bilder, tabellen: stand.tabellen
     };
 
