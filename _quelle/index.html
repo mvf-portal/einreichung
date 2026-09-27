@@ -989,6 +989,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           Doppelnamen besser als jede Automatik wissen, wie Ihr Name getrennt gehört.</p>
           <p class="anleitung">Ausgabe, Seitenzahl und DOI ergänzt die Redaktion nach dem
           Satz, sie stehen beim Einreichen noch nicht fest.</p>
+          <p class="anleitung"><b>Ab vier Autor:innen</b> nennt die Zitation nur die
+          erste Person und „et al.“ &ndash; das ist so gewollt und gilt im ganzen Heft.
+          Bitte tragen Sie die übrigen nicht von Hand nach; vollständig stehen sie
+          über dem Beitrag.</p>
           <p style="margin:0 0 8px">
             <button type="button" class="knopf rand klein" id="zitationNeu">Aus meinen
             Angaben neu bilden</button></p>
@@ -3243,8 +3247,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         return nach + ', ' + vor.charAt(0).toUpperCase() + '.';
       });
     if (!namen.length) { return ''; }
+    /* Ab vier Autor:innen nur die erste Person und „et al." (Peter
+       Stegmaier, 27.09.2026). Der Vorname der ersten bleibt stehen - eine
+       Zitation soll auffindbar sein, und ein blosser Nachname ist das oft
+       nicht. */
+    var liste = namen.length >= 4 ? namen[0] + ' et al.' : namen.join(', ');
     var titel = (stand.titel || '').trim();
-    return namen.join(', ') + ': „' + (titel || '…') + '“, in '
+    return liste + ': „' + (titel || '…') + '“, in '
          + '„Monitor Versorgungsforschung“';
   }
 
