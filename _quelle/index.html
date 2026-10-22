@@ -568,7 +568,13 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <span class="mass">höchstens 100 Zeichen</span>, mindestens 20. Sie soll die
           <b>Aussage</b> tragen, nicht nur das Thema nennen: Wenn Ihr Beitrag ein Ergebnis
           hat, gehört es hierher.</p>
-          <input type="text" id="titel" data-feld="titel" data-min="20" data-max="100" maxlength="100">
+          <p class="anleitung">Brauchen Sie mehr Platz – etwa für einen Untertitel nach
+          Gedankenstrich –, schreiben Sie den Titel trotzdem hier hinein. Im letzten
+          Schritt können Sie ihn dann beim Herausgeber beantragen.</p>
+          <!-- maxlength stand bis zum 22.10.2026 auf 100 und war damit das einzige
+               harte Laengenlimit der Seite. 300 ist jetzt nur noch eine Notbremse:
+               Der laengste veroeffentlichte MVF-Titel hat 163 Zeichen. -->
+          <input type="text" id="titel" data-feld="titel" data-min="20" data-max="100" maxlength="300">
           <p class="beispiel"><span class="nein">Zu allgemein:</span>
           „Ersteinschätzungsinstrumente im internationalen Vergleich“<br>
           <span class="ja">Besser:</span> „Ersteinschätzung in der Versorgung: Handlungsoptionen
@@ -840,8 +846,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <ol>
             <li>Abbildungen einzeln hochladen. <b>Jede braucht eine Unterschrift</b>.</li>
             <li>Tabellen als Datei hochladen, nicht als Bild. Auch je mit Unterschrift.</li>
+            <li>Was online beim Beitrag stehen soll, aber nicht ins Heft kommt, gehört
+            unten unter <i>Online-Anhang</i>.</li>
           </ol>
-          <p>Haben Sie weder Abbildungen noch Tabellen, gehen Sie einfach weiter.</p>
+          <p>Haben Sie nichts davon, gehen Sie einfach weiter.</p>
         </div>
 
         <div class="kasten">
@@ -919,6 +927,27 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
           <div id="tabelleListe"></div>
           <button type="button" class="knopf rand klein" data-mehr="tabelle">Weitere Tabelle hinzufügen</button>
         </div>
+
+        <!-- Online-Anhang, neu am 22.10.2026.
+
+             Es gab ihn nicht, und gebraucht wurde er trotzdem: Eine Autorin
+             hat ihren Anhang am 22.10.2026 per Mail nachgereicht, weil das
+             Portal keinen Platz dafuer hatte. Was per Mail nachkommt, liegt
+             neben dem Vorgang und nicht in ihm. -->
+        <div class="gruppe" style="max-width:none">
+          <span class="beschriftung">Online-Anhang</span>
+          <p class="anleitung">Material, das <b>nicht ins Heft</b> kommt, aber online
+          beim Beitrag stehen soll: ausführliche Methodenbeschreibungen, Fragebögen,
+          Codebücher, zusätzliche Auswertungen.
+          <span class="mass">.pdf, .docx, .xlsx, .csv oder .txt</span></p>
+          <p class="anleitung">Freiwillig, und ohne Längengrenze. Weil der Anhang nicht
+          gesetzt wird, darf er auch eine PDF-Datei sein – anders als das Manuskript.</p>
+          <div class="ablage" data-ablage="anhang" tabindex="0" role="button">
+            <p><b>Anhang wählen</b> oder hierher ziehen</p>
+          </div>
+          <div id="anhangListe"></div>
+          <button type="button" class="knopf rand klein" data-mehr="anhang">Weiteren Anhang hinzufügen</button>
+        </div>
       </section>
 
       <!-- ================================================== 4 Autoren -->
@@ -928,16 +957,26 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         <p class="vor">Die Reihenfolge hier ist die Reihenfolge im Heft.</p>
 
         <div class="auftrag">
-          <p class="was">In diesem Schritt legen Sie zuerst sich selbst als Haupt- und
-          Korrespondenzautor:in an.</p>
+          <p class="was">In diesem Schritt legen Sie die Autor:innen an – in das erste
+          Feld die Person, die im Heft als erste genannt wird.</p>
           <ol>
-            <li>Ihre Angaben in das erste Feld: Name mit Titel, E-Mail, kurze Vita.</li>
+            <li>Die Angaben der <b>erstgenannten Autor:in</b>: Name mit Titel, E-Mail,
+            kurze Vita.</li>
             <li>Danach über <i>Weitere:n Autor:in hinzufügen</i> die Mitautor:innen ergänzen, in der
             Reihenfolge, in der sie im Heft stehen sollen.</li>
           </ol>
-          <p><b>Als Korrespondenzautor:in sind Sie die Person, an die sich die Redaktion bei
-          Rückfragen wendet.</b> <span id="autorenPflicht">Nur für Sie sind die Angaben
-          Pflicht; bei Mitautor:innen genügt zunächst der Name.</span></p>
+          <p><b>Die Korrespondenzautor:in ist die Person, an die sich die Redaktion bei
+          Rückfragen wendet.</b> <span id="autorenPflicht">Nur für die erstgenannte
+          Autor:in sind die Angaben Pflicht; bei Mitautor:innen genügt zunächst der
+          Name.</span></p>
+          <!-- Der Fall kommt vor und ist bisher nirgends erklaert worden: Am
+               22.10.2026 reichte eine Autorin einen Beitrag fuer die Erstautorin
+               ein, las hier "legen Sie zuerst sich selbst an" und wusste danach
+               nicht mehr, wer die Post bekommt. -->
+          <p>Reichen Sie den Beitrag <b>für jemand anderen</b> ein, gehört in das erste
+          Feld trotzdem die erstgenannte Autor:in. Kreuzen Sie darunter <i>Es gibt eine
+          andere Korrespondenzautor:in</i> an und tragen Sie sich dort ein – die ganze
+          Post zum Beitrag geht dann an Ihre Adresse.</p>
         </div>
 
         <!-- Der Weg aus der Annahme-Mail endet hier: ein Link, der angemeldet
@@ -1231,12 +1270,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <li>Für alle Abbildungen, Tabellen und längeren Zitate (ab etwa drei Sätzen
             oder einem ganzen Absatz), die nicht von uns stammen, liegen die Nutzungsrechte
             vor; die Quellen sind angegeben.</li>
-            <li>Waren Menschen einbezogen, wurden Einwilligung und — soweit erforderlich — ein
+            <li>Waren Menschen einbezogen, wurden Einwilligung und – soweit erforderlich – ein
             Ethikvotum eingeholt; die Angaben stehen im Beitrag.</li>
             <li>Ein Einsatz KI-gestützter Werkzeuge über Sprachprüfung hinaus ist im Beitrag
             offengelegt. Die Verantwortung für den Inhalt liegt bei uns.</li>
-            <li>Als einreichende:r Erstautor:in bin ich zugleich Korrespondenzautor:in und für die
-            Kommunikation mit der Redaktion zuständig.</li>
+            <li>Für die Kommunikation mit der Redaktion ist die im Portal angegebene
+            Korrespondenzautor:in zuständig; sie handelt im Namen aller Autor:innen.</li>
             <li>Wir stimmen der Veröffentlichung unter der gewählten Lizenz zu und räumen
             „Monitor Versorgungsforschung“ das Recht ein, den Beitrag in Print und online zu
             veröffentlichen und dauerhaft verfügbar zu halten. Das Urheberrecht verbleibt
@@ -1355,9 +1394,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     literatur:'', zitation:'', danksagung:'', ausgabe:'', lizenz:'cc_by',
     /* `ausgabe` bleibt im Stand, aber leer: Sie traegt seit dem 17.09.2026
        der Herausgeber ein, nicht der Autor. */
-    bildNachreichen:false, kiEinsatz:'',
+    bildNachreichen:false, titelLang:false, kiEinsatz:'',
     konflikte:'', erklaerung:false, efirst:'nein',
-    manuskript:[], bilder:[], tabellen:[],
+    manuskript:[], bilder:[], tabellen:[], anhaenge:[],
     autoren:[{name:'', mail:'', institution:'', orcid:'', vita:'', bild:null}],
     /* Haupt- und Korrespondenzautor:in sind in der Regel dieselbe Person.
        Wenn nicht, fuehrt jemand anderes den Schriftwechsel - an der
@@ -1375,6 +1414,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   // Ein Stand aus einer frueheren Fassung kennt das eFirst-Feld noch nicht.
   if (stand.efirst !== 'ja') { stand.efirst = 'nein'; }
 
+  /* Ebenso den Online-Anhang (22.10.2026). Ohne diese Zeile stolpert jeder
+     Zwischenstand, der vor heute gespeichert wurde, beim ersten Zugriff auf
+     `stand.anhaenge`. */
+  if (!Array.isArray(stand.anhaenge)) { stand.anhaenge = []; }
+  if (typeof stand.titelLang !== 'boolean') { stand.titelLang = false; }
+
   /* Die Unterzeilen sind am 18.09.2026 entfallen (Mariann Stegmaier). Drei
      der sechs wiederholten nur die Ueberschrift ("Bilder und Tabellen" unter
      "Abbildungen"), und "und freigeben" war ein zerschnittener Satz. Sechs
@@ -1388,13 +1433,41 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     {name:'Prüfen'}
   ];
   var MIN_BILD = 2126, MIN_PORTRAIT = 354;
+
+  /* Der Satzspiegel, 180 x 237 mm - der Kasten, in dem eine Abbildung im Heft
+     Platz hat. Beide Zahlen stehen ebenso im Endpunkt (SATZBREITE_MM,
+     SATZHOEHE_MM); wer eine aendert, aendert beide.
+
+     Bis zum 22.10.2026 kannte die Pruefung nur die Breite. Eine hochformatige
+     Abbildung laeuft im Heft aber nicht ueber 180 mm Breite, sondern ueber
+     237 mm Hoehe - und ist dabei schmaler als 180 mm. Sie braucht also
+     weniger Breite, nicht mehr. Die alte Regel verlangte trotzdem die vollen
+     2126 Pixel und war damit fuer steile Abbildungen unerfuellbar. */
+  var SATZBREITE_MM = 180, SATZHOEHE_MM = 237;
+  var MIN_BILD_HOCH = Math.round(MIN_BILD * SATZHOEHE_MM / SATZBREITE_MM);
+
+  /* Steiler als der Satzspiegel heisst: Im Heft begrenzt die Hoehe, nicht die
+     Breite. Nur dann ist die Hoehe das Mass. */
+  function bildSteil(breite, hoehe) {
+    return hoehe * SATZBREITE_MM > breite * SATZHOEHE_MM;
+  }
+
+  /* Die Breite, die diese Abbildung bei ihrem Seitenverhaeltnis braucht. */
+  function bildNoetig(breite, hoehe) {
+    return bildSteil(breite, hoehe)
+      ? Math.ceil(MIN_BILD_HOCH * breite / Math.max(1, hoehe))
+      : MIN_BILD;
+  }
   /* Obergrenze: WordPress rechnet beim Empfang alles ueber 2560 px auf 2560
      herunter (`big_image_size_threshold`) - darueber ist nichts gewonnen. Und
      bei genuegend Pixeln stirbt der Vorgang: Ein Portrait mit 6153 x 4102 px
      brachte ihn am 11.09.2026 zum Absturz, nach 60 Sekunden in Imagick.
      Dieselbe Zahl steht als MAX_BILDKANTE im Endpunkt und in der
      Redaktionsansicht. Wer eine aendert, muss alle drei aendern. */
-  var MAX_BILDKANTE = 2560;
+  /* 2560 -> 3600 am 22.10.2026: Ueber die Satzhoehe braucht eine Abbildung
+     bei 300 dpi 2799 Pixel Hoehe, und die lagen bisher ueber der Grenze.
+     Begruendung samt Zahlen steht im Endpunkt bei MAX_BILDKANTE. */
+  var MAX_BILDKANTE = 3600;
   /* Mehr als vier Abbildungen traegt eine Heftstrecke nicht. Die Grenze
      steht hier und nicht nur im Text daneben - ein Hinweis, den man
      ueberlesen kann, ist keine Grenze. */
@@ -1616,7 +1689,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       name:'Sonderdruck (Supplement)', peer:false, intern:true,
       wink:'Ein Supplement ist kein Beitrag, sondern ein eigenes Heft: Titelseite, '
         + 'Editorial, Inhalt, mehrere Beiträge, Rückseite. Legen Sie hier den '
-        + '<b>Rahmen</b> an — Anlass, Auftraggeber und Titel des Supplements — und '
+        + '<b>Rahmen</b> an – Anlass, Auftraggeber und Titel des Supplements – und '
         + 'reichen Sie jeden Beitrag daraus einzeln ein.',
       vorzeileMax:90, vorzeileZweck:'Anlass und Auftraggeber',
       vorzeileText:'Anlass und Auftraggeber des Supplements. '
@@ -1667,7 +1740,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     zugangOben('<p><b>Die Rubrik Ihres Zwischenstands steht hier nicht zur '
       + 'Wahl.</b> „' + esc(alt) + '“ stellt die Redaktion selbst ein. '
       + 'Eingestellt ist jetzt <b>' + esc(RUBRIKEN[RUBRIK_STANDARD].name)
-      + '</b> – bitte prüfen Sie in Schritt 1, ob das passt. Ihre übrigen '
+      + '</b>. Bitte prüfen Sie in Schritt 1, ob das passt. Ihre übrigen '
       + 'Eingaben sind unverändert.</p>', true);
   }
 
@@ -1874,7 +1947,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     /* Die Annahmegrenze steht hier nicht als Zahl, sondern wird gerechnet.
        Sie stand dreimal fest im Text und war nach der ersten Aenderung an
        TOLERANZ dreimal falsch. */
-    {s:0, feld:'titel',     text:spanne('Überschrift eintragen', 20, 100), min:20, max:100},
+    {s:0, feld:'titel',     text:spanne('Überschrift eintragen', 20, 100), min:20, max:100,
+     langAntrag:'titelLang'},
     {s:0, teil:'vorspann', feld:'vorspann',  text:spanne('Vorspann schreiben', 600, 900), min:600, max:900},
     {s:0, liste:'manuskript', text:'Manuskript hochladen'},
     /* Die Literatur steht seit dem 17.09.2026 in Schritt 1. Die Regel blieb
@@ -1887,7 +1961,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     {s:1, teil:'zusammenfassung', feld:'titelEn',   text:'Englischer Titel', min:10, max:100},
     {s:1, teil:'zusammenfassung', feld:'abstractEn', text:spanne('Englisches Abstract', 1000, 1500), min:1000, max:1500},
     {s:1, teil:'zusammenfassung', feld:'schlagEn',  text:'Englische Keywords (3 bis 7)', komma:3},
-    {s:3, autor:true,       text:'Haupt- und Korrespondenzautor:in anlegen: Name, E-Mail, Vita'},
+    {s:3, autor:true,       text:'Erstgenannte Autor:in anlegen: Name, E-Mail, Vita'},
     /* Zu lang steht als eigene Regel daneben: Die Regel darueber prueft, ob
        ueberhaupt etwas dasteht - hier geht es um eine Vita, die vollstaendig
        ist und nur gekuerzt werden muss. Zwei verschiedene Meldungen, sonst
@@ -1971,7 +2045,11 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var w = (stand[r.feld] || '').toString().trim();
     if (!w) { return true; }
     if (r.min && w.length < r.min) { return true; }
-    if (r.max && w.length > hoechstens(r.max)) { return true; }
+    /* `langAntrag` nennt das Standfeld, mit dem die Hoechstgrenze dieses
+       Feldes beantragt ist. Gesetzt, zaehlt die Laenge nicht mehr als Mangel
+       - der Herausgeber entscheidet, nicht diese Zeile. */
+    if (r.max && w.length > hoechstens(r.max)
+        && !(r.langAntrag && stand[r.langAntrag])) { return true; }
     if (r.komma) {
       var teile = w.split(',').map(function(t){return t.trim();}).filter(Boolean);
       if (teile.length < r.komma) { return true; }
@@ -2126,9 +2204,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     if (ap) {
       ap.textContent = alleVitae()
         ? 'Beim wissenschaftlichen Beitrag braucht jede Autorin und jeder Autor eine '
-          + 'Vita. Name und E-Mail-Adresse sind nur bei Ihnen Pflicht.'
-        : 'Nur f\u00fcr Sie sind die Angaben Pflicht; bei Mitautor:innen gen\u00fcgt '
-          + 'zun\u00e4chst der Name.';
+          + 'Vita. Name und E-Mail-Adresse sind nur bei der erstgenannten Autor:in '
+          + 'Pflicht.'
+        : 'Nur f\u00fcr die erstgenannte Autor:in sind die Angaben Pflicht; bei '
+          + 'Mitautor:innen gen\u00fcgt zun\u00e4chst der Name.';
     }
     var pw = $('#portraetWink');
     if (pw) {
@@ -2368,6 +2447,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       wahl.hidden = true;
       wahl.accept = art === 'bild' ? '.jpg,.jpeg,.png'
                   : art === 'tabelle' ? '.doc,.docx,.xls,.xlsx,.csv'
+                  : art === 'anhang' ? '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt'
                   : '.doc,.docx,.rtf';
       if (art !== 'manuskript') { wahl.multiple = true; }
       a.parentNode.appendChild(wahl);
@@ -2473,8 +2553,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
   function annehmen(art, dateien) {
     [].slice.call(dateien).forEach(function (d) {
       if (art === 'bild') { bildPruefen(d); return; }
-      var zweck = art === 'manuskript' ? 'manuskript' : 'tabelle';
-      var ziel  = art === 'manuskript' ? 'manuskript' : 'tabellen';
+      var zweck = art === 'manuskript' ? 'manuskript'
+                : art === 'anhang' ? 'anhang' : 'tabelle';
+      var ziel  = art === 'manuskript' ? 'manuskript'
+                : art === 'anhang' ? 'anhaenge' : 'tabellen';
       dateiMeldung(esc(d.name) + ' wird hochgeladen …');
       dateiSenden(zweck, d, function (a) {
         if (!a.ok) {
@@ -2576,18 +2658,24 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         var faktor = MAX_BILDKANTE / Math.max(breite, hoehe);
         var neuBreite = Math.round(breite * faktor);
         var neuHoehe = Math.round(hoehe * faktor);
-        if (neuBreite < MIN_BILD) {
-          dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' x '
-            + hoehe + ' Pixeln zu groß und zugleich zu hochformatig, um es hier '
-            + 'zu verkleinern: Dabei fiele die Breite unter die nötigen '
-            + MIN_BILD.toLocaleString('de-DE') + ' Pixel. Bitte legen Sie die '
-            + 'Abbildung querformatiger an.', true);
+        /* Seit MAX_BILDKANTE auf 3600 steht, kann das nicht mehr eintreten:
+           Wer auf 3600 an der langen Kante verkleinert wird, behaelt in jedem
+           Seitenverhaeltnis mehr als die noetigen Pixel. Die Pruefung bleibt
+           als Riegel stehen - aber ohne den alten Rat, querformatiger
+           anzulegen. Der war falsch: Nicht die Abbildung war schlecht
+           angelegt, die Regel war zu eng. */
+        if (neuBreite < bildNoetig(neuBreite, neuHoehe)) {
+          dateiMeldung('<b>' + esc(datei.name) + '</b> mit ' + breite + ' x '
+            + hoehe + ' Pixeln lässt sich hier nicht verkleinern, ohne unter die '
+            + 'Druckauflösung zu fallen. Bitte wenden Sie sich an die Redaktion '
+            + '– die Abbildung selbst ist in Ordnung.', true);
           return;
         }
         dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' x '
           + hoehe + ' Pixeln größer als nötig und wird auf ' + neuBreite
-          + ' Pixel verkleinert. WordPress würde es beim Empfang ohnehin auf '
-          + MAX_BILDKANTE + ' Pixel herunterrechnen. An Ihrer eigenen Datei ändert '
+          + ' x ' + neuHoehe + ' Pixel verkleinert. Mehr bringt im Druck nichts: '
+          + 'So viel reicht für den ganzen Satzspiegel von ' + SATZBREITE_MM
+          + ' x ' + SATZHOEHE_MM + ' mm. An Ihrer eigenen Datei ändert '
           + 'sich nichts.');
         bildVerkleinern(datei, bild, faktor,
           function (kleiner) { hochladen(kleiner, neuBreite, neuHoehe); },
@@ -2602,12 +2690,20 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
       /* Zu schmale Bilder gehen gar nicht erst hoch - die Wartezeit waere
          umsonst, der Server wiese sie ohnehin ab. */
-      if (breite < MIN_BILD) {
+      if (breite < bildNoetig(breite, hoehe)) {
         stand.bilder.push({name:datei.name, groesse:datei.size, breite:breite,
           hoehe:hoehe, zuKlein:true, unterschrift:''});
-        dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' Pixeln zu '
-          + 'schmal, nötig sind ' + MIN_BILD + '. Die Datei wurde nicht hochgeladen.',
-          true);
+        /* Bei einer steilen Abbildung ist die Hoehe das Mass - und die Zahl,
+           die der Autor in sein Programm eintragen kann, ist dann eine
+           Hoehe. Die Breite zu nennen hiesse, ihn auf die falsche Zahl
+           hinarbeiten zu lassen. */
+        dateiMeldung('<b>' + esc(datei.name) + '</b> ist mit ' + breite + ' x '
+          + hoehe + ' Pixeln zu klein angelegt: Über den Satzspiegel käme die '
+          + 'Abbildung nicht auf 300 dpi. Nötig sind '
+          + (bildSteil(breite, hoehe)
+              ? MIN_BILD_HOCH.toLocaleString('de-DE') + ' Pixel Höhe'
+              : MIN_BILD.toLocaleString('de-DE') + ' Pixel Breite')
+          + '. Die Datei wurde nicht hochgeladen.', true);
         dateienMalen(); sichern(); leisteMalen();
         return;
       }
@@ -2644,7 +2740,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             : d.zuKlein ? '<span class="marke-pill warn">' + d.breite + ' px, zu schmal</span>'
             : '<span class="marke-pill ok">' + d.breite + ' × ' + d.hoehe + ' px</span>';
           var warn = d.zuKlein ? '<p class="wink" style="color:var(--warn)">Gebraucht werden ' +
-            MIN_BILD.toLocaleString('de-DE') + ' Pixel Breite. Bitte die Fassung in ' +
+            (bildSteil(d.breite || 0, d.hoehe || 0)
+              ? MIN_BILD_HOCH.toLocaleString('de-DE') + ' Pixel Höhe'
+              : MIN_BILD.toLocaleString('de-DE') + ' Pixel Breite') + '. Bitte die Fassung in ' +
             'Originalgröße hochladen. Ein vergrößertes Bild wird dadurch nicht schärfer.</p>'
             + nachreichHaken() : '';
           var fehlt = !d.unterschrift.trim();
@@ -2687,6 +2785,30 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         }).join('')
       : '<p class="leerstand">Noch keine Tabelle. Sobald Sie eine hochladen, erscheint ' +
         'hier ein Feld für ihre <b>Tabellenunterschrift</b>.</p>';
+
+    /* ---- Online-Anhang ----
+       Dasselbe Muster wie bei den Tabellen, mit einem Unterschied: Das
+       Beschreibungsfeld ist KEIN Pflichtfeld. Es traegt deshalb auch kein
+       Sternchen und faerbt sich nicht rot. */
+    var la = $('#anhangListe');
+    if (la) {
+      la.innerHTML = stand.anhaenge.length
+        ? stand.anhaenge.map(function (d, i) {
+            return '<div class="stueck"><div class="stueck-kopf">' +
+              '<span class="marke-pill">Anhang ' + (i+1) + '</span>' +
+              '<span class="dateiname">' + esc(d.name) + '</span>' +
+              '<button type="button" class="weg" data-weg="anhaenge" data-i="' + i + '" ' +
+              'aria-label="Entfernen">&times;</button></div>' +
+              '<label class="unter-label" for="au' + i + '">Was enthält Anhang ' +
+              (i+1) + '?</label>' +
+              '<p class="anleitung" style="margin-bottom:6px">Ein Satz genügt. Freiwillig – ' +
+              'er hilft der Redaktion, den Anhang online richtig zu beschriften.</p>' +
+              '<input type="text" id="au' + i + '" data-unterschrift="anhaenge" data-i="' + i + '" ' +
+              'placeholder="Online-Anhang 1: Vollständige Operationalisierung der ICD-Codes." ' +
+              'value="' + esc(d.unterschrift || '') + '"></div>';
+          }).join('')
+        : '<p class="leerstand">Kein Anhang. Das ist der Normalfall.</p>';
+    }
   }
 
   document.addEventListener('click', function (e) {
@@ -2851,6 +2973,45 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       'bekommen Sie dafür einen Zugangslink; darüber laden Sie die Datei nach. ' +
       'Bis dahin steht die Abbildung bei uns als offener Punkt.</span></p>';
   }
+
+  /* Der Antrag auf einen laengeren Titel.
+
+     Zwei Zustaende, und beide stehen an derselben Stelle: die Bitte und die
+     Bestaetigung. Ein Knopf, der nach dem Druecken verschwindet, laesst den
+     Autor im Zweifel, ob er gedrueckt hat. */
+  function titelAntragBlock() {
+    var n = (stand.titel || '').trim().length;
+    if (n <= 100) { return ''; }
+    if (stand.titelLang) {
+      return '<p class="kasten acht" style="margin:8px 0 0"><b>Vermerkt: Ihre '
+        + 'Überschrift ist ' + zahl(n) + ' Zeichen lang.</b> Die Anfrage geht mit '
+        + 'der Einreichung an den Herausgeber – Sie müssen dafür nichts weiter '
+        + 'tun und nichts kürzen.'
+        + '<span class="wink" style="display:block;margin-top:5px">Der Herausgeber '
+        + 'entscheidet, wie mit der Länge der Artikel-Headline umgegangen wird. '
+        + 'Möglich ist auch, dass die Redaktion sie im Satz kürzt – dann hören Sie '
+        + 'davon. <span class="klickbar" data-titellang="weg">Anfrage '
+        + 'zurücknehmen</span></span></p>';
+    }
+    return '<p class="kasten acht" style="margin:8px 0 0"><b>Ihre Überschrift ist '
+      + zahl(n) + ' Zeichen lang</b>, vorgesehen sind 100. Kürzen – oder fragen:'
+      + '<span style="display:block;margin-top:8px">'
+      + '<button type="button" class="knopf klein" data-titellang="an" '
+      + 'title="Der Herausgeber entscheidet, wie mit der Länge der '
+      + 'Artikel-Headline umgegangen wird">Titel verlängern und beim '
+      + 'Herausgeber anfragen</button></span>'
+      + '<span class="wink" style="display:block;margin-top:5px">Die Anfrage hält '
+      + 'Ihre Einreichung nicht auf. Sie reist mit, und der Herausgeber '
+      + 'entscheidet.</span></p>';
+  }
+
+  document.addEventListener('click', function (e) {
+    var k = e.target.closest ? e.target.closest('[data-titellang]') : null;
+    if (!k) { return; }
+    stand.titelLang = (k.dataset.titellang === 'an');
+    sichern(); leisteMalen();
+    if (jetzt === SCHRITTE.length - 1) { pruefenMalen(); }
+  });
 
   document.addEventListener('change', function (e) {
     var h = e.target.closest('[data-nachreichen]');
@@ -3569,7 +3730,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         '</span><button type="button" class="springen" data-spring="2">zu Schritt 3</button></li>');
     });
     $('#pruefListe').innerHTML = zeilen.join('');
-    $('#pruefNachreichen').innerHTML = nachreichBlock;
+    $('#pruefNachreichen').innerHTML = titelAntragBlock() + nachreichBlock;
 
     $('#uebersicht').innerHTML = uebersicht();
     absendbar();
@@ -3582,7 +3743,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
   function zeile(k, w) {
     return '<dt>' + esc(k) + '</dt><dd>' +
-      (w ? esc(w) : '<span class="leer">— nicht angegeben —</span>') + '</dd>';
+      (w ? esc(w) : '<span class="leer">– nicht angegeben –</span>') + '</dd>';
   }
 
   function uebersicht() {
@@ -3594,7 +3755,12 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     var t = '<div class="uebersicht"><h3>Der Beitrag</h3><dl>' +
       zeile('Rubrik', stand.rubrik ? rub.text : '') +
       wenn('vorzeile', zeile('Vorzeile', stand.vorzeile)) +
-      zeile('Überschrift', stand.titel) +
+      zeile('Überschrift', stand.titel
+        ? stand.titel + ' (' + zahl(stand.titel.trim().length) + ' Zeichen'
+          + (stand.titel.trim().length > 100
+              ? stand.titelLang ? ', Verlängerung beantragt' : ', zu lang' : '')
+          + ')'
+        : '') +
       wenn('vorspann', zeile('Vorspann', stand.vorspann ? stand.vorspann.length.toLocaleString('de-DE') + ' Zeichen' : '')) +
       zeile('Manuskript', stand.manuskript.map(function(d){return d.name;}).join(', ')) +
       '</dl></div>';
@@ -3612,13 +3778,31 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
         return b.name + (b.breite ? ' (' + b.breite + ' px)' : '');
       }).join(', ') : '') +
       zeile('Tabellen', stand.tabellen.map(function(d){return d.name;}).join(', ')) +
+      (stand.anhaenge.length
+        ? zeile('Online-Anhang', stand.anhaenge.map(function(d){return d.name;}).join(', '))
+        : '') +
       '</dl></div>';
 
     t += '<div class="uebersicht"><h3>Autor:innen</h3><dl>' +
       stand.autoren.map(function (a, i) {
-        return zeile(i === 0 ? 'Korrespondenzautor:in' : 'Autor:in ' + (i+1),
-          a.name ? a.name + (a.mail ? ' · ' + a.mail : '') : '');
-      }).join('') + '</dl></div>';
+        var was = i > 0 ? 'Autor:in ' + (i+1)
+          : stand.korrAnders ? 'Erstgenannte Autor:in'
+          : 'Erstgenannte Autor:in und Korrespondenz';
+        return zeile(was, a.name ? a.name + (a.mail ? ' · ' + a.mail : '') : '');
+      }).join('') +
+      (stand.korrAnders
+        ? zeile('Korrespondenzautor:in', (stand.korrName || '').trim()
+            + (stand.korrMail ? ' · ' + stand.korrMail : ''))
+        : '') +
+      '</dl>' +
+      (stand.korrAnders
+        ? '<p class="wink">Alle E-Mails zum Beitrag gehen an '
+          + esc((stand.korrMail || '').trim() || 'die Korrespondenzadresse')
+          + ', nicht an die erstgenannte Autor:in. Im Heft steht '
+          + esc((stand.autoren[0] || {}).name || 'die erste Person')
+          + ' an erster Stelle.</p>'
+        : '') +
+      '</div>';
 
     t += '<div class="uebersicht"><h3>Formales</h3><dl>' +
       wenn('literatur', zeile('Literatur', stand.literatur ? stand.literatur.split(/\n/).filter(Boolean).length + ' Einträge' : '')) +
@@ -3658,6 +3842,10 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       ki_einsatz: stand.kiEinsatz,
       interessenkonflikte: stand.konflikte,
       efirst_beantragt: stand.efirst === 'ja',
+      /* Der Antrag auf eine laengere Ueberschrift. Im Endpunkt gibt er genau
+         die Hoechstgrenze frei, die die Redaktion sonst ueber "Textlänge
+         erlauben" freigibt - nur beantragt statt entschieden. */
+      titel_lang_antrag: !!stand.titelLang,
       erklaerung_bestaetigt: true, erklaerung_fassung: '2026-09-04',
       autoren: stand.autoren, manuskript: stand.manuskript,
       /* Nur wenn es wirklich eine andere ist - sonst stuende am Beitrag
@@ -3665,7 +3853,8 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       korrespondenz: stand.korrAnders
         ? {name: (stand.korrName || '').trim(), mail: (stand.korrMail || '').trim()}
         : null,
-      abbildungen: stand.bilder, tabellen: stand.tabellen
+      abbildungen: stand.bilder, tabellen: stand.tabellen,
+      anhaenge: stand.anhaenge
     };
 
     /* Die Gutachtervorschlaege gehen mit.
@@ -4019,7 +4208,20 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
      um einen Entwurf, nicht um ein Konto. */
 
   var SITZUNG = 'mvf-einreichung-sitzung';
-  var ZIEL = 'https://www.monitor-versorgungsforschung.de/einreichung/einreichung.php';
+
+  /* Die Adresse steht absolut, weil die Seite auch unter einreichung.m-vf.de
+     liegt und von dort auf den WordPress-Server zugreift.
+
+     AUSNAHME FUER DIE TESTKOPIE (22.10.2026)
+
+     Auf mvf.local ist das genau falsch: Die Testseite schickte ihre Uploads
+     an das LIVESYSTEM. Geschehen ist dabei nichts - der Browser hat die
+     Anfragen an der CORS-Regel abgewiesen -, aber verlassen darf man sich
+     darauf nicht. Eine Testkopie, die nach draussen greift, ist keine
+     Testkopie. */
+  var ZIEL = (location.hostname === 'mvf.local')
+    ? location.origin + '/einreichung/einreichung.php'
+    : 'https://www.monitor-versorgungsforschung.de/einreichung/einreichung.php';
 
   function sitzung()      { try { return localStorage.getItem(SITZUNG) || ''; } catch (e) { return ''; } }
   function sitzungSetzen(w) {
@@ -4292,6 +4494,17 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
       if (tun === 'ueberarbeiten') { ueberarbeitenTafelAn(beitrag); }
     }).catch(function () {
       anmeldeMeldung('Keine Verbindung zum Server. Bitte versuchen Sie es später.', 'fehler');
+      /* Meist ist der Link dabei nicht verbraucht - die Anfrage kam nicht an.
+         Also den Knopf zurueckgeben, statt oben ewig „wird geprüft" stehen
+         zu lassen. */
+      zugangOben('<p><b>Keine Verbindung zum Server.</b> Ihr Link gilt vermutlich noch. '
+        + 'Bitte versuchen Sie es gleich noch einmal.</p>'
+        + '<p style="margin:10px 0 0"><button type="button" class="knopf haupt" '
+        + 'id="zugangKnopf">Erneut versuchen</button></p>', true);
+      $('#zugangKnopf').addEventListener('click', function () {
+        this.disabled = true;
+        zugangEinloesen(schluessel, tun, beitrag);
+      });
     });
   }
 
@@ -4412,7 +4625,23 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     /* Den Schluessel aus der Adresszeile nehmen, bevor irgendetwas ihn
        mitliest: Verlauf, Lesezeichen, ein Screenshot ueber die Schulter. */
     history.replaceState(null, '', location.pathname);
-    zugangEinloesen(ausUrl, tunUrl, beitragUrl);
+    /* Eingeloest wird erst auf Knopfdruck, nicht beim Laden.
+
+       Bis zum 28.09.2026 tauschte die Seite den Schluessel sofort. Die
+       Virenpruefung mancher Mailprogramme (Outlook Safe Links, Mail-Filter
+       von Kliniken und Hochschulen) oeffnet jeden Link beim Empfang in einem
+       eigenen Browser - und hat ihn damit verbraucht, bevor der Autor klickt.
+       Der stand dann vor „Dieser Zugangslink gilt nicht mehr" und einem
+       leeren Formular. Solche Pruefer laden Seiten, sie druecken keine
+       Knoepfe. */
+    zugangOben('<p><b>Fast geschafft.</b> Bitte bestätigen Sie die Anmeldung, '
+      + 'dann öffnet sich Ihr Beitrag.</p>'
+      + '<p style="margin:10px 0 0"><button type="button" class="knopf haupt" '
+      + 'id="zugangKnopf">Jetzt anmelden</button></p>', false);
+    $('#zugangKnopf').addEventListener('click', function () {
+      this.disabled = true;
+      zugangEinloesen(ausUrl, tunUrl, beitragUrl);
+    });
     abgleichFertig = false;   // erst nach dem Einloesen
   } else if (sitzung()) {
     /* Angemeldet, aber die Seite frisch geoeffnet - vielleicht an einem
