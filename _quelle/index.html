@@ -783,7 +783,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <label for="abstractDe">Abstract deutsch <span class="pflicht">*</span>
               <span class="zeichenzahl" data-zaehlt="abstractDe"></span></label>
             <p class="anleitung">Fassen Sie hier bitte Ihren Beitrag zusammen.
-            <span class="mass">1.000 bis 1.500 Zeichen</span>, in dieser Reihenfolge:
+            <span class="mass" data-abstractmass>1.000 bis 1.500 Zeichen</span>, in dieser Reihenfolge:
             <b>Hintergrund, Methode(n), Ergebnis(se), Diskussion</b>. Ohne Zwischentitel und
             ohne Literaturverweise. Eine <b>Schlussfolgerung</b> dürfen Sie anschließen, wenn
             sie über die Diskussion hinausgeht. Pflicht ist sie nicht.</p>
@@ -814,7 +814,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
             <label for="abstractEn">Abstract englisch <span class="pflicht">*</span>
               <span class="zeichenzahl" data-zaehlt="abstractEn"></span></label>
             <p class="anleitung">Schreiben Sie hier bitte das englische Abstract.
-            <span class="mass">1.000 bis 1.500 Zeichen</span>, gleicher Aufbau wie oben:
+            <span class="mass" data-abstractmass>1.000 bis 1.500 Zeichen</span>, gleicher Aufbau wie oben:
             Introduction, Methods, Results, Discussion, optional Conclusion.
             Bitte <b>keine ungeprüfte Maschinenübersetzung</b>.</p>
             <textarea id="abstractEn" data-feld="abstractEn" rows="7" data-min="1000" data-max="1500"></textarea>
@@ -1963,10 +1963,14 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
        auf eine Seite, auf der das Feld gar nicht mehr ist
        (Mariann Stegmaier, 18.09.2026). */
     {s:0, teil:'literatur', feld:'literatur', text:'Literatur', min:20},
-    {s:1, teil:'zusammenfassung', feld:'abstractDe', text:spanne('Deutsches Abstract', 1000, 1500), min:1000, max:1500},
+    {s:1, teil:'zusammenfassung', feld:'abstractDe', max:1500,
+     text:function(){ return spanne('Deutsches Abstract', abstractGrenze(), 1500); },
+     minF:abstractGrenze},
     {s:1, teil:'zusammenfassung', feld:'schlagDe',  text:'Deutsche Schlüsselwörter (3 bis 7)', komma:3},
     {s:1, teil:'zusammenfassung', feld:'titelEn',   text:'Englischer Titel', min:10, max:100},
-    {s:1, teil:'zusammenfassung', feld:'abstractEn', text:spanne('Englisches Abstract', 1000, 1500), min:1000, max:1500},
+    {s:1, teil:'zusammenfassung', feld:'abstractEn', max:1500,
+     text:function(){ return spanne('Englisches Abstract', abstractGrenze(), 1500); },
+     minF:abstractGrenze},
     {s:1, teil:'zusammenfassung', feld:'schlagEn',  text:'Englische Keywords (3 bis 7)', komma:3},
     {s:3, autor:true,       text:'Erstgenannte Autor:in anlegen: Name, E-Mail, Vita'},
     /* Zu lang steht als eigene Regel daneben: Die Regel darueber prueft, ob
@@ -2022,6 +2026,19 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     return t;
   }
 
+  /* Die Untergrenze des Abstracts haengt an der Rubrik.
+
+     Dieselben Zahlen stehen im Endpunkt (ABSTRACT_MINDEST,
+     ABSTRACT_MINDEST_SONST) - wer eine aendert, aendert beide. Bis zum
+     23.10.2026 kannte nur der Endpunkt die Ausnahme, und sie lief ins
+     Leere: Die Seite sperrte vorher. */
+  var ABSTRACT_MIN = {wissen: 600};
+  var ABSTRACT_MIN_SONST = 1000;
+
+  function abstractGrenze() {
+    return ABSTRACT_MIN[stand.rubrik] || ABSTRACT_MIN_SONST;
+  }
+
   function vorzeileGrenze() {
     var r = rubrik();
     return (r && r.vorzeileMax) || 60;
@@ -2051,7 +2068,9 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     }
     var w = (stand[r.feld] || '').toString().trim();
     if (!w) { return true; }
-    if (r.min && w.length < r.min) { return true; }
+    /* `minF` statt `min`, wenn die Untergrenze von der Rubrik abhaengt. */
+    var untenMin = r.minF ? r.minF() : r.min;
+    if (untenMin && w.length < untenMin) { return true; }
     /* `langAntrag` nennt das Standfeld, mit dem die Hoechstgrenze dieses
        Feldes beantragt ist. Gesetzt, zaehlt die Laenge nicht mehr als Mangel
        - der Herausgeber entscheidet, nicht diese Zeile. */
@@ -2207,6 +2226,14 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
     // Wer eine Vita braucht, haengt ebenfalls an der Rubrik. Die Autorenfelder
     // werden dabei neu gezeichnet, damit die Sterne stimmen.
+    /* Die Abstract-Masszahl steht zweimal im Formular und haengt an der
+       Rubrik. Ohne diese Zeilen laese ein Wissen-Autor "1.000 bis 1.500"
+       und bekaeme trotzdem 600 durch - oder, schlimmer, kuerzte nicht, weil
+       er die Grenze fuer unerreichbar hielt. */
+    $$('[data-abstractmass]').forEach(function (m) {
+      m.textContent = zahl(abstractGrenze()) + ' bis 1.500 Zeichen';
+    });
+
     var ap = $('#autorenPflicht');
     if (ap) {
       ap.textContent = alleVitae()
