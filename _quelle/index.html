@@ -607,12 +607,19 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
                im Formular - wer sich daran hielt, war im Nachteil gegenueber dem,
                der sie nicht gelesen hatte (Mariann Stegmaier, 18.09.2026).
                Bewusst OHNE Pruefung: Die Seite kann nur .docx lesen, bei .doc und
-               .rtf bliebe die Grenze stumm - und 30.000 ist die Schwelle fuer
-               "ohne Rueckfrage", keine Ablehnungsgrenze. -->
+               .rtf bliebe die Grenze stumm - und 24.000 ist die Schwelle fuer
+               "ohne Rueckfrage", keine Ablehnungsgrenze.
+
+               30.000 -> 24.000 am 23.10.2026: Die Hinweise fuer Autor:innen
+               nannten vier Druckseiten und 24.000 Zeichen, diese Seite
+               30.000. Gemessen wird dasselbe - die hochgeladene Datei
+               traegt nur den Grund- und Basistext. -->
           <p class="anleitung"><b>Zum Umfang:</b> Rechnen Sie mit etwa
-          <span class="mass">30.000 Zeichen</span> einschließlich Leerzeichen. Mehr ist
-          möglich, macht aber eine Rückfrage nötig. In Word finden Sie die Zahl unter
-          <i>Überprüfen → Wörter zählen</i>.</p>
+          <span class="mass">24.000 Zeichen</span> einschließlich Leerzeichen, das sind
+          vier Druckseiten. Gemeint ist allein der Text dieser Datei – Literatur,
+          Abstracts und Schlüsselwörter zählen nicht mit, die stehen in eigenen Feldern.
+          Mehr ist möglich, macht aber eine Rückfrage nötig. In Word finden Sie die Zahl
+          unter <i>Überprüfen → Wörter zählen</i>.</p>
           <p class="anleitung"><b>Hier bitte ausschließlich den Grund- und Basistext
           hochladen.</b> Alle weiteren Bestandteile entfernen Sie bitte aus dem Dokument und
           laden sie hier nicht mit hoch: Überschrift und Vorspann (Schritt 1, bereits
@@ -2501,7 +2508,7 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
 
   function laengePruefen(a) {
     var n = a.zeichen || 0;
-    var normal = a.zeichenNormal || 30000;
+    var normal = a.zeichenNormal || 24000;
     var kasten = $('#laengeHinweis');
     if (!kasten) { return; }
     if (!n || n <= normal) { kasten.hidden = true; return; }
