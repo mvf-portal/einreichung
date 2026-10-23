@@ -2026,13 +2026,20 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     return t;
   }
 
-  /* Die Untergrenze des Abstracts haengt an der Rubrik.
+  /* Die Untergrenze des Abstracts kann an der Rubrik haengen - zur Zeit tut
+     sie es nicht.
 
      Dieselben Zahlen stehen im Endpunkt (ABSTRACT_MINDEST,
-     ABSTRACT_MINDEST_SONST) - wer eine aendert, aendert beide. Bis zum
-     23.10.2026 kannte nur der Endpunkt die Ausnahme, und sie lief ins
-     Leere: Die Seite sperrte vorher. */
-  var ABSTRACT_MIN = {wissen: 600};
+     ABSTRACT_MINDEST_SONST) - wer eine aendert, aendert beide.
+
+     Die Tabelle ist seit dem 23.10.2026 leer: Es gilt eine Zahl fuer alle
+     Rubriken ("dann ist es einheitlich", Peter Stegmaier). Stehen bleibt sie
+     trotzdem. Vom 12.09. bis zum 23.10.2026 gab es eine Ausnahme fuer Wissen
+     (600 Zeichen), die NUR im Endpunkt gebaut war - und deshalb nie gewirkt
+     hat, weil diese Seite vorher sperrte. Wer je wieder eine Rubrik anders
+     behandeln will, aendert eine Zeile hier und eine dort; dass der
+     Mechanismus damals nur auf einer Seite stand, war der ganze Fehler. */
+  var ABSTRACT_MIN = {};
   var ABSTRACT_MIN_SONST = 1000;
 
   function abstractGrenze() {
