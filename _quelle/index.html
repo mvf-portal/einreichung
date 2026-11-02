@@ -1029,21 +1029,31 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
                Jetzt in der natuerlichen Reihenfolge: erst was man tun kann, dann
                warum (Mariann Stegmaier, 18.09.2026). "Und bei Bedarf berichtigen"
                ist dabei weggefallen - der naechste Satz sagt genau das. -->
-          <p class="anleitung">Wir setzen die Zitation nach einem <b>festen Muster</b>. Es
-          steht unten schon im Feld, gebildet aus Ihren Angaben. Bitte nur noch prüfen.
-          <b>Ändern können Sie es</b>, weil Sie bei mehrteiligen Namen, Adelspräfixen oder
-          Doppelnamen besser als jede Automatik wissen, wie Ihr Name getrennt gehört.</p>
+          <p class="anleitung">Die Zitation <b>bildet das System</b> nach einem festen
+          Muster aus Ihren Angaben. Sie steht unten im Feld und ändert sich mit, sobald
+          Sie Titel oder Autor:innen ändern &ndash; <b>Sie müssen hier nichts tun</b>.</p>
+          <p class="anleitung">Stimmt etwas daran nicht, liegt es an den Angaben weiter
+          oben: Berichtigen Sie dort den Namen oder den Titel, dann stimmt auch die
+          Zitation. Geht Ihr Name ungewöhnlich auseinander &ndash; mehrteilige Namen,
+          Adelspräfixe, Doppelnamen &ndash;, schreiben Sie es bitte ins Feld
+          <i>Anmerkungen an die Redaktion</i>; wir setzen es dann von Hand.</p>
           <p class="anleitung">Ausgabe, Seitenzahl und DOI ergänzt die Redaktion nach dem
           Satz, sie stehen beim Einreichen noch nicht fest.</p>
           <p class="anleitung"><b>Ab vier Autor:innen</b> nennt die Zitation nur die
           erste Person und „et al.“ &ndash; das ist so gewollt und gilt im ganzen Heft.
           Bitte tragen Sie die übrigen nicht von Hand nach; vollständig stehen sie
           über dem Beitrag.</p>
-          <p style="margin:0 0 8px">
-            <button type="button" class="knopf rand klein" id="zitationNeu">Aus meinen
-            Angaben neu bilden</button></p>
-          <textarea id="zitation" data-feld="zitation" rows="3" data-min="20"
-            placeholder="Nachname, V., Nachname, V.: „Titel des Beitrags“, in „Monitor Versorgungsforschung“"></textarea>
+          <!-- Seit dem 26.10.2026 erzeugt das System die Zitation, und der Autor
+               kann sie nicht mehr ändern. Der Knopf „Aus meinen Angaben neu
+               bilden" ist damit entfallen: Es gibt nichts mehr zurückzusetzen,
+               weil nichts mehr von Hand hineingerät.
+
+               readonly, NICHT disabled: Ein deaktiviertes Feld wird vom Browser
+               nicht mitgeschickt, und der Endpunkt führt die Zitation als
+               Pflichtangabe - die Einreichung fiele mit „Zitation fehlt" durch. -->
+          <textarea id="zitation" data-feld="zitation" rows="3" data-min="20" readonly
+            aria-readonly="true" style="background:#f2f2f2;cursor:default"
+            title="Diese Zeile bildet das System aus Ihren Angaben."></textarea>
           <!-- Das Beispielpaar "Nicht so / Besser" ist am 18.09.2026 entfallen
                (Mariann Stegmaier: "Das ist doch jetzt ueberfluessig"). Es stammte
                aus der Zeit, als der Autor die Zitation selbst tippte. Seit sie
@@ -1176,6 +1186,32 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
               Zusammenhang erscheinen.</span>
             </label>
           </div>
+        </div>
+
+        <!-- Zenodo steht hinter der Lizenzwahl und nicht beim eFirst-Kasten:
+             Es ist eine Folge der Lizenz. Nur CC BY 4.0 geht zu Zenodo, eine
+             eingeschraenkte Lizenz laesst die Kette liegen (ERLAUBTE_LIZENZ in
+             `mvf-zenodo/zenodo_ablage.py`). Alle 936 Beitragssaetze bei
+             Crossref tragen CC BY 4.0, die 82 Saetze ohne Lizenzangabe sind die
+             81 Hefte und die Zeitschrift selbst, also keine Beitraege.
+
+             DIE ZAHL TRAEGT EIN DATUM. Sie wandert, und eine Zahl ohne Stand
+             ist in zwei Jahren eine Falschaussage.
+
+             NICHT BEHAUPTET werden ORCID und Einrichtung: In einer Stichprobe
+             von 20 Datensaetzen trug 1 eine ORCID und keiner eine Einrichtung
+             (02.11.2026). Beides stuende hier gut, aber es steht nicht drin. -->
+        <div class="kasten gut" style="max-width:none">
+          <p><b>Wo Ihr Beitrag danach steht.</b> Nach dem Erscheinen erhält er eine
+          <b>DOI</b>, wird bei <b>Crossref</b> registriert und im <b>DOAJ</b> angemeldet.
+          Zusätzlich legen wir ihn im Repositorium <b>Zenodo</b> ab, das vom CERN
+          betrieben wird: als vollständiges PDF, unter CC&nbsp;BY&nbsp;4.0 und mit
+          Heft, Jahrgang und Seitenzahlen. Es bleibt bei <b>einer</b> Kennung, nämlich
+          unserer DOI. Es entsteht also keine zweite, die mit Ihrer Zitation
+          konkurriert.</p>
+          <p>Das gilt nicht nur für neue Beiträge. Wir haben das Archiv rückwärts
+          aufgearbeitet: <b>914 der 936</b> MVF-Beiträge mit DOI stehen bei Zenodo,
+          zurück bis 2014 (Stand 02.11.2026).</p>
         </div>
 
         <div class="gruppe" data-teil="gutachtervorschlag">
@@ -3529,8 +3565,15 @@ input.fehlt-noch{border-color:var(--warn);background:var(--warn-tint)}
     if (!feld) { return; }
     var neu = zitationBilden();
     if (!neu) { return; }
-    var jetzt = (stand.zitation || '').trim();
-    if (!erzwingen && jetzt !== '' && jetzt !== zitationZuletzt) { return; }
+    /* Immer neu bilden (26.10.2026).
+
+       Bis heute blieb stehen, was der Autor selbst eingetragen hatte: Weicht
+       der Feldinhalt von der zuletzt gebildeten Fassung ab, galt er als
+       Handarbeit und wurde geschont. Seit das Feld `readonly` ist, kann
+       Handarbeit nicht mehr entstehen - und ein Rest aus einem älteren
+       Zwischenstand bliebe sonst für immer stehen, obwohl Titel oder
+       Autor:innen sich längst geändert haben. `erzwingen` bleibt als
+       Parameter erhalten, damit Aufrufe von außen nicht brechen. */
     stand.zitation = neu;
     zitationZuletzt = neu;
     feld.value = neu;
